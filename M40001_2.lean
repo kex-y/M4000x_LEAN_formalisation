@@ -122,18 +122,43 @@ end
 2.4 Inverses
 -/
 
-section test
+section var0
     variables {X Y : Type}
-    def two_sided_inverse (f : X → Y) (g : Y → X) := ∀ x : X, (g ∘ f)(x) = x ∧ ∀ y : Y, (f ∘ g)(y) = y
-end test
+    def two_sided_inverse (f : X → Y) (g : Y → X) := (∀ x : X, (g ∘ f)(x) = x) ∧ (∀ y : Y, (f ∘ g)(y) = y)
+end var0
 
 /-Theorem
 A function $f : X → Y$ has a two-sided inverse if and only if it is a bijection.
 -/
 theorem exist_two_sided_inverse
-    (X Y : Type) (f : X → Y) : ∃ g : Y → X, two_sided_inverse f g ↔ bijective f :=
+    (X Y : Type) (f : X → Y) : (∃ g : Y → X, two_sided_inverse f g) ↔ bijective f :=
 begin
-    
+    split,
+    rintro ⟨g, ⟨hlinv, hrinv⟩⟩,
+    have hfinj : injective f,
+        intros p q hf,
+        replace hf : g (f p) = g (f q), rw hf,
+        have ha : g (f p) = p := hlinv p,
+        have hb : g (f q) = q := hlinv q,
+        rw [ha, hb] at hf,
+        assumption,
+    have hfbsur : surjective f,
+        intro y,
+        existsi g y,
+        exact hrinv y,
+    split,
+    all_goals {try {assumption}},
+
+    rintro ⟨hfinj, hfsur⟩,
+    choose g hg using hfsur,
+    existsi g,
+    split,
+    intro a, 
+    rw composition,
+    have ha : f (g (f a)) = f a,
+        rw hg (f a),
+    exact hfinj ha,
+    assumption,
 end
 
 end M40001_2

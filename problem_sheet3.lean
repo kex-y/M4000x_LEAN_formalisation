@@ -11,7 +11,7 @@ or you can install Lean and its maths library following the
 instructions at
 https://github.com/leanprover-community/mathlib#installation
 
-There are advantages to installing Lean on your own computer
+There are advantages to installing Lean on your own compute
 (for example it's faster), but it's more hassle than
 just using it online. 
 

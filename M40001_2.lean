@@ -133,31 +133,46 @@ A function $f : X → Y$ has a two-sided inverse if and only if it is a bijectio
 theorem exist_two_sided_inverse
     (X Y : Type) (f : X → Y) : (∃ g : Y → X, two_sided_inverse f g) ↔ bijective f :=
 begin
+    -- Again, since the question is in the form of 'if and only if', we need to prove both sides of the implications. 
     split,
+    -- $(⇒)$ Suppose the function $f : X → Y$ has a two sided inverse $g$, we need to show that $f$ is bijective.
     rintro ⟨g, ⟨hlinv, hrinv⟩⟩,
+    -- So lets first show that $f$ is injective.
     have hfinj : injective f,
+    -- Suppose we have $f(p) = f(q)$ for some $p q ∈ X$, then $f$ is injective if $p = q$.
         intros p q hf,
+    -- Since $f(p) = f(q)$, we have $g(f(p)) = g(f(q))$.
         replace hf : g (f p) = g (f q), rw hf,
+    -- But since $g$ is a double sided inverse of $f$, $∀ x ∈ X, g(f(x)) = x$, hence $p = g(f(p))= g(f(q)) = q$ which is exactly what we need!
         have ha : g (f p) = p := hlinv p,
         have hb : g (f q) = q := hlinv q,
         rw [ha, hb] at hf,
         assumption,
+    -- Now we need to show that $f$ is surjective, i.e. $∀ y ∈ Y, ∃ x ∈ X, f(x) = y$.
     have hfbsur : surjective f,
         intro y,
+    -- Since we have $g(y) ∈ X$, suppose we choose $x$ to be $g(y)$.
         existsi g y,
+    -- But, as $g$ is a double inverse of $f$, $f(g(y)) = y$ which is exactly what we need!
         exact hrinv y,
+    -- Thus, as $f$ is both injective and surjective, $f$ is bijective!
     split,
     all_goals {try {assumption}},
-
+    -- $(⇐)$ Now lets prove the reverse implication, i.e. if $f$ is bijective, then $f$ has a two-sided inverse.
     rintro ⟨hfinj, hfsur⟩,
+    -- Since $f$ is surjective, $∀ y ∈ Y, ∃ x ∈ X$ such that $f(x) = y$, lets choose this $x$ to be our output of $g(y)$.
     choose g hg using hfsur,
     existsi g,
+    -- Now we need to show that $g$ is a double sided inverse of $f$ so let's first show that $g$ is a left inverse of $f$.
     split,
     intro a, 
     rw composition,
+    -- Consider that since, by definition of $g$, $∀ y ∈ Y, f(g(y)) = y$ we have $f(g(f(a))) = f(a)$,
     have ha : f (g (f a)) = f a,
         rw hg (f a),
+    -- therefore, as $f$ is injective, we have $f(g(f(a))) = f(a) ⇒ g(f(a)) = f(a)$. Thus, $g$ is a left inverse of $f$.
     exact hfinj ha,
+    -- Now all we have left to prove is that $g$ is a right inverse of $f$. But that is true by definition, so we are done!
     assumption,
 end
 

@@ -180,4 +180,10 @@ end
 2.5 Binary Relations
 -/
 
+section var1
+variable {X : Type}
+def bin_rel (R : setoid X) := X → X → Prop -- I don't think this works... How would I go about writting the definition of binary relations?
+localized "infix ` ~ `:70 := bin_rel" in M40001_2
+end var1
+
 end M40001_2

@@ -176,4 +176,8 @@ begin
     assumption,
 end
 
+/-Section
+2.5 Binary Relations
+-/
+
 end M40001_2

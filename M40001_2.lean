@@ -22,18 +22,6 @@ begin
 end
 
 /- Section
-2.2.2 Equality of Functions
--/
-
-theorem equality 
-    (A B : Type) (f₁ f₂ : A → B) : ∀ x : A, f₁(x) = f₂(x) ↔ f₁ = f₂ :=
-begin
-    intro x,
-    split,
-
-end
-
-/- Section
 2.3 Injectivity, Surjectivity and Bijectivity
 -/
 
@@ -182,8 +170,8 @@ end
 
 section var1
 variable {X : Type}
-def bin_rel (R : setoid X) := X → X → Prop -- I don't think this works... How would I go about writting the definition of binary relations?
-localized "infix ` ~ `:70 := bin_rel" in M40001_2
+def bin_rel (R : setoid X) := X → X → Prop -- I don't think this works... How would I go about writting the definition of binary relations? 
+-- example : bin_rel (R : X) implies R is a binary relation maps X ^ 2 → Prop
 end var1
 
 end M40001_2

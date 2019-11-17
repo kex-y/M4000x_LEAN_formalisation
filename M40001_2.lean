@@ -123,7 +123,7 @@ theorem exist_two_sided_inverse
 begin
     -- Again, since the question is in the form of 'if and only if', we need to prove both sides of the implications. 
     split,
-    -- $(⇒)$ Suppose the function $f : X → Y$ has a two sided inverse $g$, we need to show that $f$ is bijective.
+    -- $(⇒)$ Suppose the function $f : X → Y$ has a two sided inverse $g$, we need to show that $f$ is bijective, i.e. it is injective and surjective.
     rintro ⟨g, ⟨hlinv, hrinv⟩⟩,
     -- So lets first show that $f$ is injective.
     have hfinj : injective f,
@@ -160,7 +160,7 @@ begin
         rw hg (f a),
     -- therefore, as $f$ is injective, we have $f(g(f(a))) = f(a) ⇒ g(f(a)) = f(a)$. Thus, $g$ is a left inverse of $f$.
     exact hfinj ha,
-    -- Now all we have left to prove is that $g$ is a right inverse of $f$. But that is true by definition, so we are done!
+    -- Now, all we have left to prove is that $g$ is a right inverse of $f$. But that is true by definition, so we are done!
     assumption,
 end
 

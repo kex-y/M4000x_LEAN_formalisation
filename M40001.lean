@@ -17,6 +17,7 @@ namespace M40001
 1.3.1 The Law of the Excluded Middle
 -/
 
+-- Scrapted
 /- Theorem
 The law of the excluded middle states that if $P$ is a proposition, then $ ¬ (¬ P) ⇔ P$.
 -/
@@ -30,7 +31,7 @@ begin
     -- Suppose we now make a dubious assumption that $¬ P$ is true.
     apply classical.by_contradiction,
     intro hnp,
-    -- But $¬ P$ is true implies that $¬ (¬ P)$ is false which is a contradiction to $¬ (¬ P)$ is true, so $¬ P$ must be false, resulting in the first part of the proof!
+    -- But $¬ P$ is true implies that $¬ (¬ P)$ is false which is a contradiction to our premis that $¬ (¬ P)$ is true, so $¬ P$ must be false, resulting in the first part of the proof!
     exact hp hnp,
     -- Now we need to proof that the backwards implication is also correct, i.e. $P$ is true implies $¬ (¬ P)$ is also true.
     -- To show that $¬ (¬ P)$ is true when $P$ is true, we can simply show that $P$ is true implies $¬ P$ is false.
@@ -49,9 +50,9 @@ end
 theorem demorgan_a
     (P Q : Prop) : ¬ (P ∨ Q) ↔ (¬ P) ∧ (¬ Q) :=
 begin
-    -- Again we have an if and only if statement so we need to consider both directions of the argument.
+    -- Again we have an 'if and only if' statement so we need to consider both directions of the argument.
     split,
-    -- We first show that $¬ (P ∨ Q) ⇒ ¬ P ∧ ¬ Q$ through contradiction. Suppose $¬ (P ∨ Q)$, and $P$ is true.
+    -- We first show that $¬ (P ∨ Q) ⇒ ¬ P ∧ ¬ Q$ through contradiction. Suppose $¬ (P ∨ Q)$ is true, and we make a dubious assumption that $P$ is true.
     intro h,
     split,
     intro hp,
@@ -69,11 +70,11 @@ begin
     cases hpq with hp hq,
     cases h with hnp hnq,
     exact hnp hp, 
-    -- So $Q$ must be true.
+    -- So since, we assumed $P$ or $Q$, then $Q$ must be true.
     -- But $Q$ also can't be true as we have $¬ Q$!
     cases h with hnp hnq,
     exact hnq hq,
-    -- Therefore, given $(¬ P) ∧ (¬ Q)$, $(P ∨ Q)$ must not be true, which is exactly what we need!
+    -- Therefore, given $(¬ P) ∧ (¬ Q)$, $(P ∨ Q)$ must not be true, i.e. $¬ (P ∨ Q)$ is true, which is exactly what we need!
 end
 
 /- Theorem
@@ -99,7 +100,7 @@ begin
     -- Now let's suppose $¬ P$. But as $¬ P$ implies $¬ P ∨ ¬ Q$, we have nothing left to prove.
     left, exact hnp,
     -- With the forward implication dealt with, let's consider the reverse, i.e. $¬ P ∨ ¬ Q ⇒ ¬ (P ∧ Q)$.
-    -- Suppose we have $¬ P ∨ ¬ Q$ but also $P ∧ Q$.
+    -- Given $¬ P ∨ ¬ Q$ let's suppose that $P ∧ Q$.
     intros h hpq,
     -- But this is a contradiction as $P ∧ Q$ implies that neither $P$ nor $Q$ is false!
     cases h with hnp hnq,

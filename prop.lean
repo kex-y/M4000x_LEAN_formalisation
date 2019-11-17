@@ -2,6 +2,8 @@ import tactic.ring
 import tactic.linarith
 import tactic.library_search
 
+-- Testing ground for theorems
+
 theorem contrapositive
     (P Q : Prop) (HPQ : P → Q) : ¬ Q → ¬ P :=
 begin

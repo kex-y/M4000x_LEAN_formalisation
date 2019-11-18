@@ -2,7 +2,6 @@
 import tactic.ring
 import data.real.basic
 import tactic.linarith
-import tactic.library_search
 import tactic.norm_cast
 
 namespace M40001_2
@@ -164,14 +163,5 @@ begin
     assumption,
 end
 
-/-Section
-2.5 Binary Relations
--/
-
-section var1
-variable {X : Type}
-def bin_rel (R : setoid X) := X → X → Prop -- I don't think this works... How would I go about writting the definition of binary relations? 
--- example : bin_rel (R : X) implies R is a binary relation maps X ^ 2 → Prop
-end var1
 
 end M40001_2

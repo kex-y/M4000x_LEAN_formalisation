@@ -13,7 +13,9 @@ namespace M40001_3
 -/
 
 variable {X : Type}
-def reflexive (r : setoid X) := ∀ x : X, r.rel x x → true
+def bin_rel (R : Type) := X → X → Prop
+
+def reflexive (r : setoid X) := ∀ x : X, r.rel x x
 def symmetric (r : setoid X) := ∀ x y : X, r.rel x y → r.rel y x
 def antisymmetric (r : setoid X) := ∀ x y : X, r.rel x y ∧ r.rel y x → x = y
 def trainsitive (r : setoid X ) := ∀ x y z : X, r.rel x y ∧ r.rel y z → r.rel x z
@@ -24,6 +26,7 @@ def total_order (r : setoid X) := partial_order r ∧ total r
 
 def equivalence (r : setoid X) := reflexive r ∧ symmetric r ∧ transitive r.rel
 
+def class (s : X) (r : setoid X) := {x : X ∧ r.rel s x} -- huh
 
 
 end M40001_3

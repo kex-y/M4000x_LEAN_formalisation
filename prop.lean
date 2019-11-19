@@ -484,8 +484,6 @@ begin
   exact h3,
 end
 
-namespace nat
-
 theorem orderx (x y z : ℕ) (h : z > 0) : x > y → x * z > y * z :=
 begin
   exact (mul_lt_mul_right h).mpr,
@@ -576,5 +574,14 @@ begin
     intro x,
     induction x with hb hsucc,
     
+
+end
+
+example (a b : ℕ) : a + a = b + b → a = b :=
+begin
+  ring,
+  rw nat.mul_left_inj,
+  intro, assumption,
+  simp,
 
 end

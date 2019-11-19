@@ -3,7 +3,6 @@ import tactic.ring
 import data.rat.basic
 import data.rat.cast
 import tactic.linarith
-import tactic.library_search
 import tactic.norm_cast
 
 namespace M40001
@@ -35,11 +34,11 @@ begin
     apply classical.by_contradiction,
     intro hnp,
     -- But $¬ P$ is true implies that $¬ (¬ P)$ is false which is a contradiction to our premis that $¬ (¬ P)$ is true. Thus, $¬ P$ must be false which by the Law of the excluded middle implies $P$ is true, resulting in the first part of the proof!
-    exact hp hnp,
+    contradiction,
     -- Now we need to proof that the backwards implication is also correct, i.e. $P$ is true implies $¬ (¬ P)$ is also true.
     -- To show that $¬ (¬ P)$ is true when $P$ is true, we can simply show that $P$ is true implies $¬ P$ is false.
     intros hp hnp,
-    exact hnp hp,
+    contradiction,
     -- But this is true by definition, so we have nothing left to prove!
 end
 
@@ -72,10 +71,10 @@ begin
     -- But $P$ can't be true, as we have $¬ P$,
     cases h with hnp hnq,
     cases hpq with hp hq,
-    exact hnp hp, 
+    contradiction, 
     -- Therefore, $Q$ must be true.
     -- But $Q$ also can't be true as we have $¬ Q$! Contradiction!
-    exact hnq hq,
+    contradiction,
     -- Therefore, given $(¬ P) ∧ (¬ Q)$, $(P ∨ Q)$ must not be true, i.e. $¬ (P ∨ Q)$ is true, which is exactly what we need!
 end
 
@@ -96,7 +95,7 @@ begin
         intro hq,
         have hpq : P ∧ Q,
             split, exact hp, exact hq,
-        exact h hpq,
+        contradiction,
     -- hence, we have $¬ P ∨ ¬ Q$.
     right, exact hnq,
     -- Now let's suppose $¬ P$. But as $¬ P$ implies $¬ P ∨ ¬ Q$, we have nothing left to prove.
@@ -107,9 +106,9 @@ begin
     -- But this is a contradiction as $P ∧ Q$ implies that neither $P$ nor $Q$ is false!
     cases h with hnp hnq,
         cases hpq with hp hq,
-        exact hnp hp,
+        contradiction,
         cases hpq with hp hq,
-        exact hnq hq,
+        contradiction,
     -- Therefore, $P ∧ Q$ must be false by contradiction which results in the second part of our proof!
 end
 

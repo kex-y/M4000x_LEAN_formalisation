@@ -583,5 +583,4 @@ begin
   rw nat.mul_left_inj,
   intro, assumption,
   simp,
-
 end

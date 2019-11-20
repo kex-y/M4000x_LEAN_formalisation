@@ -170,11 +170,7 @@ begin
   rw ha,
   have hc : 2 * hz = hz * 2, 
     rw mul_comm,
-  rw hc,
-  rw mul_assoc,
-  rw mul_assoc,
-  rw hc,
-  rw mul_left_comm,
+  rw [hc, mul_assoc, mul_assoc, hc, mul_left_comm],
   exact h2,
 end
 
@@ -261,7 +257,7 @@ begin
 end
 
 example (a b : ℕ) : a + a = b + b → a = b :=
-by{ring, rw nat.mul_left_inj, intro, assumption, simp}
+by{ring, rw nat.mul_left_inj, intro; assumption, simp}
 
 theorem wellordered
   (S : set ℕ) : S ≠ ∅ → ∃ s ∈ S, ∀ x ∈ S, s ≤ x :=

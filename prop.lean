@@ -125,85 +125,36 @@ by {
 }
 
 example : (∃ x, P x ∨ Q x) → (∃ x, Q x ∨ P x) :=
-begin
-  intro h,
-  cases h with x Hx,
-  cases Hx with HPx HQx,
-  have HPQ : Q x ∨ P x, right, exact HPx,
-  existsi x, exact HPQ,
-  have HPQ : Q x ∨ P x, left, exact HQx,
-  existsi x, exact HPQ, 
-end
+by {
+  rintro ⟨x, hx⟩, existsi x,
+  cases hx,
+  all_goals { {left, assumption} <|> {right, assumption}}
+}
 
 example : (∀ x, P x) ∧ (∀ x, Q x) ↔ (∀ x, P x ∧ Q x) :=
-begin
+by {
   split,
-  intro h,
-  cases h with HPx HQx,
-  intro x,
-  have HP : P x, exact HPx x,
-  have HQ : Q x, exact HQx x,
-  split, exact HP, exact HQ,
-  intro h,
-  split,
-  intro x,
-  have HPQ : P x ∧ Q x, exact h x,
-  cases HPQ with HP HQ, exact HP,
-  intro x,
-  have HPQ : P x ∧ Q x, exact h x,
-  cases HPQ with HP HQ, exact HQ,
-end
+  {rintros ⟨hp, hq⟩ x, from ⟨hp x, hq x⟩},
+  {intro h, split,
+  all_goals {intro x, from (h x).left <|> from (h x).right} }
+}
 
 example : (∃ x, P x) ∨ (∃ x, Q x) ↔ (∃ x, P x ∨ Q x) :=
-begin
+by {
   split,
-  intro h,
-  cases h with HPx HQx,
-  cases HPx with x HP,
-  have HPQ : P x ∨ Q x, left, exact HP,
-  existsi x, exact HPQ,
-  cases HQx with x HQ,
-  have HPQ : P x ∨ Q x, right, exact HQ,
-  existsi x, exact HPQ,
-  intro h,
-  cases h with x HPQ,
-  cases HPQ with HP HQ,
-  left, existsi x, exact HP,
-  right, existsi x, exact HQ,
-end
+  {intro h, repeat {rcases h with ⟨x, hx⟩},
+  all_goals {existsi x, {left, assumption} <|> {right, assumption}  }
+  },
+  {rintro ⟨x, hx⟩, cases hx, 
+  {left, existsi x, assumption},
+  {right, existsi x, assumption} }
+}
 
 example (α : Type) (p q : α → Prop) : (∀ x : α, p x ∧ q x) → ∀ x : α, p x  :=
-begin
-    intro h,
-    intro hx,
-    have hpq : p hx ∧ q hx,
-    exact h hx,
-    cases hpq,
-    exact hpq_left,
-end
+by {intros h x, from (h x).left}
 
 example : ¬ (∀ x, P x) ↔ ∃ x, ¬ P x :=
-begin
-  split,
-  intro h,  
-  apply classical.by_contradiction,
-  intro h2,
-  apply h, intro x,
-  have nnP : ¬ ¬ P x,
-  intro hNpx,
-  apply h2,
-  existsi x,
-  exact hNpx,
-  apply classical.by_contradiction,
-  intro h3,
-  exact nnP h3,
-
-  intro h,
-  intro h1,
-  cases h with x np,
-  have hp : P x, apply h1,
-  exact np hp,
-end
+by {push_neg, refl}
 
 def even (a : ℤ) := ∃ b : ℤ, a = 2 * b
 def odd (a : ℤ) := ∃ b : ℤ, a = 2 * b + 1
@@ -257,9 +208,7 @@ begin
 end
 
 theorem orderx (x y z : ℕ) (h : z > 0) : x > y → x * z > y * z :=
-begin
-  exact (mul_lt_mul_right h).mpr,
-end
+by {from (mul_lt_mul_right h).mpr}
 
 theorem orderone (a b : ℕ) (ha : a > 1) : b > 1 → a * b > a :=
 begin
@@ -311,48 +260,11 @@ begin
   exact hc.left,
 end
 
-example (P : Prop) : ¬ (¬ P) → P :=
-begin
-  intro h,
-  apply classical.by_cases,
-  cc, cc, exact P,
-end
-
-example (P Q : Prop) : ¬ (¬ P ∧ ¬ Q) → P ∨ Q :=
-begin
-  push_neg,
-  intro, assumption,
-end
-
-example (P Q :Prop) : (P → Q) → (¬ P ∨ Q) :=
-begin
-  intro h,
-  cases classical.em P with hp hnp,
-  right,
-  exact h hp,
-  left,
-  assumption,
-end
+example (a b : ℕ) : a + a = b + b → a = b :=
+by{ring, rw nat.mul_left_inj, intro, assumption, simp}
 
 theorem wellordered
   (S : set ℕ) : S ≠ ∅ → ∃ s ∈ S, ∀ x ∈ S, s ≤ x :=
 begin
-  intro nempty,
-  apply classical.by_contradiction,
-  push_neg,
-  intro h,
-
-  have empty: ∀ n : ℕ, n ∉ S,
-    intro x,
-    induction x with hb hsucc,
-    
-
-end
-
-example (a b : ℕ) : a + a = b + b → a = b :=
-begin
-  ring,
-  rw nat.mul_left_inj,
-  intro, assumption,
-  simp,
+  sorry,
 end

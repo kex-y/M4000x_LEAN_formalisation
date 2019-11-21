@@ -2,6 +2,7 @@
 import tactic.ring
 import data.real.basic
 import data.setoid
+import M40001.M40001_2
 import tactic.linarith
 import tactic.norm_cast
 
@@ -192,7 +193,21 @@ $<~$ is reflexive.
 -/
 theorem brel_refl : reflexive (<~) := 
 begin
-    choose g hg using,
+    intro X,
+    let g : X → X := id,
+    existsi g,
+    from function.bijective_id
+end
+
+/- Theorem
+$<~$ is symmetric.
+-/
+theorem brel_symm : symmetric (<~) :=
+begin
+    intros x y,
+    rintro ⟨g, hg⟩,
+    have hf : ∃ f : y → x, function.bijective f,
+        apply M40001_2.exist_two_sided_inverse
 end
 
 /-

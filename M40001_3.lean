@@ -11,35 +11,35 @@ namespace M40001_3
 /-Section
 2.5 Binary Relations
 -/
-
-variables {X Ω : Type}
-def bin_rel (R : Type) := X → X → Prop
+universe u
+variables {X V : Type u}
+def bin_rel (R : Type*) := X → X → Prop
 
 /- Section 
 2.6 Common Predicates on Binary Relations
 -/
 
-def reflexive (r : setoid X) := ∀ x : X, r.rel x x
+def reflexive (r : bin_rel X) := ∀ x : X, r x x
 
 /- Theorem
 $≤$ is reflexive.
 -/
-theorem le_refl : ∀ x : ℝ, x ≤ x := by {intro; refl}
+@[simp] theorem le_refl : reflexive ((≤) : ℝ → ℝ → Prop) := by {intro; refl}
 
-def symmetric (r : setoid X) := ∀ x y : X, r.rel x y → r.rel y x
+def symmetric (r : bin_rel X) := ∀ x y : X, r x y → r y x
 
 /- Theorem
 $=$ is symmetric.
 -/
-theorem eq_symm : ∀ x y : ℝ, x = y → y = x :=
+theorem eq_symm : symmetric ((=) : ℝ → ℝ → Prop) :=
 by {intros x y h, rwa h}
 
-def antisymmetric (r : setoid X) := ∀ x y : X, r.rel x y ∧ r.rel y x → x = y
+def antisymmetric (r : bin_rel X) := ∀ x y : X, r x y ∧ r y x → x = y
 
 /- Theorem
 $≤$ is anti-symmetric.
 -/
-theorem le_antisymm : ∀ x y : ℝ, x ≤ y ∧ y ≤ x → x = y :=
+@[simp] theorem le_antisymm : antisymmetric ((≤) : ℝ → ℝ → Prop) :=
 begin
 -- Suppose we have $x, y ∈ ℝ$ where $x ≤ y$ and $y ≤ x$, then we need to show that $x = y$.
     intros x y h,
@@ -61,36 +61,36 @@ begin
     }
 end
 
-def transitive (r : setoid X ) := ∀ x y z : X, r.rel x y ∧ r.rel y z → r.rel x z
+def transitive (r : bin_rel X) := ∀ x y z : X, r x y ∧ r y z → r x z
 
 /- Theorem
 $⇒$ is transitive.
 -/
-theorem imply_trans (P Q R : Prop) : (P → Q) ∧ (Q → R) → P → R :=
-by {intros h p, from h.right (h.left p)}
+theorem imply_trans : transitive ((→) : Prop → Prop → Prop) :=
+by {intros P Q R h hp, from h.right (h.left hp)}
 
 /- Theorem
 $≤$ is also transitive.
 -/
-theorem le_trans : ∀ x y z : ℝ, (x ≤ y) ∧ (y ≤ z) → x ≤ z :=
+@[simp] theorem le_trans : transitive ((≤) : ℝ → ℝ → Prop) :=
 by {intros x y z h, from le_trans h.left h.right}
 
 /- Section
 2.7 Partial and Total Orders
 -/
 
-def partial_order (r : setoid X) := reflexive r ∧ symmetric r ∧ transitive r
-def total (r : setoid X) := ∀ x y, r.rel x y ∨ r.rel y x
-def total_order (r : setoid X) := partial_order r ∧ total r
+def partial_order (r : bin_rel X) := reflexive r ∧ antisymmetric r ∧ transitive r
+def total (r : bin_rel X) := ∀ x y : X, r x y ∨ r y x
+def total_order (r : bin_rel X) := partial_order r ∧ total r
 
-/- Theorem
-$≤$ is a total order.
+/- 
+Let's now prove that $≤$ is a total order.
 -/
 -- As we already have already proven that $≤$ is reflexive, symmetric, and transitive, i.e. its a partial order, we only need to show $≤$ is total to prove that $≤$ is a total order.
 /- Lemma
 $≤$ is total.
 -/
-theorem le_total : ∀ x y : ℝ, x ≤ y ∨ y ≤ x :=
+@[simp] theorem le_total : total ((≤) : ℝ → ℝ → Prop) :=
 begin
 -- Suppose we have $x, y ∈ ℝ$, by the trichotomy axiom, either $x < y$, $y < x$ or $x = y$.
     intros x y,
@@ -102,11 +102,21 @@ begin
     {cases h, repeat { {left, assumption} <|> right <|> assumption }, rwa h}
 end
 
+/- Theorem
+$≤$ is a total order.
+-/
+theorem le_total_order : total_order ((≤) : ℝ → ℝ → Prop) :=
+begin
+-- As $≤$ is a partial order and is total, it is a total order!
+    repeat {split},
+    repeat {simp},
+end
+
 /- Section
 2.7 Equivalence Relations
 -/
 
-def equivalence (r : setoid X) := reflexive r ∧ symmetric r ∧ transitive r
+def equivalence (r : bin_rel X) := reflexive r ∧ symmetric r ∧ transitive r
 
 /- Sub-section
 Examples
@@ -121,7 +131,7 @@ def R (m n : ℤ) := 2 ∣ (m - n)
 /- Lemma
 (1) $R$ is reflexive.
 -/
-theorem R_refl : ∀ m : ℤ, R m m :=
+theorem R_refl : reflexive R :=
 begin
 -- We have for any $m ∈ ℝ$, $m - m = 0$.
     intro,
@@ -133,7 +143,7 @@ end
 /- Lemma
 (2) $R$ is symmetric.
 -/
-theorem R_symm : ∀ m n : ℤ, R m n → R n m :=
+theorem R_symm : symmetric R :=
 begin
 -- Suppose we have $m, n ∈ ℝ$ such that $R(m, n)$ is true.
     intros m n,
@@ -147,7 +157,7 @@ end
 /- Lemma
 (3) $R$ is transitive.
 -/
-theorem R_trans : ∀ l m n : ℤ, (R m l) ∧ (R l n) → R m n :=
+theorem R_trans : transitive R :=
 begin
 -- Suppose we have $l, m, n ∈ ℝ$ such that $R(m, l)$ and $R(l, n)$, we need to show $R(m, n)$ is true.
     intros l m n,
@@ -161,18 +171,29 @@ end
 /- Theorem
 $R$ is an equivalence relation.
 -/
+theorem R_equiv : equivalence R :=
+begin
 -- This follows directly from lemma (1), (2), and (3).
+    repeat {split},
+    {from R_refl},
+    {from R_symm},
+    {from R_trans}
+end
 
 /-
-Example 4. 
+Example 4. Let $X$ be a set of sets, where $A, B ∈ X$. Let's define $<~$ such that $A <~ B$ if an only if $∃ g: A → B$, $g$ is an injection.
 -/
 
-def brel (A B : set Ω) : ∃ g : A → B, function.bijective g
+def brel (A B : Type*) := (∃ g : A → B, function.bijective g)
+infix ` <~ `: 50 := brel
 
 /- Theorem
-$~$ is reflexive.
+$<~$ is reflexive.
 -/
-theorem brel_refl (A : set Ω) : brel A A :=
+theorem brel_refl : reflexive (<~) := 
+begin
+    choose g hg using,
+end
 
 /-
 Example 5.

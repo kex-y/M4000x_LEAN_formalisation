@@ -185,13 +185,13 @@ end
 Example 4. Let $X$ be a set of sets, where $A, B ∈ X$. Let's define $<~$ such that $A <~ B$ if an only if $∃ g: A → B$, $g$ is an injection.
 -/
 
-def brel (A B : Type*) := (∃ g : A → B, function.bijective g)
+def brel (A B : Type*) := ∃ g : A → B, function.bijective g
 infix ` <~ `: 50 := brel
 
 /- Theorem
 $<~$ is reflexive.
 -/
-theorem brel_refl : reflexive (<~) := 
+@[simp] theorem brel_refl : reflexive (<~) := 
 begin
     intro X,
     let g : X → X := id,
@@ -202,16 +202,97 @@ end
 /- Theorem
 $<~$ is symmetric.
 -/
-theorem brel_symm : symmetric (<~) :=
+@[simp] theorem brel_symm : symmetric (<~) :=
 begin
-    intros x y,
-    rintro ⟨g, hg⟩,
-    have hf : ∃ f : y → x, function.bijective f,
-        apply M40001_2.exist_two_sided_inverse
+    intros X Y,
+    rintro ⟨f, hf⟩,
+    have hg : ∃ g : Y → X, M40001_2.two_sided_inverse f g,
+        {rwa M40001_2.exist_two_sided_inverse
+    },
+    {cases hg with g hg,
+    unfold brel,
+    existsi g,
+    rw ←M40001_2.exist_two_sided_inverse,
+    existsi f,
+    split,
+    {from hg.right},
+    {from hg.left}
+    }
+end
+
+/- Theorem
+$<~$ is transitive.
+-/
+@[simp] theorem brel_trans : transitive (<~) :=
+begin
+    intros X Y Z,
+    rintro ⟨⟨f, hf⟩, g, hg⟩,
+    existsi (g ∘ f),
+    apply M40001_2.both_bijective,
+    split, repeat {assumption}
 end
 
 /-
-Example 5.
+With that, we can conclude that $<~$ is an equivalence relation!
 -/
+
+/- Theorem
+$<~$ is an equivalence relation
+-/
+theorem brel_equiv : equivalence (<~) :=
+by {repeat {split}, repeat {simp} }
+
+/-
+Example 5. Let $X$ and $Y$ be two sets, and $f : X → V$ be some function between the sets. Let's define tje binary relation $~>$ such that for $x, y ∈ X$ $x ~> y$ if and only if $f(x) = f(y)$.
+-/
+
+variables {M N : Type}
+def crel (f : X → V) (x y : X) := f x = f y
+infix ` ~> `: 50 := crel
+
+/- Theorem
+$~>$ is reflexive.
+-/
+@[simp] theorem crel_refl : ∀ f : X → V, reflexive ((~>) f) := 
+by {intros f x, unfold crel}
+
+/- Theorem
+$~>$ is symmetric.
+-/
+@[simp] theorem crel_symm : ∀ f : X → V, symmetric ((~>) f) :=
+begin
+    intros f x y h,
+    unfold crel at h,
+    unfold crel,
+    rwa h,
+end
+
+/- Theorem
+$~>$ is transitive.
+-/
+@[simp] theorem crel_trans : ∀ f : X → V, transitive ((~>) f) :=
+begin
+    intros f x y z,
+    rintro ⟨ha, hb⟩,
+    unfold crel at ha hb,
+    unfold crel,
+    rw [ha, hb],
+end
+
+/-
+Thus, since $~>$ is reflexive, symmetric and transitive, it is an equivalence relation!
+-/
+
+/- Theorem
+$~>$ is an equvivalence relation.
+-/
+theorem crel_eq : ∀ f : X → V, equivalence ((~>) f) :=
+begin
+    intros f,
+    unfold equivalence,
+    repeat {split},
+    repeat {simp},
+end
+
 
 end M40001_3

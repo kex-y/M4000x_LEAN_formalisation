@@ -15,6 +15,10 @@ namespace M40001_3
 variable {X : Type}
 def bin_rel (R : Type) := X → X → Prop
 
+/- Section 
+2.6 Common Predicates on Binary Relations
+-/
+
 def reflexive (r : setoid X) := ∀ x : X, r.rel x x
 
 /- Theorem
@@ -67,6 +71,10 @@ $≤$ is also transitive.
 theorem le_trans : ∀ x y z : ℝ, (x ≤ y) ∧ (y ≤ z) → x ≤ z :=
 by {intros x y z h, from le_trans h.left h.right}
 
+/- Section
+2.7 Partial and Total Orders
+-/
+
 def partial_order (r : setoid X) := reflexive r ∧ symmetric r ∧ transitive r
 def total (r : setoid X) := ∀ x y, r.rel x y ∨ r.rel y x
 def total_order (r : setoid X) := partial_order r ∧ total r
@@ -74,7 +82,7 @@ def total_order (r : setoid X) := partial_order r ∧ total r
 /- Theorem
 $≤$ is a total order.
 -/
--- We already have $≤$ is reflexive, symmetric, and transitive, thus we only need to show $≤$ is total.
+-- As we already have already proven that $≤$ is reflexive, symmetric, and transitive, we only need to show $≤$ is total to prove that $≤$ is a total order.
 theorem le_total : ∀ x y : ℝ, x ≤ y ∨ y ≤ x :=
 begin
     intros x y,
@@ -84,8 +92,61 @@ begin
     {cases h, repeat { {left, assumption} <|> right <|> assumption }, rwa h}
 end
 
+/- Section
+2.7 Equivalence Relations
+-/
+
 def equivalence (r : setoid X) := reflexive r ∧ symmetric r ∧ transitive r
 
+/- Sub-section
+Examples
+-/
 
+/-
+Example 2. Suppose we define a binary relation $R(m, n)$, $m, n ∈ ℤ$, where $R(m, n)$ is true if and only if $m - n$ is even.
+-/
+
+def R (m n : ℤ) := 2 ∣ (m - n)
+
+/- Lemma
+(1) $R$ is reflexive.
+-/
+theorem R_refl : ∀ m : ℤ, R m m :=
+by{intro, unfold R, simp}
+
+/- Lemma
+(2) $R$ is symmetric.
+-/
+theorem R_symm : ∀ m n : ℤ, R m n → R n m :=
+begin
+    intros m n,
+    rintro ⟨x, hx⟩,
+    existsi -x,
+    simp, rw ←hx, ring,
+end
+
+/- Lemma
+(3) $R$ is transitive.
+-/
+theorem R_trans : ∀ l m n : ℤ, (R m l) ∧ (R l n) → R m n :=
+begin
+    intros l m n,
+    rintro ⟨⟨x, hx⟩, ⟨y, hy⟩⟩,
+    existsi x + y,
+    ring, rw [←hx, ←hy], ring,
+end
+
+/- Theorem
+$R$ is an equivalence relation.
+-/
+-- This follows directly from lemma (1), (2), and (3).
+
+/-
+Example 4. 
+-/
+
+/-
+Example 5.
+-/
 
 end M40001_3

@@ -165,10 +165,8 @@ theorem dis_and_or
 begin
     -- Let's first consider the foward implication, $P ∧ (Q ∨ R) ⇒ (P ∧ Q) ∨ (P ∧ R)$
     split,
-    -- Suppose we have $P ∧ (Q ∨ R)$,
-    intro h,
-    -- then $P$ is true and either $Q$ or $R$ is true.
-    cases h with hp hqr,
+    -- Suppose $P$ is true and either $Q$ or $R$ is true.
+    rintro ⟨hp, hqr⟩,
     -- But this means either $P$ and $Q$ is true or $P$ and $R$ is true which is exactly what we need.
     cases hqr with hq hr,
     left, split, repeat {assumption},

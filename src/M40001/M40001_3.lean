@@ -193,9 +193,12 @@ $<~$ is reflexive.
 -/
 @[simp] theorem brel_refl : reflexive (<~) := 
 begin
+-- To prove $<~$ is reflexive we need to show there exists a bijection between a set $X$ and itself.
     intro X,
+-- Luckily, we can simply choose the identity function! 
     let g : X → X := id,
     existsi g,
+-- Since the identity function is bijective, $<~$ is reflexive as required.
     from function.bijective_id
 end
 
@@ -204,15 +207,19 @@ $<~$ is symmetric.
 -/
 @[simp] theorem brel_symm : symmetric (<~) :=
 begin
+-- To prove $<~$ is symmetric we need to show that, for sets $X, Y$, $X <~ Y ⇒ Y <~ X$.
     intros X Y,
+-- Suppose $X <~ Y$, then by definition, $∃ f : X → Y$, where $f$ is bijective.
     rintro ⟨f, hf⟩,
+-- As proven ealier, $f$ is bijective implies $f$ has a two sided inverse $g$, let's choose that as our function.
     have hg : ∃ g : Y → X, M40001_2.two_sided_inverse f g,
         {rwa M40001_2.exist_two_sided_inverse
     },
     {cases hg with g hg,
-    unfold brel,
     existsi g,
+-- Since $g$ is bijective if and only if $g$ has a two sided inverse, it suffices to prove that such an inverse exist.
     rw ←M40001_2.exist_two_sided_inverse,
+-- But as $g$ is the two sided inverse of $f$ by construction, we have $f$ is the two sided inverse of $g$ by definition, thus such an inverse does exist!
     existsi f,
     split,
     {from hg.right},
@@ -225,8 +232,11 @@ $<~$ is transitive.
 -/
 @[simp] theorem brel_trans : transitive (<~) :=
 begin
+-- Given three sets $X, Y, Z$ where $X <~ Y$ and $Y <~ Z$ we need to show that $X <~ Z$.
     intros X Y Z,
+-- Since $X <~ Y$ and $Y <~ Z$ there exists bijective functions $f : X → Y$ and $g : Y → Z$.
     rintro ⟨⟨f, hf⟩, g, hg⟩,
+-- But as proven ealier, the composition of two bijective functions is also bijective. Thus, $g ∘ f : X → Z$ is a bijective function which is exactly what we need!
     existsi (g ∘ f),
     apply M40001_2.both_bijective,
     split, repeat {assumption}

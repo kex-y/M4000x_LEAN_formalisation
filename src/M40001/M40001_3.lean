@@ -132,7 +132,7 @@ def R (m n : ℤ) := 2 ∣ (m - n)
 /- Lemma
 (1) $R$ is reflexive.
 -/
-theorem R_refl : reflexive R :=
+lemma R_refl : reflexive R :=
 begin
 -- We have for any $m ∈ ℝ$, $m - m = 0$.
     intro,
@@ -144,7 +144,7 @@ end
 /- Lemma
 (2) $R$ is symmetric.
 -/
-theorem R_symm : symmetric R :=
+lemma R_symm : symmetric R :=
 begin
 -- Suppose we have $m, n ∈ ℝ$ such that $R(m, n)$ is true.
     intros m n,
@@ -158,7 +158,7 @@ end
 /- Lemma
 (3) $R$ is transitive.
 -/
-theorem R_trans : transitive R :=
+lemma R_trans : transitive R :=
 begin
 -- Suppose we have $l, m, n ∈ ℝ$ such that $R(m, l)$ and $R(l, n)$, we need to show $R(m, n)$ is true.
     intros l m n,
@@ -188,10 +188,10 @@ Example 4. Let $X$ be a set of sets, where $A, B ∈ X$. Let's define $<~$ such 
 def brel (A B : Type*) := ∃ g : A → B, function.bijective g
 infix ` <~ `: 50 := brel
 
-/- Theorem
+/- Lemma
 $<~$ is reflexive.
 -/
-@[simp] theorem brel_refl : reflexive (<~) := 
+@[simp] lemma brel_refl : reflexive (<~) := 
 begin
 -- To prove $<~$ is reflexive we need to show there exists a bijection between a set $X$ and itself.
     intro X,
@@ -202,10 +202,10 @@ begin
     from function.bijective_id
 end
 
-/- Theorem
+/- Lemma
 $<~$ is symmetric.
 -/
-@[simp] theorem brel_symm : symmetric (<~) :=
+@[simp] lemma brel_symm : symmetric (<~) :=
 begin
 -- To prove $<~$ is symmetric we need to show that, for sets $X, Y$, $X <~ Y ⇒ Y <~ X$.
     intros X Y,
@@ -227,10 +227,10 @@ begin
     }
 end
 
-/- Theorem
+/- Lemma
 $<~$ is transitive.
 -/
-@[simp] theorem brel_trans : transitive (<~) :=
+@[simp] lemma brel_trans : transitive (<~) :=
 begin
 -- Given three sets $X, Y, Z$ where $X <~ Y$ and $Y <~ Z$ we need to show that $X <~ Z$.
     intros X Y Z,
@@ -253,23 +253,23 @@ theorem brel_equiv : equivalence (<~) :=
 by {repeat {split}, repeat {simp} }
 
 /-
-Example 5. Let $X$ and $Y$ be two sets, and $f : X → V$ be some function between the sets. Let's define tje binary relation $~>$ such that for $x, y ∈ X$ $x ~> y$ if and only if $f(x) = f(y)$.
+Example 5. Let $X$ and $Y$ be two sets, and $f : X → V$ be some function between the sets. Let's define the binary relation $~>$ such that for $x, y ∈ X$ $x ~> y$ if and only if $f(x) = f(y)$.
 -/
 
 variables {M N : Type}
 def crel (f : X → V) (x y : X) := f x = f y
 infix ` ~> `: 50 := crel
 
-/- Theorem
+/- Lemma
 $~>$ is reflexive.
 -/
-@[simp] theorem crel_refl : ∀ f : X → V, reflexive ((~>) f) := 
+@[simp] lemma crel_refl : ∀ f : X → V, reflexive ((~>) f) := 
 by {intros f x, unfold crel}
 
-/- Theorem
+/- Lemma
 $~>$ is symmetric.
 -/
-@[simp] theorem crel_symm : ∀ f : X → V, symmetric ((~>) f) :=
+@[simp] lemma crel_symm : ∀ f : X → V, symmetric ((~>) f) :=
 begin
     intros f x y h,
     unfold crel at h,
@@ -277,10 +277,10 @@ begin
     rwa h,
 end
 
-/- Theorem
+/- Lemma
 $~>$ is transitive.
 -/
-@[simp] theorem crel_trans : ∀ f : X → V, transitive ((~>) f) :=
+@[simp] lemma crel_trans : ∀ f : X → V, transitive ((~>) f) :=
 begin
     intros f x y z,
     rintro ⟨ha, hb⟩,

@@ -88,6 +88,7 @@ def total_order (r : bin_rel X) := partial_order r ∧ total r
 Let's now prove that $≤$ is a total order.
 -/
 -- As we already have already proven that $≤$ is reflexive, symmetric, and transitive, i.e. its a partial order, we only need to show $≤$ is total to prove that $≤$ is a total order.
+
 /- Lemma
 $≤$ is total.
 -/

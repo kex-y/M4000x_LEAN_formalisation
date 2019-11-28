@@ -63,7 +63,7 @@ end
 lemma class_not_relate
     (s t : X) (R : bin_rel X) (h : M40001_3.equivalence R) : ¬ R s t → cls R t ∩ cls R s = ∅ :=
 begin
--- LEAN badly behaving saying "cls R t ∩ cls R s = ∅" not decidable :/
+-- LEAN saying "cls R t ∩ cls R s = ∅" not decidable :/
     have : (cls R t ∩ cls R s = ∅) ↔ ¬ ¬ (cls R t ∩ cls R s = ∅), rwa classical.not_not, rw this,
 -- We prove by contradiction. Suppose $cl(t) ∩ cl(s) ≠ ∅$.
     intros ha hb,
@@ -115,13 +115,11 @@ begin
                 rwa set.mem_set_of_eq at this}
             }
         },
-    {simp,
-    intros x hx,
+    {simp, intros x hx,
     rw set.empty_def at hx,
     have : x ∈ {x : X | false}, by {rw hx, from itself_in_cls R h x},
     rwa set.mem_set_of_eq at this
     }
 end
-
 
 end M40001_4

@@ -87,7 +87,7 @@ We now formally define a partition of a set $X$
 /-
 Partition of a set $X$ is a set $A$ of non-empty subsets of $X$ with the property that each element of $X$ is in exacctly one of the subsets.
 -/
-def partition (A : set (set X)) := (∀ x : X, (∃ B ∈ A, x ∈ B ∧ ∀ C ∈ A, x ∈ C → B = C)) ∧ ∅ ∉ A
+def partition (A : set (set X)) : Prop := (∀ x : X, (∃ B ∈ A, x ∈ B ∧ ∀ C ∈ A, x ∈ C → B = C)) ∧ ∅ ∉ A
 
 lemma equiv_refl (R : bin_rel X) (h : M40001_3.equivalence R) (x : X): R x x :=
 by {rcases h with ⟨href, ⟨hsym, htrans⟩⟩, from href x}
@@ -111,7 +111,7 @@ begin
     {simp, intro y,
     existsi cls R y,
     split,
-        {existsi y, refl},
+    { use y},
         {split,
             {from itself_in_cls R h y},
                 {intros C x hC hy_in_C, rw hC,

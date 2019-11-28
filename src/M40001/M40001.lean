@@ -213,14 +213,4 @@ begin
     right, split, repeat {assumption},
 end
 
-/- Section
-1.4 An Application
--/
-
-/- 
-We would like prove that there is no rational number whose square is 2 using the techniques introduced earlier.
--/
-
--- Section moved to Sqrt2_not_rational.lean
-
 end M40001

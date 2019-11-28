@@ -49,11 +49,11 @@ begin
     intro h0,
     rw le_antisymm_iff,
     split,
-    all_goals {apply class_relate_lem_a,
-    repeat {assumption}
-    },
-    {rcases h with ⟨href, ⟨hsym, htrans⟩⟩,
-    from hsym s t h0
+        all_goals {apply class_relate_lem_a,
+        repeat {assumption}
+        },
+        {rcases h with ⟨href, ⟨hsym, htrans⟩⟩,
+        from hsym s t h0
     }
 end
 
@@ -92,6 +92,12 @@ def partition (A : set (set X)) := (∀ x : X, (∃ B ∈ A, x ∈ B ∧ ∀ C �
 lemma equiv_refl (R : bin_rel X) (h : M40001_3.equivalence R) (x : X): R x x :=
 by {rcases h with ⟨href, ⟨hsym, htrans⟩⟩, from href x}
 
+lemma equiv_symm (R : bin_rel X) (h : M40001_3.equivalence R) (x y : X): R x y ↔ R y x :=
+by {rcases h with ⟨href, ⟨hsym, htrans⟩⟩, split, from hsym x y, from hsym y x}
+
+lemma equiv_trans (R : bin_rel X) (h : M40001_3.equivalence R) (x y z : X): R x y ∧ R y z → R x z :=
+by {rcases h with ⟨href, ⟨hsym, htrans⟩⟩, from htrans x y z}
+
 lemma itself_in_cls (R : bin_rel X) (h : M40001_3.equivalence R) (x : X) : x ∈ cls R x :=
 by {unfold cls, rw set.mem_set_of_eq, from equiv_refl R h x}
 
@@ -119,6 +125,35 @@ begin
     rw set.empty_def at hx,
     have : x ∈ {x : X | false}, by {rw hx, from itself_in_cls R h x},
     rwa set.mem_set_of_eq at this
+    }
+end
+
+lemma class_relate_lem_c 
+    (s t : X) (R : bin_rel X) (h : M40001_3.equivalence R) : R s t ↔ cls R t = cls R s :=
+begin
+    split,
+    {from class_relate_lem_b s t R h},
+    {intro ha,
+    unfold cls at ha,
+    have : t ∈ {x : X | R t x}, by {rwa set.mem_set_of_eq, from equiv_refl R h t},
+    rwa [ha, set.mem_set_of_eq] at this
+    }
+end
+
+variable {R : bin_rel X}
+def Rf (g : X → V) (s t : X)  := g s = g t
+
+theorem equiv_relation_equiv (f = λ x, cls R x) (h : M40001_3.equivalence R) : ∀ s t : X, R s t ↔ Rf f s t :=
+begin
+    intros s t,
+    unfold Rf, rw H, simp,
+    split,
+    {intro ha,
+    rwa [←class_relate_lem_c, equiv_symm R h t s],
+    assumption
+    },
+    {intro ha,
+    rwa [class_relate_lem_c s t R h, ha]
     }
 end
 

@@ -14,7 +14,7 @@ namespace M40001_3
 -/
 universe u
 variables {X V : Type u}
-def bin_rel (R : Type*) := X → X → Prop
+def bin_rel (X : Type*) := X → X → Prop
 
 /- Section 
 2.6 Common Predicates on Binary Relations

@@ -89,11 +89,39 @@ Partition of a set $X$ is a set $A$ of non-empty subsets of $X$ with the propert
 -/
 def partition (A : set (set X)) := (∀ x : X, (∃ B ∈ A, x ∈ B ∧ ∀ C ∈ A, x ∈ C → B = C)) ∧ ∅ ∉ A
 
+lemma equiv_refl (R : bin_rel X) (h : M40001_3.equivalence R) (x : X): R x x :=
+by {rcases h with ⟨href, ⟨hsym, htrans⟩⟩, from href x}
+
+lemma itself_in_cls (R : bin_rel X) (h : M40001_3.equivalence R) (x : X) : x ∈ cls R x :=
+by {unfold cls, rw set.mem_set_of_eq, from equiv_refl R h x}
+
 /- Theorem
 Let $X$ be a set and let $R$ be an equivalence relation on $X$. Then the set $V$ of equivalence classes $\{cl(s) | s ∈ X\}$ for $R$ is a partition of $X$. 
 -/
-theorem equiv_relation_partion -- hmmmm
-    (R : bin_rel X) (h : M40001_3.equivalence R) : partition {cls R s | s ∈ X} := sorry
+theorem equiv_relation_partion -- or replace the set with (set.range (cls R))
+    (R : bin_rel X) (h : M40001_3.equivalence R) : partition {a : set X | ∃ s : X, a = cls R s} := 
+begin
+    split,
+    {simp, intro y,
+    existsi cls R y,
+    split,
+        {existsi y, refl},
+        {split,
+            {from itself_in_cls R h y},
+                {intros C x hC hy_in_C, rw hC,
+                apply class_relate_lem_b, assumption,
+                have : y ∈ cls R x, rwa ←hC,
+                unfold cls at this,
+                rwa set.mem_set_of_eq at this}
+            }
+        },
+    {simp,
+    intros x hx,
+    rw set.empty_def at hx,
+    have : x ∈ {x : X | false}, by {rw hx, from itself_in_cls R h x},
+    rwa set.mem_set_of_eq at this
+    }
+end
 
 
 end M40001_4

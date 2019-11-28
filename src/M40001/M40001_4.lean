@@ -111,7 +111,7 @@ begin
     {simp, intro y,
     existsi cls R y,
     split,
-    { use y},
+    {use y},
         {split,
             {from itself_in_cls R h y},
                 {intros C x hC hy_in_C, rw hC,

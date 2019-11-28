@@ -272,9 +272,11 @@ $~>$ is symmetric.
 -/
 @[simp] lemma crel_symm : ∀ f : X → V, symmetric ((~>) f) :=
 begin
+-- To prove $~>$ is symmetric we need to show that if $x ~> y$ then $y ~> x$.
     intros f x y h,
     unfold crel at h,
     unfold crel,
+-- But this is quite obvious isn't it? Of course $f(x) = f(y) ⇒ f(y) = f(x)$. Thus, we can conclude $~>$ is symmetric!
     rwa h,
 end
 
@@ -283,6 +285,7 @@ $~>$ is transitive.
 -/
 @[simp] lemma crel_trans : ∀ f : X → V, transitive ((~>) f) :=
 begin
+-- Proof is left as an exercise for the reader! (Hint : we need to prove that $x ~> y ∧ y ~> z → x ~> z$).
     intros f x y z,
     rintro ⟨ha, hb⟩,
     unfold crel at ha hb,
@@ -299,6 +302,7 @@ $~>$ is an equvivalence relation.
 -/
 theorem crel_eq : ∀ f : X → V, equivalence ((~>) f) :=
 begin
+-- This followes directly from the three lemmas we've proven previously!
     intros f,
     unfold equivalence,
     repeat {split},

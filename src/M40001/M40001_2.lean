@@ -14,6 +14,9 @@ universe u
 2.2.1 Function Composition
 -/
 
+/- Theorem
+Given two functions $f : A → B$, $g : B → C$ where $A, B, C$ are sets, then $(g ∘ f)(x)$ (the composition of $g$ and $f$) is $g(f(x))$.
+-/
 theorem composition
     (A B C : Type u) (f : A → B) (g : B → C) (x : A) : (g ∘ f)(x) = g(f(x)) :=
 begin
@@ -25,6 +28,9 @@ end
 2.3 Injectivity, Surjectivity and Bijectivity
 -/
 
+/-Theorem
+A function $f : X → Y$ is called injective if distinct elements of $X$ get mapped to distinct elements of $Y$. More formally, $f$ is injective if $∀ a, b ∈ X, f(a) = f(b) ⇒ a = b$.
+-/
 theorem injective_def 
     (X Y : Type u) (f : X → Y) : injective f ↔ (∀ a b : X, f(a) = f(b) → a = b) :=
 begin
@@ -32,6 +38,9 @@ begin
     refl,
 end
 
+/- Theorem
+A function $f : X → Y$ is called surjective if every element of $Y$ gets "hit" by $f$. More formally, $f$ is surjective if $∀ y ∈ Y, ∃ x ∈ X$ such that $f(x) = y$.
+-/
 theorem surjective_def 
     (X Y : Type u) (f : X → Y) : surjective f ↔ ∀ y : Y, ∃ x : X, f(x) = y :=
 begin
@@ -39,6 +48,9 @@ begin
     refl,
 end
 
+/- Theorem
+A function $f : X → Y$ is called bijective if it is both injective and surjective.
+-/
 theorem bijective_def
     (X Y : Type u) (f : X → Y) : bijective f ↔ injective f ∧ surjective f :=
 begin

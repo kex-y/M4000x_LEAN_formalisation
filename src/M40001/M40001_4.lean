@@ -5,14 +5,12 @@ import tactic.linarith
 import tactic.norm_cast
 import M40001.M40001_3
 
-namespace M40001_4
+namespace M40001
 -- end header
 
 /- Section
 2.9 Quotients and Equivalence Classes
 -/
-
-open M40001_3
 
 universe u
 variables {X V : Type u}
@@ -26,7 +24,7 @@ def cls (r : bin_rel X) (s : X) := {x : X | r s x}
 (1) Let $X$ be a set and let $R$ be an equivalence relation on $X$. Then, for $s, t ∈ X$, $R(s, t) ⇒ cl(t) ⊆ cl(s)$.
 -/
 lemma class_relate_lem_a 
-    (s t : X) (R : bin_rel X) (h : M40001_3.equivalence R) : R s t → cls R t ⊆ cls R s :=
+    (s t : X) (R : bin_rel X) (h : equivalence R) : R s t → cls R t ⊆ cls R s :=
 begin
     rcases h with ⟨href, ⟨hsym, htrans⟩⟩,
     intros ha x hb,
@@ -44,7 +42,7 @@ With lemma (1) in place, it is quite easy to see that, not only is $cl(t) ⊆ cl
 (2) Let $X$ be a set and let $R$ be an equivalence relation on $X$. Then, for $s, t ∈ X$, $R(s, t) ⇒ cl(t) = cl(s)$.
 -/
 lemma class_relate_lem_b 
-    (s t : X) (R : bin_rel X) (h : M40001_3.equivalence R) : R s t → cls R t = cls R s :=
+    (s t : X) (R : bin_rel X) (h : equivalence R) : R s t → cls R t = cls R s :=
 begin
     intro h0,
     rw le_antisymm_iff,
@@ -61,7 +59,7 @@ end
 (3) Let $X$ be a set and let $R$ be an equivalence relation on $X$. Then, for $s, t ∈ X$, $¬ R(s, t) ⇒ cl(t) ∩ cl(s) = ∅$. 
 -/
 lemma class_not_relate
-    (s t : X) (R : bin_rel X) (h : M40001_3.equivalence R) : ¬ R s t → cls R t ∩ cls R s = ∅ :=
+    (s t : X) (R : bin_rel X) (h : equivalence R) : ¬ R s t → cls R t ∩ cls R s = ∅ :=
 begin
 -- LEAN saying "cls R t ∩ cls R s = ∅" not decidable :/
     have : (cls R t ∩ cls R s = ∅) ↔ ¬ ¬ (cls R t ∩ cls R s = ∅), rwa classical.not_not, rw this,
@@ -89,23 +87,23 @@ Partition of a set $X$ is a set $A$ of non-empty subsets of $X$ with the propert
 -/
 def partition (A : set (set X)) : Prop := (∀ x : X, (∃ B ∈ A, x ∈ B ∧ ∀ C ∈ A, x ∈ C → B = C)) ∧ ∅ ∉ A
 
-lemma equiv_refl (R : bin_rel X) (h : M40001_3.equivalence R) (x : X): R x x :=
+lemma equiv_refl (R : bin_rel X) (h : equivalence R) (x : X): R x x :=
 by {rcases h with ⟨href, ⟨hsym, htrans⟩⟩, from href x}
 
-lemma equiv_symm (R : bin_rel X) (h : M40001_3.equivalence R) (x y : X): R x y ↔ R y x :=
+lemma equiv_symm (R : bin_rel X) (h : equivalence R) (x y : X): R x y ↔ R y x :=
 by {rcases h with ⟨href, ⟨hsym, htrans⟩⟩, split, from hsym x y, from hsym y x}
 
-lemma equiv_trans (R : bin_rel X) (h : M40001_3.equivalence R) (x y z : X): R x y ∧ R y z → R x z :=
+lemma equiv_trans (R : bin_rel X) (h : equivalence R) (x y z : X): R x y ∧ R y z → R x z :=
 by {rcases h with ⟨href, ⟨hsym, htrans⟩⟩, from htrans x y z}
 
-lemma itself_in_cls (R : bin_rel X) (h : M40001_3.equivalence R) (x : X) : x ∈ cls R x :=
+lemma itself_in_cls (R : bin_rel X) (h : equivalence R) (x : X) : x ∈ cls R x :=
 by {unfold cls, rw set.mem_set_of_eq, from equiv_refl R h x}
 
 /- Theorem
 Let $X$ be a set and let $R$ be an equivalence relation on $X$. Then the set $V$ of equivalence classes $\{cl(s) | s ∈ X\}$ for $R$ is a partition of $X$. 
 -/
 theorem equiv_relation_partion -- or replace the set with (set.range (cls R))
-    (R : bin_rel X) (h : M40001_3.equivalence R) : partition {a : set X | ∃ s : X, a = cls R s} := 
+    (R : bin_rel X) (h : equivalence R) : partition {a : set X | ∃ s : X, a = cls R s} := 
 begin
     split,
     {simp, intro y,
@@ -129,7 +127,7 @@ begin
 end
 
 lemma class_relate_lem_c 
-    (s t : X) (R : bin_rel X) (h : M40001_3.equivalence R) : R s t ↔ cls R t = cls R s :=
+    (s t : X) (R : bin_rel X) (h : equivalence R) : R s t ↔ cls R t = cls R s :=
 begin
     split,
     {from class_relate_lem_b s t R h},
@@ -143,7 +141,7 @@ end
 variable {R : bin_rel X}
 def Rf (g : X → V) (s t : X)  := g s = g t
 
-theorem equiv_relation_equiv (f = λ x, cls R x) (h : M40001_3.equivalence R) : ∀ s t : X, R s t ↔ Rf f s t :=
+theorem equiv_relation_equiv (f = λ x, cls R x) (h : equivalence R) : ∀ s t : X, R s t ↔ Rf f s t :=
 begin
     intros s t,
     unfold Rf, rw H, simp,
@@ -157,4 +155,4 @@ begin
     }
 end
 
-end M40001_4
+end M40001

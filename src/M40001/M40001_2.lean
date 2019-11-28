@@ -4,7 +4,7 @@ import data.real.basic
 import tactic.linarith
 import tactic.norm_cast
 
-namespace M40001_2
+namespace M40001
 -- end header
 
 open function 
@@ -177,4 +177,4 @@ begin
 end
 
 
-end M40001_2
+end M40001

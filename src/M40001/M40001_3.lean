@@ -6,7 +6,7 @@ import M40001.M40001_2
 import tactic.linarith
 import tactic.norm_cast
 
-namespace M40001_3
+namespace M40001
 -- end header
 
 /-Section
@@ -213,13 +213,13 @@ begin
 -- Suppose $X <~ Y$, then by definition, $∃ f : X → Y$, where $f$ is bijective.
     rintro ⟨f, hf⟩,
 -- As proven ealier, $f$ is bijective implies $f$ has a two sided inverse $g$, let's choose that as our function.
-    have hg : ∃ g : Y → X, M40001_2.two_sided_inverse f g,
-        {rwa M40001_2.exist_two_sided_inverse
+    have hg : ∃ g : Y → X, two_sided_inverse f g,
+        {rwa exist_two_sided_inverse
     },
     {cases hg with g hg,
     existsi g,
 -- Since $g$ is bijective if and only if $g$ has a two sided inverse, it suffices to prove that such an inverse exist.
-    rw ←M40001_2.exist_two_sided_inverse,
+    rw ←exist_two_sided_inverse,
 -- But as $g$ is the two sided inverse of $f$ by construction, we have $f$ is the two sided inverse of $g$ by definition, thus such an inverse does exist!
     existsi f,
     split,
@@ -239,7 +239,7 @@ begin
     rintro ⟨⟨f, hf⟩, g, hg⟩,
 -- But as proven ealier, the composition of two bijective functions is also bijective. Thus, $g ∘ f : X → Z$ is a bijective function which is exactly what we need!
     existsi (g ∘ f),
-    apply M40001_2.both_bijective,
+    apply both_bijective,
     split, repeat {assumption}
 end
 
@@ -310,4 +310,4 @@ begin
 end
 
 
-end M40001_3
+end M40001

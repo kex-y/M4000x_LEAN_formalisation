@@ -5,7 +5,7 @@ import data.rat.cast
 import tactic.linarith
 import tactic.norm_cast
 
-namespace M40001_1
+namespace M40001
 -- end header
 
 /- Section
@@ -69,43 +69,4 @@ begin
     }
 end
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-end M40001_1
+end M40001

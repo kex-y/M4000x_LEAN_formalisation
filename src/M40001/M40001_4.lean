@@ -98,7 +98,7 @@ by {unfold cls, rw set.mem_set_of_eq, from equiv_refl R h x}
 /- Theorem
 Let $X$ be a set and let $R$ be an equivalence relation on $X$. Then the set $V$ of equivalence classes $\{cl(s) | s ∈ X\}$ for $R$ is a partition of $X$. 
 -/
-theorem equiv_relation_partion -- or replace the set with (set.range (cls R))
+theorem equiv_relation_partition -- or replace the set with (set.range (cls R))
     (R : bin_rel X) (h : equivalence R) : partition {a : set X | ∃ s : X, a = cls R s} := 
 begin
     split,
@@ -120,6 +120,14 @@ begin
     have : x ∈ {x : X | false}, by {rw hx, from itself_in_cls R h x},
     rwa set.mem_set_of_eq at this
     }
+end
+
+--set_option pp.notation false
+
+theorem partition_equiv_relation
+    (A : set (set(X))) (B : set (bin_rel X)) (h : partition A) : ∃ f : A → B, ∀ a : A, equivalence (f a) :=
+begin
+    sorry
 end
 
 lemma class_relate_lem_c 

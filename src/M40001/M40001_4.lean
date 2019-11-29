@@ -122,8 +122,6 @@ begin
     }
 end
 
---set_option pp.notation false
-
 def rs (A : set (set(X))) (s t : X) := ∃ B ∈ A, s ∈ B ∧ t ∈ B
 
 theorem partition_equiv_relation

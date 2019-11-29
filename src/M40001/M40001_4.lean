@@ -124,10 +124,45 @@ end
 
 --set_option pp.notation false
 
+def rs (A : set (set(X))) (s t : X) := ∃ B ∈ A, s ∈ B ∧ t ∈ B
+
 theorem partition_equiv_relation
-    (A : set (set(X))) (B : set (bin_rel X)) (h : partition A) : ∃ f : A → B, ∀ a : A, equivalence (f a) :=
+    (C : set (set(X))) (h : partition C) : equivalence (rs C) :=
 begin
-    sorry
+    split,
+-- Proving reflexivity
+    {intro x,
+    cases h with ha hb,
+    replace ha : 
+        ∃ (B : set X) (H : B ∈ C), x ∈ B ∧ ∀ (D : set X), D ∈ C → x ∈ D → B = D := ha x,
+    rcases ha with ⟨ha, ⟨hb, ⟨hc, hd⟩⟩⟩,
+    use ha, use hb,
+    split,
+    repeat {assumption}
+    },
+-- Proving symmtric
+    {split,
+        {rintros x y ⟨ha, ⟨hb, ⟨hc, hd⟩⟩⟩,
+        use ha, use hb,
+        split,
+        repeat {assumption}
+        },
+-- Proving transitive
+        {rintros x y z ⟨⟨ha, ⟨hb, ⟨hd, he⟩⟩⟩, ⟨hf, ⟨hg, ⟨hk, hl⟩⟩⟩⟩,
+        use ha, use hb,
+        cases h with hm hn,
+        replace hm : 
+            ∃ (B : set X) (H : B ∈ C), y ∈ B ∧ ∀ (D : set X), D ∈ C → y ∈ D → B = D := hm y,
+        rcases hm with ⟨ho, ⟨hp, ⟨hq, hr⟩⟩⟩,
+        have : hf = ha, 
+            {suffices : hf = ho, {rw this, apply hr ha, repeat {assumption}},
+            rwa hr hf, repeat {assumption},
+            },
+        split,
+        {assumption},
+        {rwa ←this},
+        }
+    }
 end
 
 lemma class_relate_lem_c 

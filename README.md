@@ -1,4 +1,4 @@
-# M40001_LEAN_Formalisation
+# M40001 LEAN Formalisation
 
 Formalising the M40001 lecture notes in LEAN (mostly done!)
 

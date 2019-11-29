@@ -156,3 +156,6 @@ begin
   -- goal is ⊢ ∀ (x : ℕ), x = x
   intro y, reflexivity
 end
+
+-- use this when confused
+-- set_option pp.notation false

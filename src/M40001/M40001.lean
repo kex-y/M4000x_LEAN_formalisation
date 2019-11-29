@@ -1,9 +1,5 @@
 -- begin header
 import tactic.ring
-import data.rat.basic
-import data.rat.cast
-import tactic.linarith
-import tactic.norm_cast
 
 namespace M40001
 -- end header

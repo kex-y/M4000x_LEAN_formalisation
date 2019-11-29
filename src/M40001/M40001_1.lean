@@ -1,9 +1,8 @@
 -- begin header
 import tactic.ring
-import data.rat.basic
-import data.rat.cast
-import tactic.linarith
-import tactic.norm_cast
+
+meta def tactic.interactive.lefta := `[left, assumption]
+meta def tactic.interactive.righta := `[right, assumption]
 
 namespace M40001
 -- end header
@@ -27,7 +26,19 @@ by {rwa set.compl_union}
 (2) $\bar{X ∩ Y} = \bar{X} ∪ \bar{Y}.
 -/
 theorem de_morg_set_b (X Y : set Ω) : - (X ∩ Y) = - X ∪ - Y :=
-by {rwa set.compl_inter}
+begin
+    ext, split,
+    {dsimp, intro h, push_neg at h,
+    cases h,
+        {lefta},
+        {righta},
+    },
+    {intro h, dsimp at h, dsimp, 
+    rintro ⟨ha, hb⟩,
+    cases h,
+    all_goals {contradiction}
+    }
+end
 
 /- Section
 1.7.1 "For All" and "There Exists"

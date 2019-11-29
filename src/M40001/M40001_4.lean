@@ -1,8 +1,4 @@
 -- begin header
-import tactic.ring
-import data.real.basic
-import tactic.linarith
-import tactic.norm_cast
 import M40001.M40001_3
 
 namespace M40001

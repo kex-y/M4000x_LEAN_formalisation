@@ -1,10 +1,5 @@
 -- begin header
-import tactic.ring
-import data.real.basic
-import data.setoid
 import M40001.M40001_2
-import tactic.linarith
-import tactic.norm_cast
 
 namespace M40001
 -- end header

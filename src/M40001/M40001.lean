@@ -34,8 +34,8 @@ begin
     -- Now we need to proof that the backwards implication is also correct, i.e. $P$ is true implies $¬ (¬ P)$ is also true.
     -- To show that $¬ (¬ P)$ is true when $P$ is true, we can simply show that $P$ is true implies $¬ P$ is false.
     intros hp hnp,
-    contradiction,
     -- But this is true by definition, so we have nothing left to prove!
+    contradiction,
 end
 
 /- Sub-section
@@ -69,9 +69,8 @@ begin
     cases hpq with hp hq,
     contradiction, 
     -- Therefore, $Q$ must be true.
-    -- But $Q$ also can't be true as we have $¬ Q$! Contradiction!
+    -- But $Q$ also can't be true as we have $¬ Q$! Contradiction! Therefore, given $(¬ P) ∧ (¬ Q)$, $(P ∨ Q)$ must not be true, i.e. $¬ (P ∨ Q)$ is true, which is exactly what we need!
     contradiction,
-    -- Therefore, given $(¬ P) ∧ (¬ Q)$, $(P ∨ Q)$ must not be true, i.e. $¬ (P ∨ Q)$ is true, which is exactly what we need!
 end
 
 /- Theorem
@@ -104,8 +103,8 @@ begin
         cases hpq with hp hq,
         contradiction,
         cases hpq with hp hq,
-        contradiction,
     -- Therefore, $P ∧ Q$ must be false by contradiction which results in the second part of our proof!
+        contradiction,
 end
 
 /- Sub-section
@@ -176,8 +175,8 @@ begin
     split, assumption, left, assumption,
     -- Similarly, is $P ∧ R$ is true, then $P$ is true and $Q ∨ R$ is also true. 
     cases hpr with hp hr,
-    split, assumption, right, assumption,
     -- Therefore, by considering bothe cases, we see that either $P ∧ Q$ or $P ∧ R$ implies $P ∧ (Q ∨ R)$.
+    split, assumption, right, assumption,
 end
 
 /- Theorem

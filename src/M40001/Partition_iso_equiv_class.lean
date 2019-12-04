@@ -13,7 +13,14 @@ begin
     rcases r.2 with ⟨rrefl, ⟨rsymm, rtran⟩⟩,
     sorry
 end,
-  right_inv := begin sorry end
+  right_inv := 
+begin
+  unfold function.right_inverse,
+  unfold function.left_inverse,
+  intro b,
+  unfold cls,
+  sorry
+end
 }
 
 end M40001

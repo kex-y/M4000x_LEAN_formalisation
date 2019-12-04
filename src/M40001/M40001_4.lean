@@ -114,11 +114,11 @@ begin
     {use y},
         {split,
             {from itself_in_cls R h y},
-                {intros C x hC hy_in_C, rw hC,
-                apply class_relate_lem_b, assumption,
-                have : y ∈ cls R x, rwa ←hC,
-                unfold cls at this,
-                rwa set.mem_set_of_eq at this}
+            {intros C x hC hy_in_C, rw hC,
+            apply class_relate_lem_b, assumption,
+            have : y ∈ cls R x, rwa ←hC,
+            unfold cls at this,
+            rwa set.mem_set_of_eq at this}
             }
         },
     {simp, intros x hx,

@@ -20,7 +20,12 @@ def reflexive (r : bin_rel X) := ∀ x : X, r x x
 /- Theorem
 $≤$ is reflexive.
 -/
-@[simp] theorem le_refl : reflexive ((≤) : ℝ → ℝ → Prop) := by {intro; refl}
+@[simp] theorem le_refl : reflexive ((≤) : ℝ → ℝ → Prop) := 
+begin
+-- Surprisingly, $x$ is in fact less or equal to $x$!
+    intro,
+    refl
+end
 
 def symmetric (r : bin_rel X) := ∀ x y : X, r x y → r y x
 
@@ -28,7 +33,11 @@ def symmetric (r : bin_rel X) := ∀ x y : X, r x y → r y x
 $=$ is symmetric.
 -/
 theorem eq_symm : symmetric ((=) : ℝ → ℝ → Prop) :=
-by {intros x y h, rwa h}
+begin
+-- $x = y → y = x$, need I say more? 
+    intros x y h,
+    rwa h
+end
 
 def antisymmetric (r : bin_rel X) := ∀ x y : X, r x y ∧ r y x → x = y
 
@@ -119,8 +128,8 @@ def equivalence (r : bin_rel X) := reflexive r ∧ symmetric r ∧ transitive r
 Examples
 -/
 
-/-
-Example 2. Suppose we define a binary relation $R(m, n)$, $m, n ∈ ℤ$, where $R(m, n)$ is true if and only if $m - n$ is even.
+/- Example
+Suppose we define a binary relation $R(m, n)$, $m, n ∈ ℤ$, where $R(m, n)$ is true if and only if $m - n$ is even.
 -/
 
 def R (m n : ℤ) := 2 ∣ (m - n)
@@ -177,8 +186,8 @@ begin
     {from R_trans}
 end
 
-/-
-Example 4. Let $X$ be a set of sets, where $A, B ∈ X$. Let's define $<~$ such that $A <~ B$ if an only if $∃ g: A → B$, $g$ is an injection.
+/- Example
+Let $X$ be a set of sets, where $A, B ∈ X$. Let's define $<~$ such that $A <~ B$ if an only if $∃ g: A → B$, $g$ is an injection.
 -/
 
 def brel (A B : Type*) := ∃ g : A → B, function.bijective g
@@ -246,10 +255,14 @@ With that, we can conclude that $<~$ is an equivalence relation!
 $<~$ is an equivalence relation
 -/
 theorem brel_equiv : equivalence (<~) :=
-by {repeat {split}, repeat {simp} }
+begin
+-- This follows as $<~$ is reflexive, symmetric and transitive!
+    repeat {split},
+    repeat {simp}
+end
 
-/-
-Example 5. Let $X$ and $Y$ be two sets, and $f : X → V$ be some function between the sets. Let's define the binary relation $~>$ such that for $x, y ∈ X$ $x ~> y$ if and only if $f(x) = f(y)$.
+/- Example
+Let $X$ and $Y$ be two sets, and $f : X → V$ be some function between the sets. Let's define the binary relation $~>$ such that for $x, y ∈ X$ $x ~> y$ if and only if $f(x) = f(y)$.
 -/
 
 variables {M N : Type}
@@ -260,7 +273,11 @@ infix ` ~> `: 50 := crel
 $~>$ is reflexive.
 -/
 @[simp] lemma crel_refl : ∀ f : X → V, reflexive ((~>) f) := 
-by {intros f x, unfold crel}
+begin 
+-- This is quite trivial ain't it? Of course $f(x)$ equals itself!
+    intros f x, 
+    unfold crel
+end
 
 /- Lemma
 $~>$ is symmetric.

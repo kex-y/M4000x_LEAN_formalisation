@@ -17,16 +17,31 @@ variable {Ω : Type*}
 -- Let $Ω$ be a fixed set with subsets $X$ and $Y$, then
 
 /- Theorem
-(1) $\bar{X ∪ Y} = \bar{X} ∩ \bar{Y},
+(1) $\bar{X ∪ Y} = \bar{X} ∩ \bar{Y}$,
 -/
 theorem de_morg_set_a (X Y : set Ω) : - (X ∪ Y) = - X ∩ - Y :=
-by {rwa set.compl_union}
+begin
+-- What exactly does $\bar{(X ∪ Y)}$ and $\bar{X} ∩ \bar{Y}$ mean? Well, lets find out!
+    ext,
+-- As we can see, to show that $\bar{X ∪ Y} = \bar{X} ∩ \bar{Y}$, we in fact need to prove $x ∈ \bar{(X ∪ Y)} ↔ x ∈ \bar{X} ∩ \bar{Y}$.
+    split,
+-- Thus, by considering both cases logically, we see that this is indeed true!
+    {dsimp, intro h, 
+    push_neg at h,
+    assumption,
+    },
+    {dsimp, intro h,
+    push_neg,
+    assumption
+    }
+end
 
 /- Theorem
-(2) $\bar{X ∩ Y} = \bar{X} ∪ \bar{Y}.
+(2) $\bar{X ∩ Y} = \bar{X} ∪ \bar{Y}$.
 -/
 theorem de_morg_set_b (X Y : set Ω) : - (X ∩ Y) = - X ∪ - Y :=
 begin
+-- Similar reasoning as the above theorem!
     ext, split,
     {dsimp, intro h, push_neg at h,
     cases h,

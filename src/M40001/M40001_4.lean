@@ -22,11 +22,14 @@ def cls (r : bin_rel X) (s : X) := {x : X | r s x}
 lemma class_relate_lem_a 
     (s t : X) (R : bin_rel X) (h : equivalence R) : R s t → cls R t ⊆ cls R s :=
 begin
+-- Given that $R$ is an equivalence relation, we know that it is reflexive, symmetric and transitive.
     rcases h with ⟨href, ⟨hsym, htrans⟩⟩,
+-- Thus, given an element $x$ in $cl(t)$ (i.e. $R(t, x)$ is true), we have, by transitivit, $R(s, x)$.
     intros ha x hb,
     have hc : R t x := hb,
     replace hc : R s t ∧ R t x, by {split, repeat {assumption}},
     replace hc : R s x := htrans s t x hc,
+-- Hence $x ∈ cl(s)$ by definition.
     from hc
 end
 
@@ -40,13 +43,16 @@ With lemma (1) in place, it is quite easy to see that, not only is $cl(t) ⊆ cl
 lemma class_relate_lem_b 
     (s t : X) (R : bin_rel X) (h : equivalence R) : R s t → cls R t = cls R s :=
 begin
+-- By lemma (1), $cl(t) ⊆ cl(s), and thus, we only need to prove that $cl(s) ⊆ cl(t)$ in order for $cl(t) = cl(s)$.
     intro h0,
     rw le_antisymm_iff,
     split,
         all_goals {apply class_relate_lem_a,
         repeat {assumption}
         },
+-- But, since $R$ is and equivalence relation, it is symmetric.
         {rcases h with ⟨href, ⟨hsym, htrans⟩⟩,
+-- Hence, $R(s, t) ↔ R(t, s)$ which by lemma (1) implies $cl(s) ⊆ cl(t)$ as required.
         from hsym s t h0
     }
 end

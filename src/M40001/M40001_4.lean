@@ -107,21 +107,28 @@ Let $X$ be a set and let $R$ be an equivalence relation on $X$. Then the set $V$
 theorem equiv_relation_partition -- or replace the set with (set.range (cls R))
     (R : bin_rel X) (h : equivalence R) : partition {a : set X | ∃ s : X, a = cls R s} := 
 begin
+-- To show that the equivalence classes of $R$ form a partition of $X$, we need to show that every $x ∈ X$ is in exactly one equivalence class of $R$, AND, none of the equivalence classes are empty.
     split,
+-- So let's first show that every $x ∈ X$ is in exactly one equivalence class of $R$. Let $y$ be and element of $X$.
     {simp, intro y,
     existsi cls R y,
     split,
+-- Then obviously $y ∈ cl(y)$ since $R(y, y)$ is true by reflexivity.
     {use y},
         {split,
             {from itself_in_cls R h y},
+-- Okay. So now we need to prove uniqueness. Suppose there is a $x ∈ X$, $x ∈ cl(y)$, we then need to show $cl(y) = cl(x)$.
             {intros C x hC hy_in_C, rw hC,
+-- But this is true by lemma (2)!
             apply class_relate_lem_b, assumption,
             have : y ∈ cls R x, rwa ←hC,
             unfold cls at this,
             rwa set.mem_set_of_eq at this}
             }
         },
+-- Now we have to prove that none of the equivalence classes are empty. But this is quite simple. Suppose there is an equivalence class $cl(x)$ where $x ∈ X$ that is empty.
     {simp, intros x hx,
+-- But then $x ∈ cl(x)$ as $R(x, x)$ is true by reflexivity. Ah ha! Contradiction! Hence, such empty equivalence class does not in fact exist! And we are done. 
     rw set.empty_def at hx,
     have : x ∈ {x : X | false}, by {rw hx, from itself_in_cls R h x},
     rwa set.mem_set_of_eq at this

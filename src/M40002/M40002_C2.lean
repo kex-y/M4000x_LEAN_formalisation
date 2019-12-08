@@ -100,15 +100,62 @@ end
 
 -- All infinite subsets of ℕ are countable
 
-def exist_min (S : set ℕ) := ∃ s ∈ S, (∀ x ∈ S, s ≤ x)
-
--- noncomputable def min (S : set ℕ) (H : exist_min S) : S := classical.some (exist_min S) why doesn't this work
+def exist_min (S : set ℕ) := ∃ s ∈ S, ∀ x ∈ S, s ≤ x
 
 theorem nat_sub_countable : ∀ (S : set ℕ), (∀ n : ℕ, ∃ s ∈ S, s > n) → countable S :=
 begin
     intros S h,
     unfold countable,
     sorry
+end
+
+-- Okay... I've skipped a bunch here cause I don't like countability :(
+
+theorem unique_max (S : set ℝ) : ∀ a b ∈ S, (∀ x ∈ S, x ≤ a ∧ x ≤ b) → a = b :=
+begin
+    intros a b ha hb hc,
+    have : a ≤ b := (hc a ha).right,
+    cases lt_or_eq_of_le this,
+        {clear this,
+        have : b ≤ a := (hc b hb).left,
+        rw ←not_lt at this,
+        contradiction
+        },
+        {assumption}
+end
+
+def bounded_above (S : set ℝ) := ∃ M : ℝ, ∀ s ∈ S, s ≤ M
+def upper_bound (S : set ℝ) (M : ℝ) := ∀ s ∈ S, s ≤ M
+
+example (p : Prop) : p → p := by {finish}
+
+theorem bdd_above_iff_have_upr_bd (S : set ℝ) : (∃ M : ℝ, upper_bound S M) ↔ bounded_above S :=
+begin
+    split,
+    all_goals {rintro ⟨M, hM⟩, use M, assumption}
+end
+
+def bounded_below (S : set ℝ) := ∃ M : ℝ, ∀ s ∈ S, M ≤ s
+def lower_bound (S : set ℝ) (M : ℝ) := ∀ s ∈ S, M ≤ s
+
+theorem bdd_below_iff_have_lwr_bd (S : set ℝ) : (∃ M : ℝ, lower_bound S M) ↔ bounded_below S :=
+begin
+    split,
+    all_goals {rintro ⟨M, hM⟩, use M, assumption}
+end
+
+def bounded (S : set ℝ) := bounded_above S ∧ bounded_below S
+
+def sup (S : set ℝ) (x : ℝ) := upper_bound S x ∧ (∀ y : ℝ, y < x → ¬ (upper_bound S y))
+def inf (S : set ℝ) (x : ℝ) := lower_bound S x ∧ (∀ y : ℝ, x < y → ¬ (lower_bound S y))
+
+theorem unique_sup (S : set ℝ) : ∀ a b ∈ S, sup S a ∧ sup S b → a = b :=
+begin
+    unfold sup,
+    unfold upper_bound,
+    rintros a b ha hb ⟨⟨bda, supa⟩, ⟨bdb,supb⟩⟩,
+    have hc : ∀ s ∈ S, s ≤ a ∧ s ≤ b := by {intros s hs, from ⟨bda s hs, bdb s hs⟩},
+    from unique_max S a b ha hb hc
 end
 
 end M40002

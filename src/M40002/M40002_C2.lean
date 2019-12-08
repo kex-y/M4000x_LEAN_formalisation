@@ -151,11 +151,14 @@ def inf (S : set ℝ) (x : ℝ) := lower_bound S x ∧ (∀ y : ℝ, x < y → �
 
 theorem unique_sup (S : set ℝ) : ∀ a b ∈ S, sup S a ∧ sup S b → a = b :=
 begin
-    unfold sup,
-    unfold upper_bound,
     rintros a b ha hb ⟨⟨bda, supa⟩, ⟨bdb,supb⟩⟩,
     have hc : ∀ s ∈ S, s ≤ a ∧ s ≤ b := by {intros s hs, from ⟨bda s hs, bdb s hs⟩},
     from unique_max S a b ha hb hc
+end
+
+theorem completeness (S : set ℝ) (h : bounded_above S) : ∃ s : ℝ, sup S s :=
+begin
+    sorry
 end
 
 end M40002

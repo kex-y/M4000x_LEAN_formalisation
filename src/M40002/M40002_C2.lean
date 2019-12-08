@@ -8,9 +8,7 @@ namespace M40002
 
 variables {X Y : Type}
 
--- Countability
-
-def countable (A : set(X)) := ∃ f : ℕ → A, function.bijective f
+-- Natural number lemmas for countability
 
 lemma no_nat_lt_zero : ¬ (∃ x : ℕ, x < 0) := by {simp}
 
@@ -68,6 +66,10 @@ begin
     {exfalso, from hSempty x (this x) he},
     {exfalso, simp at he, contradiction}
 end
+
+-- Countability
+
+def countable (A : set(X)) := ∃ f : ℕ → A, function.bijective f
 
 lemma inverse_refl (f : X → Y) (g : Y → X): M40001.two_sided_inverse f g ↔ M40001.two_sided_inverse g f :=
 by {split,

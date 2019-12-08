@@ -99,6 +99,11 @@ begin
 end
 
 -- All infinite subsets of ℕ are countable
+
+def exist_min (S : set ℕ) := ∃ s ∈ S, (∀ x ∈ S, s ≤ x)
+
+-- noncomputable def min (S : set ℕ) (H : exist_min S) : S := classical.some (exist_min S) why doesn't this work
+
 theorem nat_sub_countable : ∀ (S : set ℕ), (∀ n : ℕ, ∃ s ∈ S, s > n) → countable S :=
 begin
     intros S h,

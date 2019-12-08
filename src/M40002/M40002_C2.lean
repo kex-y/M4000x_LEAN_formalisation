@@ -14,11 +14,11 @@ lemma no_nat_lt_zero : ¬ (∃ x : ℕ, x < 0) := by {simp}
 
 lemma nat_le_imp_lt_succ (k : ℕ) : ∀ (x : ℕ), x ≤ k ↔ x < k + 1 := by {intro, rwa nat.lt_succ_iff}
 
-lemma well_ordered_principle (S : set ℕ) (h : S ≠ ∅) : ∃ n ∈ S, ∀ s ∈ S, n ≤ s :=
+theorem well_ordered_principle (S : set ℕ) (h : S ≠ ∅) : ∃ n ∈ S, ∀ s ∈ S, n ≤ s :=
 begin
 -- We'll prove this by contradiction
     apply classical.by_contradiction, push_neg, intro ha,
--- The general idea is to show that B = ℕ which implies A = ∅ which is a contradiction
+-- The general idea is to show that B = ℕ which implies S = ∅ which is a contradiction
     let B := {n : ℕ | ∀ x ≤ n, x ∉ S},
     have : ∀ x : ℕ, x ∈ B,
 -- We will do a induction on x
@@ -44,7 +44,9 @@ begin
                 {cases h_1,
                     {assumption},
                     {exfalso, 
-                    have : k + 1 < x ∧ x ≤ nat.succ k := ⟨h_1, hx⟩, revert this, simp}
+                    have : k + 1 < x ∧ x ≤ nat.succ k := ⟨h_1, hx⟩, 
+                    revert this, simp
+                    }
                 }
             },
         rw this at hb,
@@ -52,7 +54,7 @@ begin
         rcases hc with ⟨y, ⟨hd, he⟩⟩,
         apply hk y,
         rwa nat_le_imp_lt_succ, assumption
-        },
+        }
         },
 -- Okay! Now we just have to show that B = ℕ → A = ∅
     apply h,

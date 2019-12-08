@@ -43,8 +43,7 @@ begin
                 {exfalso, from (hl h_1) hb},
                 {cases h_1,
                     {assumption},
-                    {exfalso, 
-                    have : k + 1 < x ∧ x ≤ nat.succ k := ⟨h_1, hx⟩, 
+                    {have : k + 1 < x ∧ x ≤ nat.succ k := ⟨h_1, hx⟩, 
                     revert this, simp
                     }
                 }
@@ -65,8 +64,8 @@ begin
         },
     ext, split,
     all_goals {intro he},
-    {exfalso, from hSempty x (this x) he},
-    {exfalso, simp at he, contradiction}
+    {from hSempty x (this x) he},
+    {simp at he, contradiction}
 end
 
 -- Countability

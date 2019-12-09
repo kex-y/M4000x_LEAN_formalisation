@@ -3,6 +3,6 @@
 Formalising lecture notes from 1st year Imperial Mathematics course.
 
 Currently mostly done with the M40001 lecture notes in LEAN!
-Staring to formalise M40002.
+Starting to formalise M40002.
 
 There are some other files too located around all over the place where I try to prove random theorems!

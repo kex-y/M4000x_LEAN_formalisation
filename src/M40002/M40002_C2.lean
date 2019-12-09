@@ -126,22 +126,14 @@ end
 def bounded_above (S : set ℝ) := ∃ M : ℝ, ∀ s ∈ S, s ≤ M
 def upper_bound (S : set ℝ) (M : ℝ) := ∀ s ∈ S, s ≤ M
 
-example (p : Prop) : p → p := by {finish}
-
 theorem bdd_above_iff_have_upr_bd (S : set ℝ) : (∃ M : ℝ, upper_bound S M) ↔ bounded_above S :=
-begin
-    split,
-    all_goals {rintro ⟨M, hM⟩, use M, assumption}
-end
+by {split, all_goals {rintro ⟨M, hM⟩, use M, assumption} }
 
 def bounded_below (S : set ℝ) := ∃ M : ℝ, ∀ s ∈ S, M ≤ s
 def lower_bound (S : set ℝ) (M : ℝ) := ∀ s ∈ S, M ≤ s
 
 theorem bdd_below_iff_have_lwr_bd (S : set ℝ) : (∃ M : ℝ, lower_bound S M) ↔ bounded_below S :=
-begin
-    split,
-    all_goals {rintro ⟨M, hM⟩, use M, assumption}
-end
+by {split, all_goals {rintro ⟨M, hM⟩, use M, assumption} }
 
 def bounded (S : set ℝ) := bounded_above S ∧ bounded_below S
 

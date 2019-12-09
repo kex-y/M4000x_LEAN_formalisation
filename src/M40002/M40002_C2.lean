@@ -123,6 +123,12 @@ begin
         {assumption}
 end
 
+theorem neg_set_min (S : set ℝ) (s : ℝ) (h0 : s ∈ S) (h1 : ∀ x ∈ S, x ≤ s): 
+    ∀ x ∈ {t : ℝ | -t ∈ S}, x ≥ -s ∧ -s ∈ {t : ℝ | -t ∈ S} :=
+begin
+    sorry
+end
+
 def bounded_above (S : set ℝ) := ∃ M : ℝ, ∀ s ∈ S, s ≤ M
 def upper_bound (S : set ℝ) (M : ℝ) := ∀ s ∈ S, s ≤ M
 
@@ -145,6 +151,17 @@ begin
     rintros a b ha hb ⟨⟨bda, supa⟩, ⟨bdb,supb⟩⟩,
     have hc : ∀ s ∈ S, s ≤ a ∧ s ≤ b := by {intros s hs, from ⟨bda s hs, bdb s hs⟩},
     from unique_max S a b ha hb hc
+end
+
+theorem neg_set_inf (S : set ℝ) (s : ℝ) (h : sup S s) (T : set ℝ := {t : ℝ | -t ∈ S}): 
+    inf T (-s) :=
+begin
+    sorry
+end
+
+theorem sup_def (S : set ℝ) (s : ℝ) : sup S s ↔ ∀ x : ℝ, (upper_bound S x → s ≤ x) :=
+begin
+    sorry
 end
 
 theorem completeness (S : set ℝ) (h : bounded_above S) : ∃ s : ℝ, sup S s :=

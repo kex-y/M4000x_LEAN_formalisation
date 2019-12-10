@@ -143,6 +143,10 @@ def upper_bound (S : set ℝ) (M : ℝ) := ∀ s ∈ S, s ≤ M
 theorem bdd_above_iff_have_upr_bd (S : set ℝ) : (∃ M : ℝ, upper_bound S M) ↔ bounded_above S :=
 by {split, all_goals {rintro ⟨M, hM⟩, use M, assumption} }
 
+theorem bigger_upperbound (S : set ℝ) (s : ℝ) (h : upper_bound S s) :
+    ∀ x : ℝ, s ≤ x → upper_bound S x :=
+by {intros x hx y hy, from le_trans (h y hy) hx}
+
 def bounded_below (S : set ℝ) := ∃ M : ℝ, ∀ s ∈ S, M ≤ s
 def lower_bound (S : set ℝ) (M : ℝ) := ∀ s ∈ S, M ≤ s
 
@@ -165,13 +169,18 @@ theorem neg_set_inf (S : set ℝ) (s : ℝ) (h : sup S s) :
     inf {t : ℝ | -t ∈ S} (-s) :=
 begin
     unfold inf,
-    unfold sup at h,
-    cases h,
+    cases h with hbd hlub,
     split,
     unfold lower_bound,
-    have :  ∀ (x : ℝ), x ∈ {t : ℝ | -t ∈ S} → -s ≤ x ∧ -s ∈ {t : ℝ | -t ∈ S},
-    apply (neg_set_min S s),
-    all_goals {sorry}
+        {intros x hx,
+        apply classical.by_contradiction,
+        intro h, push_neg at h,
+        have : -s ≤ x := by {rw neg_le, from (hbd (-x) hx)},
+        apply not_le_of_lt h, assumption
+        },
+        {intros x hx,
+        sorry,
+        }
 end
 
 theorem sup_def (S : set ℝ) (s : ℝ) : sup S s ↔ upper_bound S s ∧ ∀ x : ℝ, (upper_bound S x → s ≤ x) :=

@@ -124,9 +124,17 @@ begin
 end
 
 theorem neg_set_min (S : set ℝ) (s : ℝ) (h0 : s ∈ S) (h1 : ∀ x ∈ S, x ≤ s): 
-    ∀ x ∈ {t : ℝ | -t ∈ S}, x ≥ -s ∧ -s ∈ {t : ℝ | -t ∈ S} :=
+    ∀ x ∈ {t : ℝ | -t ∈ S}, -s ≤ x ∧ -s ∈ {t : ℝ | -t ∈ S} :=
 begin
-    sorry
+    intros x hx,
+    split,
+    {rwa neg_le,
+    rw set.mem_set_of_eq at hx,
+    apply h1, assumption
+    },
+    {rwa set.mem_set_of_eq,
+    simpa
+    }
 end
 
 def bounded_above (S : set ℝ) := ∃ M : ℝ, ∀ s ∈ S, s ≤ M
@@ -153,15 +161,39 @@ begin
     from unique_max S a b ha hb hc
 end
 
-theorem neg_set_inf (S : set ℝ) (s : ℝ) (h : sup S s) (T : set ℝ := {t : ℝ | -t ∈ S}): 
-    inf T (-s) :=
+theorem neg_set_inf (S : set ℝ) (s : ℝ) (h : sup S s) : 
+    inf {t : ℝ | -t ∈ S} (-s) :=
 begin
-    sorry
+    unfold inf,
+    unfold sup at h,
+    cases h,
+    split,
+    unfold lower_bound,
+    have :  ∀ (x : ℝ), x ∈ {t : ℝ | -t ∈ S} → -s ≤ x ∧ -s ∈ {t : ℝ | -t ∈ S},
+    apply (neg_set_min S s),
+    all_goals {sorry}
 end
 
-theorem sup_def (S : set ℝ) (s : ℝ) : sup S s ↔ ∀ x : ℝ, (upper_bound S x → s ≤ x) :=
+theorem sup_def (S : set ℝ) (s : ℝ) : sup S s ↔ upper_bound S s ∧ ∀ x : ℝ, (upper_bound S x → s ≤ x) :=
 begin
-    sorry
+    unfold sup,
+    split,
+        {rintros ⟨ha, hb⟩,
+        split,
+            {intros x hx,
+            from ha x hx
+            },
+            {intros x hx,
+            suffices : ¬ x < s, revert this, simp,
+            intro, apply hb x, repeat {assumption}}
+        },
+        {rintros ⟨ha, hb⟩, split,
+            {assumption},
+            {intros x hx hc,
+            replace hx : ¬ s ≤ x := by {push_neg, assumption},
+            from hx (hb x hc)
+            }
+        }
 end
 
 theorem completeness (S : set ℝ) (h : bounded_above S) : ∃ s : ℝ, sup S s :=

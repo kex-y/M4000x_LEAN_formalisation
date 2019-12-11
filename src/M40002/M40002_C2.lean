@@ -153,6 +153,20 @@ def lower_bound (S : set ℝ) (M : ℝ) := ∀ s ∈ S, M ≤ s
 theorem bdd_below_iff_have_lwr_bd (S : set ℝ) : (∃ M : ℝ, lower_bound S M) ↔ bounded_below S :=
 by {split, all_goals {rintro ⟨M, hM⟩, use M, assumption} }
 
+theorem upr_bd_neg_set_lwr_bd (S : set ℝ) (s : ℝ) : upper_bound S s ↔ lower_bound {t : ℝ | -t ∈ S} (-s) :=
+begin
+    split,
+        all_goals {intros h x hx},
+        {rw set.mem_set_of_eq at hx,
+        suffices : (-x) ≤ s, rwa neg_le,
+        from h (-x) hx
+        },
+        unfold lower_bound at h,
+        suffices : (-s) ≤ (-x), simp at this, assumption,
+        have : (-x) ∈ {t : ℝ | -t ∈ S} := by {rwa set.mem_set_of_eq, simp, assumption},
+        from h (-x) this
+end
+
 def bounded (S : set ℝ) := bounded_above S ∧ bounded_below S
 
 def sup (S : set ℝ) (x : ℝ) := upper_bound S x ∧ (∀ y : ℝ, y < x → ¬ (upper_bound S y))
@@ -237,7 +251,27 @@ end
 
 theorem completeness_below (S : set ℝ) (h : bounded_below S) (h1 : S ≠ ∅) : ∃ s : ℝ, inf S s :=
 begin
-    sorry
+    let T := {t : ℝ | -t ∈ S},
+    rw ←bdd_below_iff_have_lwr_bd at h,
+    cases h with M hM,
+    have hα : upper_bound T (-M) :=
+        by {rwa upr_bd_neg_set_lwr_bd,
+        simp, assumption
+        },
+    have hβ : bounded_above T := by {rw ←bdd_above_iff_have_upr_bd, use (-M), assumption},
+    have hγ : T ≠ ∅,
+        by {cases (set.exists_mem_of_ne_empty h1), 
+        rw set.ne_empty_iff_exists_mem,
+        use (-w), rwa set.mem_set_of_eq, simp, assumption
+        },
+    have hε : ∃ k : ℝ, sup T k := completeness T hβ hγ,
+    cases hε with k hk,
+    use (-k),
+    suffices : S = {t : ℝ | -t ∈ T},
+        rw this,
+        from neg_set_inf T k hk,
+    ext, split,
+        all_goals {repeat {rw set.mem_set_of_eq}, simp}
 end
 
 

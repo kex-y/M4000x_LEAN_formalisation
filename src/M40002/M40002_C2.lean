@@ -165,13 +165,25 @@ begin
     from unique_max S a b ha hb hc
 end
 
+lemma sup_non_empty (S : set ℝ) (s : ℝ) (h : sup S s) : S ≠ ∅ :=
+begin
+    cases h with ha hb,
+    intro, 
+    have hc : upper_bound S (s - 1) := 
+        by {intros x hx,
+        rw a at hx,
+        simp at hx, contradiction
+        },
+    have hd : s - 1 < s := by {simp, by norm_cast},
+    replace hb : ¬ upper_bound S (s - 1) := by {apply hb (s - 1) hd},
+    contradiction
+end
+
 theorem neg_set_inf (S : set ℝ) (s : ℝ) (h : sup S s) : 
     inf {t : ℝ | -t ∈ S} (-s) :=
 begin
-    unfold inf,
     cases h with hbd hlub,
     split,
-    unfold lower_bound,
         {intros x hx,
         apply classical.by_contradiction,
         intro h, push_neg at h,
@@ -179,7 +191,16 @@ begin
         apply not_le_of_lt h, assumption
         },
         {intros x hx,
-        sorry,
+        have : ∃ y : ℝ, y ∈ S := by {apply set.exists_mem_of_ne_empty, from sup_non_empty S s ⟨hbd, hlub⟩}, 
+        unfold lower_bound, push_neg,
+        cases this with y hy,
+        use (-y), split,
+            {rw set.mem_set_of_eq,
+            simp, assumption
+            },
+            {unfold upper_bound at hbd,
+            sorry
+            }
         }
 end
 

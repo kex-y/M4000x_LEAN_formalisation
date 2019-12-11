@@ -165,7 +165,7 @@ begin
     from unique_max S a b ha hb hc
 end
 
-lemma sup_non_empty (S : set ℝ) (s : ℝ) (h : sup S s) : S ≠ ∅ :=
+theorem sup_non_empty (S : set ℝ) (s : ℝ) (h : sup S s) : S ≠ ∅ :=
 begin
     cases h with ha hb,
     intro, 
@@ -190,17 +190,21 @@ begin
         have : -s ≤ x := by {rw neg_le, from (hbd (-x) hx)},
         apply not_le_of_lt h, assumption
         },
-        {intros x hx,
-        have : ∃ y : ℝ, y ∈ S := by {apply set.exists_mem_of_ne_empty, from sup_non_empty S s ⟨hbd, hlub⟩}, 
-        unfold lower_bound, push_neg,
-        cases this with y hy,
-        use (-y), split,
-            {rw set.mem_set_of_eq,
-            simp, assumption
+        {intros y hy hlbd,
+        have : upper_bound S (-y) := 
+            by {intros x hx,
+            apply classical.by_contradiction,
+            intro h, push_neg at h,
+            unfold lower_bound at hlbd,
+            have : y ≤ -x := 
+                by {replace hx : -x ∈ {t : ℝ | -t ∈ S},
+                    rw set.mem_set_of_eq, simp, assumption,
+                from hlbd (-x) hx
+                },
+            apply not_le_of_lt h, rwa le_neg
             },
-            {unfold upper_bound at hbd,
-            sorry
-            }
+        replace hy : -y < s := by {rwa neg_lt},
+        from hlub (-y) hy this
         }
 end
 
@@ -226,9 +230,15 @@ begin
         }
 end
 
-theorem completeness (S : set ℝ) (h : bounded_above S) : ∃ s : ℝ, sup S s :=
+theorem completeness (S : set ℝ) (h : bounded_above S) (h1 : S ≠ ∅) : ∃ s : ℝ, sup S s :=
 begin
     sorry
 end
+
+theorem completeness_below (S : set ℝ) (h : bounded_below S) (h1 : S ≠ ∅) : ∃ s : ℝ, inf S s :=
+begin
+    sorry
+end
+
 
 end M40002

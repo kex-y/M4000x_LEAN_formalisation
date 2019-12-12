@@ -1,7 +1,6 @@
 import tactic.ring
 import data.rat.basic
 import data.rat.cast
-import tactic.linarith
 
 /- Section
 1.4 An Application

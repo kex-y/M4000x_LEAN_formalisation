@@ -302,9 +302,28 @@ end
 -- The other triangle inequalities too?
 
 -- Mentimeter Q 8
-example (a x : ℝ) (ε : ℝ) (hε : ε > 0) : abs (x - a) < ε ↔ x = a :=
+example (a x : ℝ) : (∀ ε : ℝ, 0 < ε → abs (x - a) < ε) ↔ x = a :=
 begin
-    sorry
+    split,
+        {intro h,
+        apply classical.by_contradiction,
+        intro ha,
+        have : x - a ≠ 0 := 
+            by {revert ha,
+            from sub_ne_zero.mpr
+            },
+        have hb : abs (x - a) < abs (x - a) := 
+            by {from h (abs (x - a)) (abs_pos_iff.mpr this)},
+        revert hb, finish
+        },
+        {intro h,
+        have : x - a = 0 :=
+            by {revert h, 
+            from sub_eq_zero.mpr
+            },
+        rwa this,
+        simp
+        }
 end
 
 

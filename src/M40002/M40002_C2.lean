@@ -228,7 +228,6 @@ end
 
 theorem sup_def (S : set ℝ) (s : ℝ) : sup S s ↔ upper_bound S s ∧ ∀ x : ℝ, (upper_bound S x → s ≤ x) :=
 begin
-    unfold sup,
     split,
         {rintros ⟨ha, hb⟩,
         split,
@@ -250,7 +249,23 @@ end
 
 theorem inf_def (S : set ℝ) (s : ℝ) : inf S s ↔ lower_bound S s ∧ ∀ x : ℝ, (lower_bound S x → x ≤ s) :=
 begin -- proof essentially identical to that of sup_def
-    sorry
+        split,
+        {rintros ⟨ha, hb⟩,
+        split,
+            {intros x hx,
+            from ha x hx
+            },
+            {intros x hx,
+            suffices : ¬ s < x, revert this, simp,
+            intro, apply hb x, repeat {assumption}}
+        },
+        {rintros ⟨ha, hb⟩, split,
+            {assumption},
+            {intros x hx hc,
+            replace hx : ¬ x ≤ s := by {push_neg, assumption},
+            from hx (hb x hc)
+            }
+        }
 end
 
 theorem completeness (S : set ℝ) (h : bounded_above S) (h1 : S ≠ ∅) : ∃ s : ℝ, sup S s :=
@@ -296,7 +311,7 @@ end
 theorem triangle_inequality : ∀ a b : ℝ, abs (a + b) ≤ abs a + abs b :=
 begin
     intros a b,
-    sorry
+    from abs_add a b -- Maybe do this myself?
 end
 
 -- The other triangle inequalities too?

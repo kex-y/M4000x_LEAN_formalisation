@@ -137,6 +137,8 @@ begin
     }
 end
 
+-- Defining bounded in preperation for supremum and infimums
+
 def bounded_above (S : set ℝ) := ∃ M : ℝ, ∀ s ∈ S, s ≤ M
 def upper_bound (S : set ℝ) (M : ℝ) := ∀ s ∈ S, s ≤ M
 
@@ -169,9 +171,11 @@ end
 
 def bounded (S : set ℝ) := bounded_above S ∧ bounded_below S
 
-def sup (S : set ℝ) (x : ℝ) := upper_bound S x ∧ (∀ y : ℝ, y < x → ¬ (upper_bound S y))
+-- Okay, so I've switched around the definition of supremums but dw, the two definitions are equiv.
+def sup (S : set ℝ) (x : ℝ) := upper_bound S x ∧ (∀ y : ℝ, y < x → ¬ (upper_bound S y)) -- Check out sup_def for the definition from the lecture notes
 def inf (S : set ℝ) (x : ℝ) := lower_bound S x ∧ (∀ y : ℝ, x < y → ¬ (lower_bound S y))
 
+-- Exercise 2.24
 theorem unique_sup (S : set ℝ) : ∀ a b ∈ S, sup S a ∧ sup S b → a = b :=
 begin
     rintros a b ha hb ⟨⟨bda, supa⟩, ⟨bdb,supb⟩⟩,
@@ -244,11 +248,17 @@ begin
         }
 end
 
+theorem inf_def (S : set ℝ) (s : ℝ) : inf S s ↔ lower_bound S s ∧ ∀ x : ℝ, (lower_bound S x → x ≤ s) :=
+begin -- proof essentially identical to that of sup_def
+    sorry
+end
+
 theorem completeness (S : set ℝ) (h : bounded_above S) (h1 : S ≠ ∅) : ∃ s : ℝ, sup S s :=
 begin
     sorry
 end
 
+-- Exercise 2.29
 theorem completeness_below (S : set ℝ) (h : bounded_below S) (h1 : S ≠ ∅) : ∃ s : ℝ, inf S s :=
 begin
     let T := {t : ℝ | -t ∈ S},
@@ -272,6 +282,29 @@ begin
         from neg_set_inf T k hk,
     ext, split,
         all_goals {repeat {rw set.mem_set_of_eq}, simp}
+end
+
+theorem sqrt_three_in_R : ∃ x : ℝ, x ^ 2 = 3 :=
+begin
+    sorry
+end
+
+-- TO DO : Alternative construction : Dedekind cuts
+
+-- Triangle inequalities
+
+theorem triangle_inequality : ∀ a b : ℝ, abs (a + b) ≤ abs a + abs b :=
+begin
+    intros a b,
+    sorry
+end
+
+-- The other triangle inequalities too?
+
+-- Mentimeter Q 8
+example (a x : ℝ) (ε : ℝ) (hε : ε > 0) : abs (x - a) < ε ↔ x = a :=
+begin
+    sorry
 end
 
 

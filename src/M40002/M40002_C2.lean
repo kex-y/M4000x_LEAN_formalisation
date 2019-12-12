@@ -5,7 +5,6 @@ import M40001.M40001_4
 
 namespace M40002
 
-
 variables {X Y : Type}
 
 -- Natural number lemmas for countability
@@ -316,7 +315,7 @@ end
 
 -- The other triangle inequalities too?
 
--- Mentimeter Q 8
+-- Mentimeter Q 9
 example (a x : ℝ) : (∀ ε : ℝ, 0 < ε → abs (x - a) < ε) ↔ x = a :=
 begin
     split,

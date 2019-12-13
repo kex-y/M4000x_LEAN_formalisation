@@ -159,3 +159,6 @@ end
 
 -- use this when confused
 -- set_option pp.notation false
+
+-- show what simp did
+-- set_option trace.simplify.rewrite true

@@ -62,7 +62,18 @@ begin
           simpa using this,
         refine le_of_lt (div_pos (by linarith) _),
         repeat {norm_cast, linarith},
-        }
+        },
+    rw [abs_of_nonneg h0, ha],
+    suffices : (5 + ↑n) / (1 + ↑n) - 1 < ε,
+        simpa using this,
+    rw (show (5 + ↑n :ℝ) = 4 + 1 + ↑n, by linarith),
+    rw [add_assoc, add_div, div_self], 
+    {suffices : 4 / (1 + ↑n) < ε,
+        simpa using this,
+    have : 1 / (1 + n) ≤ 1 / N :=
+        by {sorry},
+    sorry,
+    }
 end
 
 

@@ -73,7 +73,8 @@ begin
     have : 1 / (1 + n) ≤ 1 / N :=
         by {sorry},
     sorry,
-    }
+    },
+    sorry,
 end
 
 

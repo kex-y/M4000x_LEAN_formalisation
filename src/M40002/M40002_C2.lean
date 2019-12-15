@@ -316,7 +316,7 @@ end
 -- The other triangle inequalities too?
 
 -- Mentimeter Q 9
-example (a x : ℝ) : (∀ ε : ℝ, 0 < ε → abs (x - a) < ε) ↔ x = a :=
+theorem equality_def (a x : ℝ) : (∀ ε : ℝ, 0 < ε → abs (x - a) < ε) ↔ x = a :=
 begin
     split,
         {intro h,

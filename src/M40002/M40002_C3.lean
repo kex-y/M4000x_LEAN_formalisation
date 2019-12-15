@@ -1,7 +1,7 @@
 -- M40002 (Analysis I) Chapter 3. Sequences
 
 import data.real.basic
-import M40001.M40001_4
+import M40002.M40002_C2
 
 namespace M40002
 
@@ -76,6 +76,45 @@ begin
     },
     sorry,
 end
+
+--set_option trace.simplify.rewrite true
+-- Limits are unique!
+theorem unique_lim (a : ℕ → ℝ) (b c : ℝ) (hb : a ~> b) (hc : a ~> c) : b = c :=
+begin
+    have : ∀ (ε : ℝ), ε > 0 → (∃ (N : ℕ), ∀ (n : ℕ), n ≥ N → abs (b - c) < ε) :=
+        by {intros ε hε,
+        cases hb (ε / 2) (half_pos hε) with N1 hN1,
+        cases hc (ε / 2) (half_pos hε) with N2 hN2,
+        use max N1 N2,
+        intros n hn,
+        have : N1 ≤ n ∧ N2 ≤ n := 
+                by {split, 
+                    {apply le_trans (le_max_left N1 N2), rwa ge_from_le at hn},
+                    {apply le_trans (le_max_right N1 N2), rwa ge_from_le at hn}
+                    },
+        replace hb : abs (a n - b) < (ε / 2) := hN1 n this.left,
+        replace hc : abs (a n - c) < (ε / 2) := hN2 n this.right,
+        rwa abs_sub (a n) b at hb,
+        suffices : abs (b - (a n) + (a n) - c) < ε,
+            by {simp at this, from this},
+        have hd : abs (a n - c) + abs (b - a n) < ε / 2 + ε / 2 := add_lt_add hc hb,
+        simp at hd,
+        have he : abs (b -a n + a n + -c) ≤ abs (b + -a n) + abs (a n + -c) :=
+            by {suffices : abs (b + -a n + (a n + -c)) ≤ abs (b + -a n) + abs (a n + -c),
+                    simp at this, rwa [sub_eq_add_neg b (a n), neg_add_cancel_right b (a n)],
+                from abs_add (b + -a n) (a n + -c)},
+        apply lt_of_le_of_lt he hd
+        },
+    have ha : ∀ (ε : ℝ), ε > 0 →  abs (b - c) < ε :=
+        by {intros ε hε,
+        cases this ε hε with N hN,
+        have ha : N + 1 ≥ N := by {simp},
+        from hN (N + 1) ha
+        },
+    rwa ←(equality_def c b)
+end
+
+
 
 
 end M40002

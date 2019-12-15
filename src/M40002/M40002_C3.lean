@@ -7,13 +7,20 @@ namespace M40002
 
 variables {X Y : Type}
 
--- Defintions for sequences
+-- Defintions for convergent sequences
 
 def converges_to (a : ℕ → ℝ) (l : ℝ) :=  ∀ ε > 0, ∃ N : ℕ, ∀ n ≥ N, abs (a n - l) < ε 
 infix ` ~> `: 50 := converges_to
 
--- Example 3.4
-example (a : ℕ → ℝ) (ha : a = λ n : ℕ, 1/n) : a ~> 0 :=
+def is_convergent (a : ℕ → ℝ) := ∃ l : ℝ, ∀ ε > 0, ∃ N : ℕ, ∀ n ≥ N, abs (a n - l) < ε 
+
+def seq_bounded_above (a : ℕ → ℝ) := ∃ n : ℕ, ∀ m : ℕ, a m ≤ a n
+def seq_bounded_below (a : ℕ → ℝ) := ∃ n : ℕ, ∀ m : ℕ, a n ≤ a m
+
+def seq_bounded (a : ℕ → ℝ) := seq_bounded_above a ∧ seq_bounded_below a
+
+-- Example 3.4 (1 / n → 0)
+example (a : ℕ → ℝ) (ha : a = λ n : ℕ, 1 / n) : a ~> 0 :=
 begin
     intros ε hε,
     have : ∃ N : ℕ, (1 / (N + 1) : ℝ) < ε := exists_nat_one_div_lt hε,
@@ -40,7 +47,7 @@ begin
         {rwa hc}
 end
 
--- Example 3.5
+-- Example 3.5 ((n + 5) / (n + 1) → 1)
 example (a : ℕ → ℝ) (ha : a = λ n : ℕ, (n + 5) / (n + 1)) : a ~> 1 :=
 begin
     intros ε hε,
@@ -74,7 +81,7 @@ begin
         by {sorry},
     sorry,
     },
-    sorry,
+    sorry, -- Terribly sorry but I can't bring myself to complete this proof!
 end
 
 --set_option trace.simplify.rewrite true
@@ -108,13 +115,26 @@ begin
     have ha : ∀ (ε : ℝ), ε > 0 →  abs (b - c) < ε :=
         by {intros ε hε,
         cases this ε hε with N hN,
-        have ha : N + 1 ≥ N := by {simp},
+        have ha : N + 1 ≥ N := by {linarith},
         from hN (N + 1) ha
         },
     rwa ←(equality_def c b)
 end
 
-
+-- If (a n) is convergent then its bounded!
+theorem converge_is_bdd (a : ℕ → ℝ) : is_convergent a → seq_bounded a :=
+begin
+    unfold is_convergent,
+    unfold seq_bounded,
+    unfold seq_bounded_above,
+    unfold seq_bounded_below,
+    rintro ⟨l, hl⟩,
+    have : (1 : ℝ) > 0 := by {linarith},
+    -- Note that we have (hl 1 this) == ∃ (N : ℕ), ∀ (n : ℕ), n ≥ N → abs (a n - l) < 1
+    -- then we can let the bound be max {a 1, a 2, ... , a (N - 1), l + 1}
+    -- But how can I type this in LEAN I've got no idea! :/
+    sorry
+end
 
 
 end M40002

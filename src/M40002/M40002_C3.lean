@@ -9,7 +9,7 @@ variables {X Y : Type}
 -- Defintions for convergent sequences
 
 def converges_to (a : ℕ → ℝ) (l : ℝ) :=  ∀ ε > 0, ∃ N : ℕ, ∀ n ≥ N, abs (a n - l) < ε 
-notation a ` ~> ` l := converges_to a l
+notation a ` ⇒ ` l := converges_to a l
 
 def is_convergent (a : ℕ → ℝ) := ∃ l : ℝ, ∀ ε > 0, ∃ N : ℕ, ∀ n ≥ N, abs (a n - l) < ε 
 
@@ -19,7 +19,7 @@ def seq_bounded_below (a : ℕ → ℝ) := ∃ n : ℕ, ∀ m : ℕ, a n ≤ a m
 def seq_bounded (a : ℕ → ℝ) := seq_bounded_above a ∧ seq_bounded_below a
 
 -- Example 3.4 (1 / n → 0)
-example (a : ℕ → ℝ) (ha : a = λ n : ℕ, 1 / n) : a ~> 0 :=
+example (a : ℕ → ℝ) (ha : a = λ n : ℕ, 1 / n) : a ⇒ 0 :=
 begin
     intros ε hε,
     have : ∃ N : ℕ, (1 / (N + 1) : ℝ) < ε := exists_nat_one_div_lt hε,
@@ -47,7 +47,7 @@ begin
 end
 
 -- Example 3.5 ((n + 5) / (n + 1) → 1)
-example (a : ℕ → ℝ) (ha : a = λ n : ℕ, (n + 5) / (n + 1)) : a ~> 1 :=
+example (a : ℕ → ℝ) (ha : a = λ n : ℕ, (n + 5) / (n + 1)) : a ⇒ 1 :=
 begin
     intros ε hε,
     have : ∃ N : ℕ, (4 / N : ℝ) < ε :=
@@ -83,8 +83,8 @@ begin
     sorry, -- Terribly sorry but I can't bring myself to complete this proof!
 end
 
--- Limits are unique!
-theorem unique_lim (a : ℕ → ℝ) (b c : ℝ) (hb : a ~> b) (hc : a ~> c) : b = c :=
+-- Limits are unique! (I gotta admit this my proof is very terrible with alot of unnecessary lines :/)
+theorem unique_lim (a : ℕ → ℝ) (b c : ℝ) (hb : a ⇒ b) (hc : a ⇒ c) : b = c :=
 begin
     have : ∀ (ε : ℝ), ε > 0 → (∃ (N : ℕ), ∀ (n : ℕ), n ≥ N → abs (b - c) < ε) :=
         by {intros ε hε,
@@ -143,11 +143,14 @@ instance seq_has_add : has_add seq := apply_instance
 -/
 
 -- Defining addition for sequences
-def lim_add (a : ℕ → ℝ) (b : ℕ → ℝ) := λ n : ℕ, a n + b n
-notation a ` + ` b := lim_add a b
+def seq_add_seq (a : ℕ → ℝ) (b : ℕ → ℝ) := λ n : ℕ, a n + b n
+notation a ` + ` b := seq_add_seq a b
+
+def seq_add_real (a : ℕ → ℝ) (b : ℝ) := λ n : ℕ, a n + b
+notation a ` + ` b := seq_add_real a b
 
 -- Algebra of limits
-theorem add_lim_conv (a : ℕ → ℝ) (b : ℕ → ℝ) (l m : ℝ) : a ~> l ∧ b ~> m → (a + b) ~> (l + m) :=
+theorem add_lim_conv (a b : ℕ → ℝ) (l m : ℝ) : a ⇒ l ∧ b ⇒ m → (a + b) ⇒ (l + m) :=
 begin
     rintros ⟨ha, hb⟩ ε hε,
     have : ε / 2 > 0 := half_pos hε,
@@ -156,8 +159,8 @@ begin
     let N : ℕ := max N₁ N₂,
     use N,
     intros n hn,
-    unfold lim_add,
     have hrw : a n + b n - (l + m) = (a n - l) + (b n - m) := by {linarith},
+    unfold seq_add_seq,
     rw hrw,
     have hmax : N ≥ N₁ ∧ N ≥ N₂ := 
         by {split,
@@ -168,9 +171,30 @@ begin
         by {from add_lt_add (hN₁ n (ge_trans hn hmax.left)) (hN₂ n (ge_trans hn hmax.right))},
     rwa add_halves' ε at h
 end
+ 
+lemma diff_seq_is_zero (a b : ℕ → ℝ) (l : ℝ) (h : a ⇒ l) : a = b + l → b ⇒ 0 :=
+begin
+    unfold seq_add_real, unfold converges_to,
+    unfold converges_to at h,
+    intro ha,
+    rw ha at h, simp at h,
+    suffices : ∀ (ε : ℝ), 0 < ε → (∃ (N : ℕ), ∀ (n : ℕ), N ≤ n → abs (b n) < ε),
+        simpa,
+    assumption
+end
 
+-- Defining multiplication of sequences
+def seq_mul_seq (a : ℕ → ℝ) (b : ℕ → ℝ) := λ n : ℕ, a n * b n
+notation a ` × ` b := seq_mul_seq a b
+
+def seq_mul_real (a : ℕ → ℝ) (b : ℝ) := λ n : ℕ, a n * b
+notation a ` × ` b := seq_mul_real a b
+
+theorem mul_lim_conv (a b : ℕ → ℝ) (l m : ℝ) (ha : a ⇒ l) (hb : b ⇒ m) : (a × b) ⇒ l * m :=
+begin
+    sorry
+end
 --set_option trace.simplify.rewrite true
-
 
 
 end M40002

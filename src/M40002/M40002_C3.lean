@@ -4,8 +4,6 @@ import M40002.M40002_C2
 
 namespace M40002
 
-variables {X Y : Type}
-
 -- Defintions for convergent sequences
 
 def converges_to (a : ℕ → ℝ) (l : ℝ) :=  ∀ ε > 0, ∃ N : ℕ, ∀ n ≥ N, abs (a n - l) < ε 
@@ -222,6 +220,25 @@ notation a ` ↓ ` l := mono_decreasing a l
 
 -- Monotone increasing and bounded means convergent
 theorem mono_increaseing_means_conv (a : ℕ → ℝ) (h : mono_increasing a) : is_convergent a :=
+begin
+    sorry
+end
+
+-- Defining order on sequences
+def le_seq (a b : ℕ → ℝ) := ∀ n : ℕ, a n ≤ b n
+notation a ` ≤* ` b := le_seq a b
+
+def lt_seq (a b : ℕ → ℝ) := ∀ n : ℕ, a n < b n
+notation a ` <* ` b := lt_seq a b
+
+def ge_seq (a b : ℕ → ℝ) := ∀ n : ℕ, a n ≥ b n
+notation a ` ≥* ` b := ge_seq a b
+
+def gt_seq (a b : ℕ → ℝ) := ∀ n : ℕ, a n > b n
+notation a ` >* ` b := gt_seq a b
+
+-- Comparison of sequences
+theorem le_lim (a b : ℕ → ℝ) (l m : ℝ) (ha : a ⇒ l) (hb : b ⇒ m) : (a ≤* b) → l ≤ m :=
 begin
     sorry
 end

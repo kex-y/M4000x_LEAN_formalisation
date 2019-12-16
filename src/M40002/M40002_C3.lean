@@ -224,7 +224,7 @@ begin
     sorry
 end
 
--- Defining order on sequences
+-- Defining order on sequences (is this necessary?)
 def le_seq (a b : ℕ → ℝ) := ∀ n : ℕ, a n ≤ b n
 notation a ` ≤* ` b := le_seq a b
 

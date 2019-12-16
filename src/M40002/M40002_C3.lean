@@ -190,6 +190,11 @@ notation a ` × ` b := seq_mul_real a b
 
 theorem mul_lim_conv (a b : ℕ → ℝ) (l m : ℝ) (ha : a ⇒ l) (hb : b ⇒ m) : (a × b) ⇒ l * m :=
 begin
+    let e := a + -l,
+    let f := b + -m,
+    have he : a = e + l := by {sorry},
+    have hf : b = f + m := by {sorry},
+    rw [he, hf], -- Emm, this ain't right :/
     sorry
 end
 
@@ -240,8 +245,30 @@ notation a ` >* ` b := gt_seq a b
 -- Comparison of sequences
 theorem le_lim (a b : ℕ → ℝ) (l m : ℝ) (ha : a ⇒ l) (hb : b ⇒ m) : (a ≤* b) → l ≤ m :=
 begin
-    sorry
+    rw ←not_lt,
+    intros h hlt,
+    have hδ : (l - m) / 2 > 0 := half_pos (sub_pos.mpr hlt),
+    cases ha ((l - m) / 2) hδ with N₁ hN₁,
+    cases hb ((l - m) / 2) hδ with N₂ hN₂,
+    let N := max N₁ N₂,
+    have hmax : N ≥ N₁ ∧ N ≥ N₂ := 
+        by {split,
+            all_goals {rwa [ge_iff_le, le_max_iff], tauto}},
+    suffices : abs (a N - l) + abs (b N - m) < (l - m) / 2,
+        {have hα : abs (a N - l - b N + m) < (l - m) / 2 :=
+            by {rw abs_sub (b N) m at this,
+            have hβ : a N - l - b N + m = a N - l + (m - b N) := by simp,
+            have hγ : abs (a N - l + (m - b N)) < (l - m) / 2 :=
+                 lt_of_le_of_lt (abs_add (a N - l) (m - b N)) this,
+            rwa ←hβ at hγ
+            },
+        have hα : abs (a N - l - b N + m) = abs (a N - b N - (l - m)) := by simp,
+        sorry
+        }
 end
+
+set_option trace.simplify.rewrite true
+example (a b c d : ℝ) : a - b - c + d = a - b + (d - c):= by {simp,}
 
 --set_option trace.simplify.rewrite true
 

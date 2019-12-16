@@ -243,8 +243,6 @@ begin
     sorry
 end
 
--- test message
-
 --set_option trace.simplify.rewrite true
 
 

@@ -1,6 +1,5 @@
 -- M40002 (Analysis I) Chapter 3. Sequences
 
-import data.real.basic
 import M40002.M40002_C2
 
 namespace M40002
@@ -10,7 +9,7 @@ variables {X Y : Type}
 -- Defintions for convergent sequences
 
 def converges_to (a : ℕ → ℝ) (l : ℝ) :=  ∀ ε > 0, ∃ N : ℕ, ∀ n ≥ N, abs (a n - l) < ε 
-infix ` ~> `: 50 := converges_to
+notation a ` ~> ` l := converges_to a l
 
 def is_convergent (a : ℕ → ℝ) := ∃ l : ℝ, ∀ ε > 0, ∃ N : ℕ, ∀ n ≥ N, abs (a n - l) < ε 
 
@@ -84,23 +83,22 @@ begin
     sorry, -- Terribly sorry but I can't bring myself to complete this proof!
 end
 
---set_option trace.simplify.rewrite true
 -- Limits are unique!
 theorem unique_lim (a : ℕ → ℝ) (b c : ℝ) (hb : a ~> b) (hc : a ~> c) : b = c :=
 begin
     have : ∀ (ε : ℝ), ε > 0 → (∃ (N : ℕ), ∀ (n : ℕ), n ≥ N → abs (b - c) < ε) :=
         by {intros ε hε,
-        cases hb (ε / 2) (half_pos hε) with N1 hN1,
-        cases hc (ε / 2) (half_pos hε) with N2 hN2,
-        use max N1 N2,
+        cases hb (ε / 2) (half_pos hε) with N₁ hN₁,
+        cases hc (ε / 2) (half_pos hε) with N₂ hN₂,
+        use max N₁ N₂,
         intros n hn,
-        have : N1 ≤ n ∧ N2 ≤ n := 
+        have : N₁ ≤ n ∧ N₂ ≤ n := 
                 by {split, 
-                    {apply le_trans (le_max_left N1 N2), rwa ge_from_le at hn},
-                    {apply le_trans (le_max_right N1 N2), rwa ge_from_le at hn}
+                    {apply le_trans (le_max_left N₁ N₂), rwa ge_from_le at hn},
+                    {apply le_trans (le_max_right N₁ N₂), rwa ge_from_le at hn}
                     },
-        replace hb : abs (a n - b) < (ε / 2) := hN1 n this.left,
-        replace hc : abs (a n - c) < (ε / 2) := hN2 n this.right,
+        replace hb : abs (a n - b) < (ε / 2) := hN₁ n this.left,
+        replace hc : abs (a n - c) < (ε / 2) := hN₂ n this.right,
         rwa abs_sub (a n) b at hb,
         suffices : abs (b - (a n) + (a n) - c) < ε,
             by {simp at this, from this},
@@ -121,7 +119,7 @@ begin
     rwa ←(equality_def c b)
 end
 
--- If (a n) is convergent then its bounded!
+-- If (a n) is convergent then its bounded
 theorem converge_is_bdd (a : ℕ → ℝ) : is_convergent a → seq_bounded a :=
 begin
     unfold is_convergent,
@@ -135,6 +133,44 @@ begin
     -- But how can I type this in LEAN I've got no idea! :/
     sorry
 end
+
+/- Can I define the addition of sequences through instances?
+def seq := ℕ → ℝ
+
+def seq_add : seq → seq → seq
+
+instance seq_has_add : has_add seq := apply_instance
+-/
+
+-- Defining addition for sequences
+def lim_add (a : ℕ → ℝ) (b : ℕ → ℝ) := λ n : ℕ, a n + b n
+notation a ` + ` b := lim_add a b
+
+-- Algebra of limits
+theorem add_lim_conv (a : ℕ → ℝ) (b : ℕ → ℝ) (l m : ℝ) : a ~> l ∧ b ~> m → (a + b) ~> (l + m) :=
+begin
+    rintros ⟨ha, hb⟩ ε hε,
+    have : ε / 2 > 0 := half_pos hε,
+    cases ha (ε / 2) this with N₁ hN₁,
+    cases hb (ε / 2) this with N₂ hN₂,
+    let N : ℕ := max N₁ N₂,
+    use N,
+    intros n hn,
+    unfold lim_add,
+    have hrw : a n + b n - (l + m) = (a n - l) + (b n - m) := by {linarith},
+    rw hrw,
+    have hmax : N ≥ N₁ ∧ N ≥ N₂ := 
+        by {split,
+            all_goals {rwa [ge_iff_le, le_max_iff], tauto}},
+    suffices h : abs (a n - l) + abs (b n - m) < ε,
+        from lt_of_le_of_lt (abs_add (a n - l) (b n - m)) h,
+    have h : abs (a n - l) + abs (b n - m) < ε / 2 + ε / 2 := 
+        by {from add_lt_add (hN₁ n (ge_trans hn hmax.left)) (hN₂ n (ge_trans hn hmax.right))},
+    rwa add_halves' ε at h
+end
+
+--set_option trace.simplify.rewrite true
+
 
 
 end M40002

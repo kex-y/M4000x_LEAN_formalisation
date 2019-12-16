@@ -194,6 +194,38 @@ theorem mul_lim_conv (a b : ℕ → ℝ) (l m : ℝ) (ha : a ⇒ l) (hb : b ⇒ 
 begin
     sorry
 end
+
+-- Defining division of sequences (why is this noncomputable?)
+noncomputable def seq_div_seq (a : ℕ → ℝ) (b : ℕ → ℝ) := λ n : ℕ, (a n) / (b n) 
+notation a ` / ` b := seq_div_seq a b
+
+noncomputable def seq_div_real (a : ℕ → ℝ) (b : ℝ) := λ n : ℕ, a n / b
+notation a ` / ` b := seq_div_real a b
+
+theorem div_lim_conv (a b : ℕ → ℝ) (l m : ℝ) (ha : a ⇒ l) (hb : b ⇒ m) (hc : m ≠ 0) : (a / b) ⇒ l / m :=
+begin
+    sorry
+end
+
+-- Defining monotone increasing and decreasing sequences
+def mono_increasing (a : ℕ → ℝ) := ∀ n : ℕ, a n ≤ a (n + 1)
+notation a ` ↑ ` := mono_increasing a
+
+def mono_increasing_conv (a : ℕ → ℝ) (l : ℝ) := mono_increasing a ∧ a ⇒ l
+notation a ` ↑ ` l := mono_increasing a l
+
+def mono_decreasing (a : ℕ → ℝ) := ∀ n : ℕ, a (n + 1) ≤ a n
+notation a ` ↓ ` := mono_decreasing a
+
+def mono_decreasing_conv (a : ℕ → ℝ) (l : ℝ) := mono_decreasing a ∧ a ⇒ l
+notation a ` ↓ ` l := mono_decreasing a l
+
+-- Monotone increasing and bounded means convergent
+theorem mono_increaseing_means_conv (a : ℕ → ℝ) (h : mono_increasing a) : is_convergent a :=
+begin
+    sorry
+end
+
 --set_option trace.simplify.rewrite true
 
 

@@ -1,0 +1,16 @@
+syntax: glob
+*.egg
+*.pyc
+*.pyo
+.idea/
+.ropeproject
+.tags
+.tox
+Pygments.egg-info/*
+TAGS
+build/*
+dist/*
+doc/_build
+tests/.coverage
+tests/cover
+tests/examplefiles/output

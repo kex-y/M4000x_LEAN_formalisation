@@ -137,7 +137,10 @@ end
 
 def rs (A : set (set(X))) (s t : X) := ∃ B ∈ A, s ∈ B ∧ t ∈ B
 
-theorem partition_equiv_relation
+/- Theorem
+Let $X$ be a set and let $R$ be an equivalence relation on $X$. Then any partition of $X$ can form a equivalence relation. 
+-/
+theorem partition_equiv_relation -- I have defined rs to be: def rs (A : set (set(X))) (s t : X) := ∃ B ∈ A, s ∈ B ∧ t ∈ B
     (C : set (set(X))) (h : partition C) : equivalence (rs C) :=
 begin
     split,

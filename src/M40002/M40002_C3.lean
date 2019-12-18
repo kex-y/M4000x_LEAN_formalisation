@@ -264,7 +264,8 @@ begin
             },
         have hα : abs (a N - l - b N + m) = abs (a N - b N - (l - m)) := by simp,
         sorry
-        }
+        },
+    sorry
 end
 
 set_option trace.simplify.rewrite true

@@ -225,7 +225,17 @@ notation a ` ↓ ` l := mono_decreasing a l
 
 lemma le_chain (N : ℕ) (b : ℕ → ℝ) (h : mono_increasing b) : ∀ n : ℕ, N ≤ n → b N ≤ b n :=
 begin
-    sorry
+    intros n hn,
+    have ha : ∀ k : ℕ, b N ≤ b (N + k) :=
+        by {intro k,
+        induction k with k hk,
+            {refl},
+            {from le_trans hk (h (N + k))}
+        },
+    have : ∃ k : ℕ, N + k = n := nat.le.dest hn,
+    cases this with k hk,
+    rw ←hk,
+    from ha k
 end
 
 -- Monotone increasing and bounded means convergent

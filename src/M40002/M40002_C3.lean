@@ -223,10 +223,57 @@ notation a ` ↓ ` := mono_decreasing a
 def mono_decreasing_conv (a : ℕ → ℝ) (l : ℝ) := mono_decreasing a ∧ a ⇒ l
 notation a ` ↓ ` l := mono_decreasing a l
 
--- Monotone increasing and bounded means convergent
-theorem mono_increaseing_means_conv (a : ℕ → ℝ) (h : mono_increasing a) : is_convergent a :=
+lemma le_chain (N : ℕ) (b : ℕ → ℝ) (h : mono_increasing b) : ∀ n : ℕ, N ≤ n → b N ≤ b n :=
 begin
     sorry
+end
+
+-- Monotone increasing and bounded means convergent
+theorem mono_increasing_means_conv (b : ℕ → ℝ) (h₁ : mono_increasing b) (h₂ : seq_bounded b) : is_convergent b :=
+begin
+    rcases h₂ with ⟨⟨N, habv⟩, hblw⟩,
+    let α : set ℝ := {t : ℝ | ∃ n : ℕ, t = b n},
+    have : ∃ M : ℝ, sup α M :=
+        by {apply completeness α,
+            {use b N, rintros s ⟨n, hs⟩,
+            suffices : b n ≤ b N, rwa ←hs at this,
+            from habv n
+            },
+            {suffices : b 0 ∈ α,
+                apply set.not_eq_empty_iff_exists.mpr,
+                use b 0, assumption,
+            rw set.mem_set_of_eq,
+            use 0
+            }        
+        },
+    cases this with M hM,
+    use M,
+    intros ε hε,
+    clear habv N,
+    have : ∃ N : ℕ, M - ε < b N :=
+        by {cases hM with hubd hnubd,
+        unfold upper_bound at hnubd,
+        push_neg at hnubd,
+        have : M - ε < M := 
+            by {rw gt_iff_lt at hε,
+            from sub_lt_self M hε},
+        rcases hnubd (M - ε) this with ⟨s, ⟨hs₁, hs₂⟩⟩,
+        rw set.mem_set_of_eq at hs₁,
+        cases hs₁ with n hn,
+        use n, rwa ←hn
+        },
+    cases this with N hN,
+    unfold mono_increasing at h₁, --delete this
+    use N, intros n hn,
+    rw abs_of_nonpos,
+        {have : ∀ n : ℕ, N ≤ n → b N ≤ b n := le_chain N b h₁,
+        suffices : M - ε < b n,
+            simp, from sub_lt.mp this,
+        from lt_of_lt_of_le hN (this n (iff.rfl.mp hn))
+        },
+        cases hM,
+        have : b n ≤ M := by {apply hM_left, rwa set.mem_set_of_eq, use n},
+        from sub_nonpos_of_le this
 end
 
 -- Defining order on sequences (is this necessary?)
@@ -268,7 +315,7 @@ begin
 end
 
 set_option trace.simplify.rewrite true
-example (a b c d : ℝ) : a - b - c + d = a - b + (d - c):= by {simp,}
+example (a b c d : ℝ) : a - b - c + d = a - b + (d - c):= by {simp}
 
 --set_option trace.simplify.rewrite true
 

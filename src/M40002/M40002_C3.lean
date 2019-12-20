@@ -72,13 +72,7 @@ begin
         simpa using this,
     rw (show (5 + ↑n :ℝ) = 4 + 1 + ↑n, by linarith),
     rw [add_assoc, add_div, div_self], 
-    {suffices : 4 / (1 + ↑n) < ε,
-        simpa using this,
-    have : 1 / (1 + n) ≤ 1 / N :=
-        by {sorry},
-    sorry,
-    },
-    sorry, -- Terribly sorry but I can't bring myself to complete this proof!
+    repeat {sorry} -- I can't bring myself to complete this proof!
 end
 
 -- Limits are unique! (I gotta admit this my proof is very terrible with alot of unnecessary lines :/)
@@ -323,8 +317,30 @@ begin
     from this (h N)
 end
 
+-- Cauchy Sequences
+def cauchy (a : ℕ → ℝ) := ∀ ε > 0, ∃ N : ℕ, ∀ n m : ℕ, N ≤ n ∧ N ≤ m → abs (a n - a m) < ε
+
+-- Convergent implies Cauchy
+lemma conv_to_cauchy (a : ℕ → ℝ) (h : is_convergent a) : cauchy a :=
+begin
+    cases h with l hl,
+    intros ε hε,
+    cases hl (ε / 2) (half_pos hε) with N hN,
+    use N, intros n m hnm,
+    suffices : abs (a n - l) + abs (a m - l) < ε,
+        {rw abs_sub (a m) l at this,
+        have h : abs (a n - l + (l - a m)) < ε :=
+            lt_of_le_of_lt (abs_add_le_abs_add_abs (a n - l) (l - a m)) this,
+        rwa sub_add_sub_cancel (a n) l (a m) at h
+        },
+    have h : abs (a n - l) + abs (a m - l) < ε / 2 + ε / 2 := 
+        add_lt_add (hN n hnm.left) (hN m hnm.right),
+    linarith        
+end
+
+
 --set_option trace.simplify.rewrite true
---example (a b c : ℝ) : a < b - c ↔ a + c < b := by {library_search}
+--example (a b c : ℝ) : a - b + (b - c) = a - c := by {library_search}
 
 
 end M40002

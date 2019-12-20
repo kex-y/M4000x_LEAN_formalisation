@@ -296,7 +296,7 @@ notation a ` >* ` b := gt_seq a b
 
 -- Comparison of sequences
 theorem le_lim (a b : ℕ → ℝ) (l m : ℝ) (ha : a ⇒ l) (hb : b ⇒ m) : (a ≤* b) → l ≤ m :=
-begin -- Should probably scrap this proof...
+begin
     rw ←not_lt,
     intros h hlt,
     have hδ : (l - m) / 2 > 0 := half_pos (sub_pos.mpr hlt),
@@ -306,26 +306,25 @@ begin -- Should probably scrap this proof...
     have hmax : N ≥ N₁ ∧ N ≥ N₂ := 
         by {split,
             all_goals {rwa [ge_iff_le, le_max_iff], tauto}},
-    /- suffices : abs (a N - l) + abs (b N - m) < (l - m) / 2,
-        {have hα : abs (a N - l - b N + m) < (l - m) / 2 :=
-            by {rw abs_sub (b N) m at this,
-            have hβ : a N - l - b N + m = a N - l + (m - b N) := by simp,
-            have hγ : abs (a N - l + (m - b N)) < (l - m) / 2 :=
-                 lt_of_le_of_lt (abs_add (a N - l) (m - b N)) this,
-            rwa ←hβ at hγ
-            },
-        have hβ : abs (a N - l - b N + m) = abs (a N - b N - (l - m)) := by simp,
-        
-        },
-    -/
     replace hN₁ : abs (a N - l) < (l - m) / 2 := hN₁ N hmax.left,
-    replace hN₂ : abs (b N - l) < (l - m) / 2 := hN₂ N hmax.right,
-    rw abs_lt at hN₁,
-    rw abs_lt at hN₂,
+    replace hN₂ : abs (b N - m) < (l - m) / 2 := hN₂ N hmax.right,
+    have hα : (l + m) / 2 < a N := 
+        by {rw abs_lt at hN₁,
+        cases hN₁ with hl hr,
+        linarith
+        },
+    have hβ : b N < (l + m) / 2 := 
+        by {rw abs_lt at hN₂,
+        cases hN₂ with hl hr,
+        linarith
+        },
+    have : b N < a N := lt_trans hβ hα,
+    rw ←not_le at this,
+    from this (h N)
 end
 
 --set_option trace.simplify.rewrite true
---example (d b c : ℝ) : abs (d - b) < c ↔ (- c < (d - b) ∧ (d - b) < c) := by {library_search}
+--example (a b c : ℝ) : a < b - c ↔ a + c < b := by {library_search}
 
 
 end M40002

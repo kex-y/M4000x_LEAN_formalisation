@@ -227,13 +227,58 @@ begin
     from ha k
 end
 
--- Monotone increasing and bounded means convergent
-theorem mono_increasing_means_conv (b : ℕ → ℝ) (h₁ : mono_increasing b) (h₂ : seq_bounded b) : is_convergent b :=
+lemma ge_chain (N : ℕ) (b : ℕ → ℝ) (h : mono_decreasing b) : ∀ n : ℕ, N ≤ n → b n ≤ b N :=
+begin
+    intros n hn,
+    have ha : ∀ k : ℕ, b (N + k) ≤ b N :=
+        by {intro k,
+        induction k with k hk,
+            {refl},
+            {from le_trans (h (N + k)) hk}
+        },
+    have : ∃ k : ℕ, N + k = n := nat.le.dest hn,
+    cases this with k hk,
+    rw ←hk,
+    from ha k
+end
+
+-- Monotone increasing and bounded means convergent (to the supremum)
+lemma mono_increasing_means_conv_sup (b : ℕ → ℝ) (M : ℝ) (h₁ : mono_increasing b) (h₂ : seq_bounded b) (h₃ : sup {t : ℝ | ∃ n : ℕ, t = b n} M) : b ⇒ M :=
 begin
     rcases h₂ with ⟨⟨N, habv⟩, hblw⟩,
+    intros ε hε,
+    clear habv N,
+    have : ∃ N : ℕ, M - ε < b N :=
+        by {cases h₃ with hubd hnubd,
+        unfold upper_bound at hnubd,
+        push_neg at hnubd,
+        have : M - ε < M := 
+            by {rw gt_iff_lt at hε,
+            from sub_lt_self M hε},
+        rcases hnubd (M - ε) this with ⟨s, ⟨hs₁, hs₂⟩⟩,
+        rw set.mem_set_of_eq at hs₁,
+        cases hs₁ with n hn,
+        use n, rwa ←hn
+        },
+    cases this with N hN,
+    use N, intros n hn,
+    rw abs_of_nonpos,
+        {have : ∀ n : ℕ, N ≤ n → b N ≤ b n := le_chain N b h₁,
+        suffices : M - ε < b n,
+            simp, from sub_lt.mp this,
+        from lt_of_lt_of_le hN (this n (iff.rfl.mp hn))
+        },
+        cases h₃,
+        have : b n ≤ M := by {apply h₃_left, rwa set.mem_set_of_eq, use n},
+        from sub_nonpos_of_le this
+end
+
+theorem mono_increasing_means_conv (b : ℕ → ℝ) (h₁ : mono_increasing b) (h₂ : seq_bounded b) : is_convergent b :=
+begin
     let α : set ℝ := {t : ℝ | ∃ n : ℕ, t = b n},
     have : ∃ M : ℝ, sup α M :=
-        by {apply completeness α,
+        by {rcases h₂ with ⟨⟨N, habv⟩, hblw⟩,
+            apply completeness α,
             {use b N, rintros s ⟨n, hs⟩,
             suffices : b n ≤ b N, rwa ←hs at this,
             from habv n
@@ -247,32 +292,56 @@ begin
         },
     cases this with M hM,
     use M,
+    from mono_increasing_means_conv_sup b M h₁ h₂ hM
+end
+
+-- Monotone decreasing and bounded means convergent (to the infimum)
+lemma mono_decreasing_means_conv_inf (b : ℕ → ℝ) (M : ℝ) (h₁ : mono_decreasing b) (h₂ : seq_bounded b) (h₃ : inf {t : ℝ | ∃ n : ℕ, t = b n} M) : b ⇒ M :=
+begin
     intros ε hε,
-    clear habv N,
-    have : ∃ N : ℕ, M - ε < b N :=
-        by {cases hM with hubd hnubd,
-        unfold upper_bound at hnubd,
-        push_neg at hnubd,
-        have : M - ε < M := 
-            by {rw gt_iff_lt at hε,
-            from sub_lt_self M hε},
-        rcases hnubd (M - ε) this with ⟨s, ⟨hs₁, hs₂⟩⟩,
+    have : ∃ N : ℕ, b N < M + ε :=
+        by {cases h₃ with hlbd hnlbd,
+        unfold lower_bound at hnlbd,
+        push_neg at hnlbd,
+        have : M < M + ε := by {linarith},
+        rcases hnlbd (M + ε) this with ⟨s, ⟨hs₁, hs₂⟩⟩,
         rw set.mem_set_of_eq at hs₁,
         cases hs₁ with n hn,
         use n, rwa ←hn
         },
     cases this with N hN,
-    unfold mono_increasing at h₁, --delete this
     use N, intros n hn,
-    rw abs_of_nonpos,
-        {have : ∀ n : ℕ, N ≤ n → b N ≤ b n := le_chain N b h₁,
-        suffices : M - ε < b n,
-            simp, from sub_lt.mp this,
-        from lt_of_lt_of_le hN (this n (iff.rfl.mp hn))
+    rw abs_lt, split,
+        {suffices : M - ε < b n, linarith,
+        have : M ≤ b n := by {apply h₃.left (b n), rw set.mem_set_of_eq, use n},
+        have hα : M - ε < M := by {linarith},
+        from lt_of_lt_of_le hα this
         },
-        cases hM,
-        have : b n ≤ M := by {apply hM_left, rwa set.mem_set_of_eq, use n},
-        from sub_nonpos_of_le this
+        {suffices : b n < M + ε, linarith,
+        from lt_of_le_of_lt (ge_chain N b h₁ n (iff.rfl.mp hn)) hN
+        }
+end 
+
+theorem mono_decreasing_means_conv (b : ℕ → ℝ) (h₁ : mono_decreasing b) (h₂ : seq_bounded b) : is_convergent b :=
+begin
+    let α : set ℝ := {t : ℝ | ∃ n : ℕ, t = b n},
+    have : ∃ M : ℝ, inf α M :=
+        by {rcases h₂ with ⟨habv, ⟨N, hblw⟩⟩,
+            apply completeness_below α,
+            {use b N, rintros s ⟨n, hs⟩,
+            rw hs,
+            from hblw n
+            },
+            {suffices : b 0 ∈ α,
+                apply set.not_eq_empty_iff_exists.mpr,
+                use b 0, assumption,
+            rw set.mem_set_of_eq,
+            use 0
+            }        
+        },
+    cases this with M hM,
+    use M,
+    from mono_decreasing_means_conv_inf b M h₁ h₂ hM
 end
 
 -- Defining order on sequences (is this necessary?)
@@ -338,6 +407,37 @@ begin
     linarith        
 end
 
+-- Cauchy implies bounded
+lemma cauchy_bounded (a : ℕ → ℝ) : cauchy a → seq_bounded a := by sorry
+
+-- Cauchy implies convergent
+lemma cauchy_to_conv (a : ℕ → ℝ) (h : cauchy a) : is_convergent a :=
+begin
+-- Since a is Cauchy, it is bounded above
+    rcases (cauchy_bounded a h) with ⟨⟨n₀, hn⟩, ⟨n₁, hnn⟩⟩,
+-- Let's construct the sequence b where b n = sup {a i | i ≥ n}
+-- We first need to show such supremums exists for all n
+    have : ∀ m : ℕ, ∃ α : ℝ, sup {t : ℝ | ∃ i : ℕ, m ≤ i ∧ t = a i} α :=
+        by {intro m,
+        have hα : bounded_above {t : ℝ | ∃ i : ℕ, m ≤ i ∧ t = a i} :=
+            by {use a n₀, intros s hs,
+            rw set.mem_set_of_eq at hs,
+            rcases hs with ⟨i, ⟨hi₁, hi₂⟩⟩,
+            rw hi₂, from hn i
+            },
+        have hβ : {t : ℝ | ∃ i : ℕ, m ≤ i ∧ t = a i} ≠ ∅ :=
+            by {dsimp, rw set.not_eq_empty_iff_exists,
+            use a (m + 1), dsimp,
+            use m + 1, finish
+            },
+        from completeness {t : ℝ | ∃ i : ℕ, m ≤ i ∧ t = a i} hα hβ
+        },
+-- Now we construct it
+    let b : ℕ → ℝ := λ n, classical.some (this n),
+    sorry
+end
+
+example (S : set ℝ) : S ≠ ∅ ↔ ∃ s : ℝ, s ∈ S := by {library_search}
 
 --set_option trace.simplify.rewrite true
 --example (a b c : ℝ) : a - b + (b - c) = a - c := by {library_search}

@@ -11,8 +11,8 @@ notation a ` ⇒ ` l := converges_to a l
 
 def is_convergent (a : ℕ → ℝ) := ∃ l : ℝ, ∀ ε > 0, ∃ N : ℕ, ∀ n ≥ N, abs (a n - l) < ε 
 
-def seq_bounded_above (a : ℕ → ℝ) := ∃ n : ℕ, ∀ m : ℕ, a m ≤ a n
-def seq_bounded_below (a : ℕ → ℝ) := ∃ n : ℕ, ∀ m : ℕ, a n ≤ a m
+def seq_bounded_above (a : ℕ → ℝ) := ∃ R : ℝ, ∀ m : ℕ, a m ≤ R
+def seq_bounded_below (a : ℕ → ℝ) := ∃ R : ℝ, ∀ m : ℕ, R ≤ a m
 
 def seq_bounded (a : ℕ → ℝ) := seq_bounded_above a ∧ seq_bounded_below a
 
@@ -203,11 +203,17 @@ end
 def mono_increasing (a : ℕ → ℝ) := ∀ n : ℕ, a n ≤ a (n + 1)
 notation a ` ↑ ` := mono_increasing a
 
+def strict_mono_increasing (a : ℕ → ℝ) := ∀ n : ℕ, a n < a (n + 1)
+notation a ` ↑* ` := strict_mono_increasing a
+
 def mono_increasing_conv (a : ℕ → ℝ) (l : ℝ) := mono_increasing a ∧ a ⇒ l
 notation a ` ↑ ` l := mono_increasing a l
 
 def mono_decreasing (a : ℕ → ℝ) := ∀ n : ℕ, a (n + 1) ≤ a n
 notation a ` ↓ ` := mono_decreasing a
+
+def strict_mono_decreasing (a : ℕ → ℝ) := ∀ n : ℕ, a (n + 1) < a n
+notation a ` ↓* ` := strict_mono_decreasing a
 
 def mono_decreasing_conv (a : ℕ → ℝ) (l : ℝ) := mono_decreasing a ∧ a ⇒ l
 notation a ` ↓ ` l := mono_decreasing a l
@@ -277,10 +283,10 @@ theorem mono_increasing_means_conv (b : ℕ → ℝ) (h₁ : mono_increasing b) 
 begin
     let α : set ℝ := {t : ℝ | ∃ n : ℕ, t = b n},
     have : ∃ M : ℝ, sup α M :=
-        by {rcases h₂ with ⟨⟨N, habv⟩, hblw⟩,
+        by {rcases h₂ with ⟨⟨R, habv⟩, hblw⟩,
             apply completeness α,
-            {use b N, rintros s ⟨n, hs⟩,
-            suffices : b n ≤ b N, rwa ←hs at this,
+            {use R, rintros s ⟨n, hs⟩,
+            suffices : b n ≤ R, rwa ←hs at this,
             from habv n
             },
             {suffices : b 0 ∈ α,
@@ -326,9 +332,9 @@ theorem mono_decreasing_means_conv (b : ℕ → ℝ) (h₁ : mono_decreasing b) 
 begin
     let α : set ℝ := {t : ℝ | ∃ n : ℕ, t = b n},
     have : ∃ M : ℝ, inf α M :=
-        by {rcases h₂ with ⟨habv, ⟨N, hblw⟩⟩,
+        by {rcases h₂ with ⟨habv, ⟨R, hblw⟩⟩,
             apply completeness_below α,
-            {use b N, rintros s ⟨n, hs⟩,
+            {use R, rintros s ⟨n, hs⟩,
             rw hs,
             from hblw n
             },
@@ -414,13 +420,13 @@ lemma cauchy_bounded (a : ℕ → ℝ) : cauchy a → seq_bounded a := by sorry
 lemma cauchy_to_conv (a : ℕ → ℝ) (h : cauchy a) : is_convergent a :=
 begin
 -- Since a is Cauchy, it is bounded above
-    rcases (cauchy_bounded a h) with ⟨⟨n₀, hn⟩, ⟨n₁, hnn⟩⟩,
+    rcases (cauchy_bounded a h) with ⟨⟨R₀, hn⟩, ⟨R₁, hnn⟩⟩,
 -- Let's construct the sequence b where b n = sup {a i | i ≥ n}
 -- We first need to show such supremums exists for all n
     have : ∀ m : ℕ, ∃ α : ℝ, sup {t : ℝ | ∃ i : ℕ, m ≤ i ∧ t = a i} α :=
         by {intro m,
         have hα : bounded_above {t : ℝ | ∃ i : ℕ, m ≤ i ∧ t = a i} :=
-            by {use a n₀, intros s hs,
+            by {use R₀, intros s hs,
             rw set.mem_set_of_eq at hs,
             rcases hs with ⟨i, ⟨hi₁, hi₂⟩⟩,
             rw hi₂, from hn i
@@ -432,12 +438,36 @@ begin
             },
         from completeness {t : ℝ | ∃ i : ℕ, m ≤ i ∧ t = a i} hα hβ
         },
--- Now we construct it
+-- Now we construct b
     let b : ℕ → ℝ := λ n, classical.some (this n),
-    sorry
+    have hα : mono_decreasing b :=
+        by {unfold mono_decreasing, --delete this
+        intro n,
+        sorry
+        },
+    have hβ : seq_bounded b :=
+        by {split,
+            {use R₀, intro m, sorry},
+            {use R₁, intro m, sorry}
+        },
+-- Since b (by construction) is monotonically decreasing and bounded, we have it converges to its infimum
+    cases mono_decreasing_means_conv b hα hβ with l hl,
+-- I claim that this is what a converges to also!
+    use l, intros ε hε,
+    unfold cauchy at h,
+    cases h (ε / 2) (half_pos hε) with N hN,
+    use N, intros n hn',
+    sorry 
+-- under construction
 end
 
-example (S : set ℝ) : S ≠ ∅ ↔ ∃ s : ℝ, s ∈ S := by {library_search}
+-- Cauchy iff. convergent
+theorem cauchy_iff_conv {a : ℕ → ℝ} : cauchy a ↔ is_convergent a :=
+begin
+    split,
+        {intro h, from cauchy_to_conv a h},
+        {intro h, from conv_to_cauchy a h}
+end
 
 --set_option trace.simplify.rewrite true
 --example (a b c : ℝ) : a - b + (b - c) = a - c := by {library_search}

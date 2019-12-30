@@ -203,17 +203,11 @@ end
 def mono_increasing (a : ℕ → ℝ) := ∀ n : ℕ, a n ≤ a (n + 1)
 notation a ` ↑ ` := mono_increasing a
 
-def strict_mono_increasing (a : ℕ → ℝ) := ∀ n : ℕ, a n < a (n + 1)
-notation a ` ↑* ` := strict_mono_increasing a
-
 def mono_increasing_conv (a : ℕ → ℝ) (l : ℝ) := mono_increasing a ∧ a ⇒ l
 notation a ` ↑ ` l := mono_increasing a l
 
 def mono_decreasing (a : ℕ → ℝ) := ∀ n : ℕ, a (n + 1) ≤ a n
 notation a ` ↓ ` := mono_decreasing a
-
-def strict_mono_decreasing (a : ℕ → ℝ) := ∀ n : ℕ, a (n + 1) < a n
-notation a ` ↓* ` := strict_mono_decreasing a
 
 def mono_decreasing_conv (a : ℕ → ℝ) (l : ℝ) := mono_decreasing a ∧ a ⇒ l
 notation a ` ↓ ` l := mono_decreasing a l
@@ -469,8 +463,73 @@ begin
         {intro h, from conv_to_cauchy a h}
 end
 
+-- Subsequences
+def is_subseq (a b : ℕ → ℝ) := ∃ n : ℕ → ℕ, (strict_mono n ∧ ∀ i : ℕ, b i = a (n i))
+
+-- b n = 1 is a subsequence of a n = (-1)^ n
+example (a b : ℕ → ℝ) (h₁ : a = λ i, (- 1)^ i) (h₂ : b = λ i, 1) : is_subseq a b :=
+begin
+    let n := λ i, 2 * i,
+    unfold is_subseq,
+    use n, split,
+        {intros a b, finish},
+        {intro i,
+        have : n = λ (i : ℕ), 2 * i, refl, 
+        rwa [h₁, h₂, this], simp,
+        rw pow_mul, 
+        finish
+        }
+end
+
+-- Every sequence has atleast one subsequence
+theorem has_subseq (a : ℕ → ℝ) : ∃ b : ℕ → ℝ, is_subseq a b :=
+begin
+    use a,
+    unfold is_subseq,
+    let n : ℕ → ℕ := λ i, i,
+    have : n = λ i, i := rfl,
+    use n, split,
+        {intros a b hab,
+        rw this, simpa
+        },
+        {intro i,
+        rwa this,
+        }
+end
+
+-- n(i) ≥ i ∀ i ∈ ℕ
+lemma subseq_ge_id {n : ℕ → ℕ} (h : strict_mono n) : ∀ i : ℕ, i ≤ n i :=
+begin
+    intro i,
+    induction i with i hi,
+        {from zero_le (n 0)},
+        {have : (n i) + 1 ≤ n (nat.succ i) :=
+            by {rw nat.succ_le_iff,
+            from h (lt_add_one i)
+            },
+        from le_trans (nat.pred_le_iff.mp hi) this
+        }
+end
+
+-- Bolzano-Weierstrass : Every bounded sequence has a convergent subsequence
+theorem bolzano_weierstrass {a : ℕ → ℝ} (h₁ : seq_bounded a) : ∃ b : ℕ → ℝ, is_subseq a b ∧ is_convergent b :=
+begin
+    sorry
+end
+
+-- If a → l, then all subsequences of a also converges to l
+theorem conv_subseq {a : ℕ → ℝ} {l : ℝ} (h : a ⇒ l) : ∀ b : ℕ → ℝ, is_subseq a b → b ⇒ l :=
+begin
+    rintros b ⟨n, ⟨hn₁, hn₂⟩⟩ ε hε,
+    cases (h ε hε) with N hN,
+    use N, intros i hi,
+    rw hn₂ i,
+    have : n i ≥ N := ge_trans (subseq_ge_id hn₁ i) hi,
+    from hN (n i) this
+end
+
 --set_option trace.simplify.rewrite true
---example (a b c : ℝ) : a - b + (b - c) = a - c := by {library_search}
+--example (a b : ℕ) : a < nat.succ a := by {library_search}
 
 
 end M40002

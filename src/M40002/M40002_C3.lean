@@ -407,61 +407,7 @@ begin
     linarith        
 end
 
--- Cauchy implies bounded
-lemma cauchy_bounded (a : ℕ → ℝ) : cauchy a → seq_bounded a := by sorry
-
--- Cauchy implies convergent
-lemma cauchy_to_conv (a : ℕ → ℝ) (h : cauchy a) : is_convergent a :=
-begin
--- Since a is Cauchy, it is bounded above
-    rcases (cauchy_bounded a h) with ⟨⟨R₀, hn⟩, ⟨R₁, hnn⟩⟩,
--- Let's construct the sequence b where b n = sup {a i | i ≥ n}
--- We first need to show such supremums exists for all n
-    have : ∀ m : ℕ, ∃ α : ℝ, sup {t : ℝ | ∃ i : ℕ, m ≤ i ∧ t = a i} α :=
-        by {intro m,
-        have hα : bounded_above {t : ℝ | ∃ i : ℕ, m ≤ i ∧ t = a i} :=
-            by {use R₀, intros s hs,
-            rw set.mem_set_of_eq at hs,
-            rcases hs with ⟨i, ⟨hi₁, hi₂⟩⟩,
-            rw hi₂, from hn i
-            },
-        have hβ : {t : ℝ | ∃ i : ℕ, m ≤ i ∧ t = a i} ≠ ∅ :=
-            by {dsimp, rw set.not_eq_empty_iff_exists,
-            use a (m + 1), dsimp,
-            use m + 1, finish
-            },
-        from completeness {t : ℝ | ∃ i : ℕ, m ≤ i ∧ t = a i} hα hβ
-        },
--- Now we construct b
-    let b : ℕ → ℝ := λ n, classical.some (this n),
-    have hα : mono_decreasing b :=
-        by {unfold mono_decreasing, --delete this
-        intro n,
-        sorry
-        },
-    have hβ : seq_bounded b :=
-        by {split,
-            {use R₀, intro m, sorry},
-            {use R₁, intro m, sorry}
-        },
--- Since b (by construction) is monotonically decreasing and bounded, we have it converges to its infimum
-    cases mono_decreasing_means_conv b hα hβ with l hl,
--- I claim that this is what a converges to also!
-    use l, intros ε hε,
-    unfold cauchy at h,
-    cases h (ε / 2) (half_pos hε) with N hN,
-    use N, intros n hn',
-    sorry 
--- under construction
-end
-
--- Cauchy iff. convergent
-theorem cauchy_iff_conv {a : ℕ → ℝ} : cauchy a ↔ is_convergent a :=
-begin
-    split,
-        {intro h, from cauchy_to_conv a h},
-        {intro h, from conv_to_cauchy a h}
-end
+-- We will prove that Cauchy implies bounded after subsequences!
 
 -- Subsequences
 def is_subseq (a b : ℕ → ℝ) := ∃ n : ℕ → ℕ, (strict_mono n ∧ ∀ i : ℕ, b i = a (n i))
@@ -517,19 +463,73 @@ begin
     sorry
 end
 
--- If a → l, then all subsequences of a also converges to l
-theorem conv_subseq {a : ℕ → ℝ} {l : ℝ} (h : a ⇒ l) : ∀ b : ℕ → ℝ, is_subseq a b → b ⇒ l :=
+-- a → l iff. all subsequences of a also converges to l
+theorem conv_subseq {a : ℕ → ℝ} {l : ℝ} : a ⇒ l ↔ (∀ b : ℕ → ℝ, is_subseq a b → b ⇒ l) :=
 begin
-    rintros b ⟨n, ⟨hn₁, hn₂⟩⟩ ε hε,
-    cases (h ε hε) with N hN,
-    use N, intros i hi,
-    rw hn₂ i,
-    have : n i ≥ N := ge_trans (subseq_ge_id hn₁ i) hi,
-    from hN (n i) this
+    split,
+        {rintros h b ⟨n, ⟨hn₁, hn₂⟩⟩ ε hε,
+        cases (h ε hε) with N hN,
+        use N, intros i hi,
+        rw hn₂ i,
+        have : n i ≥ N := ge_trans (subseq_ge_id hn₁ i) hi,
+        from hN (n i) this
+        },
+        {intro h,
+        let n : ℕ → ℕ := λ i, i,
+        let b : ℕ → ℝ := a,
+        have : is_subseq a b :=
+            by {use n, split,
+            have : n = λ i, i := rfl,
+                {intros a b hab,
+                rw this, simpa},
+                {simp},
+            },
+        have ha : a = b := rfl,
+        rw ha, from h b this
+        }
 end
 
---set_option trace.simplify.rewrite true
---example (a b : ℕ) : a < nat.succ a := by {library_search}
+-- Cauchy implies bounded
+lemma cauchy_bounded (a : ℕ → ℝ) : cauchy a → seq_bounded a := by sorry
 
+-- Cauchy implies convergent
+lemma cauchy_to_conv (a : ℕ → ℝ) (h : cauchy a) : is_convergent a :=
+begin
+    have hα : seq_bounded a := cauchy_bounded a h,
+    rcases bolzano_weierstrass hα with ⟨b, ⟨⟨n, ⟨hb₁, hb₂⟩⟩, ⟨l, hl⟩⟩⟩,
+    use l, intros ε hε,
+    cases h (ε / 2) (half_pos hε) with N₁ hN₁,
+    cases hl (ε / 2) (half_pos hε) with N₂ hN₂,
+    let N := n (max N₁ N₂),
+    use N, intros i hi,
+    suffices : abs (a i - a N) + abs (a N - l) < ε,
+        apply lt_of_le_of_lt _ this,
+        have hα : a i - a N + (a N - l) = a i - l := by {linarith},
+        rw ←hα,
+        from abs_add (a i - a N) (a N - l),
+    have hα : abs (a i - a N) + abs (a N - l) < ε / 2 + ε / 2 := 
+        by {have : N = n (max N₁ N₂) := rfl,
+            apply add_lt_add,
+            {have hβ : N₁ ≤ N :=
+                by {rw this, from le_trans (le_max_left N₁ N₂) (subseq_ge_id hb₁ (max N₁ N₂))},
+            have hγ : N₁ ≤ i := by {from le_trans hβ hi},
+            from hN₁ i N ⟨hγ, hβ⟩
+            },
+            {have hβ : N₂ ≤ N :=
+                by {rw this, from le_trans (le_max_right N₁ N₂) (subseq_ge_id hb₁ (max N₁ N₂))},
+            apply lt_of_le_of_lt _ (hN₂ (max N₁ N₂) (le_max_right N₁ N₂)),
+            rwa hb₂ (max N₁ N₂)
+            }
+        },
+    linarith
+end
+
+-- Cauchy iff. convergent
+theorem cauchy_iff_conv {a : ℕ → ℝ} : cauchy a ↔ is_convergent a :=
+begin
+    split,
+        {intro h, from cauchy_to_conv a h},
+        {intro h, from conv_to_cauchy a h}
+end
 
 end M40002

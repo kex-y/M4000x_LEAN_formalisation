@@ -386,6 +386,31 @@ begin
     from this (h N)
 end
 
+-- Sandwich Theorem. Suppose that an ≤ bn ≤ cn ∀n and that an → a and cn → a, Then bn → a.
+theorem sandwich_theorem {a b c : ℕ → ℝ} {l : ℝ} (h₀ : a ⇒ l) (h₁ : c ⇒ l) : (a ≤* b) ∧ (b ≤* c) → b ⇒ l :=
+begin
+    rintro ⟨ha, hb⟩,
+    intros ε hε,
+    cases (h₀ ε hε) with N₀ hN₀,
+    cases (h₁ ε hε) with N₁ hN₁,
+    let N := max N₀ N₁,
+    have hN : N₀ ≤ N ∧ N₁ ≤ N := by {finish},
+    use N,
+    intros n hn,
+    cases lt_or_ge (b n) l with hlt hge,
+        {rw [abs_sub, abs_of_pos (sub_pos.mpr hlt)],
+        apply lt_of_le_of_lt _ (hN₀ n (le_trans hN.left hn)),
+        apply le_trans ((sub_le_sub_iff_left l).mpr (ha n)) _,
+        rw abs_sub,
+        from le_abs_self (l - a n)
+        },
+        {rw abs_of_nonneg (sub_nonneg.mpr hge),
+        apply lt_of_le_of_lt _ (hN₁ n (le_trans hN.right hn)),
+        apply le_trans (add_le_add_right' (hb n)) _,
+        from le_abs_self (c n - l)
+        }
+end
+
 -- Cauchy Sequences
 def cauchy (a : ℕ → ℝ) := ∀ ε > 0, ∃ N : ℕ, ∀ n m : ℕ, N ≤ n ∧ N ≤ m → abs (a n - a m) < ε
 

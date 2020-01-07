@@ -44,37 +44,6 @@ begin
         {rwa hc}
 end
 
--- Example 3.5 ((n + 5) / (n + 1) → 1)
-example (a : ℕ → ℝ) (ha : a = λ n : ℕ, (n + 5) / (n + 1)) : a ⇒ 1 :=
-begin
-    intros ε hε,
-    have : ∃ N : ℕ, (4 / N : ℝ) < ε :=
-        by {cases exists_nat_one_div_lt hε with M hM,
-        use (4 * (M + 1)),
-        suffices : 4 / (4 * (↑M + 1)) < ε,
-          exact_mod_cast this,
-        have : (4 : ℝ) ≠ 0 := by linarith,
-        rwa (div_mul_right (↑M + 1 : ℝ) this),
-        },
-    cases this with N hN,
-    use N, intros n hn,
-    have h0 : 0 ≤ a n - 1 :=
-        by {rw ha, simp,
-        rw (show (5 + ↑n :ℝ) = 4 + 1 + ↑n, by linarith),
-        rw [add_assoc, add_div, div_self], 
-        suffices : (0 : ℝ) ≤ 4 / (1 + ↑n),
-          simpa using this,
-        refine le_of_lt (div_pos (by linarith) _),
-        repeat {norm_cast, linarith},
-        },
-    rw [abs_of_nonneg h0, ha],
-    suffices : (5 + ↑n) / (1 + ↑n) - 1 < ε,
-        simpa using this,
-    rw (show (5 + ↑n :ℝ) = 4 + 1 + ↑n, by linarith),
-    rw [add_assoc, add_div, div_self], 
-    repeat {sorry} -- I can't bring myself to complete this proof!
-end
-
 -- Limits are unique! (I gotta admit this my proof is very terrible with alot of unnecessary lines :/)
 theorem unique_lim (a : ℕ → ℝ) (b c : ℝ) (hb : a ⇒ b) (hc : a ⇒ c) : b = c :=
 begin

@@ -1,60 +1,86 @@
--- M40002 (Analysis I) Chapter 2. Numbers
-
+-- begin header
 import data.real.basic
 import M40001.M40001_4
 
 namespace M40002
 
 variables {X Y : Type}
+-- end header
 
--- Natural number lemmas for countability
+/- Section
+Chapter 2. Numbers
+-/
+
+/-
+Note: This section deviates from the lecture notes as it is under construction. 
+-/
+
+/- Sub-section
+Countability
+-/
+
+/-
+We will be proving the Well-Ordered Principle (A non-empty set of natural numbers has a least element) as it will be usful for proving theorems regarding countability.
+-/
 
 lemma no_nat_lt_zero : ¬ (∃ x : ℕ, x < 0) := by {simp}
 
 lemma nat_le_imp_lt_succ (k : ℕ) : ∀ (x : ℕ), x ≤ k ↔ x < k + 1 := by {intro, rwa nat.lt_succ_iff}
 
+/- Theorem
+The Well-Ordered Principle. If $S$ is a set of natural numbers and is non-empty, then there exists an element $n ∈ S, ∀s ∈ S, n ≤ s$.
+-/
 theorem well_ordered_principle (S : set ℕ) (h : S ≠ ∅) : ∃ n ∈ S, ∀ s ∈ S, n ≤ s :=
 begin
--- We'll prove this by contradiction
+-- We'll prove the Well-Ordered Principle by contradiction. Suppose there exist $∅ ≠ S ⊂ ℕ$, $S$ does not have a least element.
     apply classical.by_contradiction, push_neg, intro ha,
--- The general idea is to show that B = ℕ which implies S = ∅ which is a contradiction
+-- Then let us create the set $B := {n ∈ ℕ | ∀ x ≤ n, x ∉ S}$. (Notice that all elements of $S$ are bigger that all elements of $B$.)
     let B := {n : ℕ | ∀ x ≤ n, x ∉ S},
+-- I claim that $B = ℕ$.
     have : ∀ x : ℕ, x ∈ B,
--- We will do a induction on x
+-- We will prove this by doing an induction on $x$.
         by {intro x, induction x with k hk,
--- Base case (0 ∈ B)
+-- We first need to prove that $0 ∈ B$. As we have $∀ s ∈ S, s ∈ ℕ ⇒ s ≥ 0$, it suffices to prove that $0 ∉ S$.
         {rw set.mem_set_of_eq,
         intros x hb hc,
         replace hb : x = 0 :=
             by {revert hb, simp},
         rw hb at hc,
+-- But if $0 ∈ S$ then $S$ has a minimum, $0$ can't be in $S$, implying $0 ∈ B$.
         have : ∃ (s : ℕ), s ∈ S ∧ s < 0 := by {apply ha 0, assumption},
         rcases this with ⟨y, ⟨hd, he⟩⟩,
         have : ∃ y : ℕ, y < 0 := by {use y, assumption},
         from no_nat_lt_zero this
         },
--- Inductive step (x ∈ B → x + 1 ∈ B)
+-- Now assume $k ∈ B$ for some $k ∈ ℕ$, then we need to prove $k + 1 ∈ B$, i.e. we need to prove $∀ x ∈ ℕ, x ≤ k + 1 → x ∉ S$.
         {rw set.mem_set_of_eq at hk,
-        rw set.mem_set_of_eq, intros x hx hb,
+        rw set.mem_set_of_eq, 
+-- Let $x$ be an arbitary natural number thats less than $k + 1$. Suppose $x ∈ S$, we will show a contradiction.
+        intros x hx hb,
+-- As $x ≤ k ⇔ x < k + 1$, we have $x < k + 1 → x ∉ S$.
         have hl : x < k + 1 → x ∉ S := by {rwa ←nat_le_imp_lt_succ, from hk x},
+-- Then as we have assumed $x ∈ S$, $x ≥ k + 1$ since $x < k + 1 → x ∉ S$.
         have : x = k + 1 := 
             by {cases lt_trichotomy x (k + 1),
                 {exfalso, from (hl h_1) hb},
                 {cases h_1,
                     {assumption},
+-- But we have $x < k + 1$, thus, by the trichotomy axiom, $x = k + 1$.
                     {have : k + 1 < x ∧ x ≤ nat.succ k := ⟨h_1, hx⟩, 
                     revert this, simp
                     }
                 }
             },
+-- Then, as $S$ has no least element, there is some $s ∈ S, s < k + 1$.
         rw this at hb,
         have hc : ∃ (s : ℕ), s ∈ S ∧ s < k + 1 := by {apply ha, assumption},
         rcases hc with ⟨y, ⟨hd, he⟩⟩,
+-- But as $k ∈ B$, $s < k + 1 ⇒ s ∉ S$, we have a contradiction! Therefore, by mathematical induction, we have $B = ℕ$
         apply hk y,
         rwa nat_le_imp_lt_succ, assumption
         }
         },
--- Okay! Now we just have to show that B = ℕ → A = ∅
+-- As, by construction, we have $S$ and $B$ are disjoint. Thus, since $S ⊆ ℕ, B = ℕ ⇒ S = ∅$.
     apply h,
     have hSempty : ∀ n ∈ B, n ∉ S := 
         by {intros n hn hs,
@@ -64,19 +90,27 @@ begin
     ext, split,
     all_goals {intro he},
     {from hSempty x (this x) he},
+-- But $S = ∅$ is a contradiction as we assumed its non-empty. Thus such an $S$ does not exist!
     {simp at he, contradiction}
 end
 
--- Countability
-
+/- Definition
+A set $S$ is countable if and only if there exists a bijection $f : ℕ → S$.
+-/
 def countable (A : set(X)) := ∃ f : ℕ → A, function.bijective f
+
+/-
+Intuitively, we can think of this as putting the elements of $S$ into a list with no repeates.
+-/
 
 lemma inverse_refl (f : X → Y) (g : Y → X): M40001.two_sided_inverse f g ↔ M40001.two_sided_inverse g f :=
 by {split,
     all_goals {rintro ⟨ha, hb⟩, from ⟨hb, ha⟩},   
 }
 
--- ∃ f : A → ℕ where f is bijective also means A is countable
+/- Theorem
+ Given a set $A$, if there exists a function $f : A → ℕ$ where $f$ is bijective then $A$ is countable. 
+-/
 theorem countable_rev : ∀ (S : set X), countable S ↔ (∃ g : S → ℕ, function.bijective g) :=
 begin
     intro S,
@@ -96,19 +130,13 @@ begin
         }
 end
 
--- All infinite subsets of ℕ are countable
+/- Sub-section
+The Completeness Axiom
+-/
 
-def exist_min (S : set ℕ) := ∃ s ∈ S, ∀ x ∈ S, s ≤ x
-
-theorem nat_sub_countable : ∀ (S : set ℕ), (∀ n : ℕ, ∃ s ∈ S, s > n) → countable S :=
-begin
-    intros S h,
-    unfold countable,
-    sorry
-end
-
--- Okay... I've skipped a bunch here cause I don't like countability :(
-
+/- Theorem
+If a set $S ⊂ ℝ$ has maximums $a$ and $b$, then $a = b$, i.e. the maximum of a set is unique.
+-/
 theorem unique_max (S : set ℝ) : ∀ a b ∈ S, (∀ x ∈ S, x ≤ a ∧ x ≤ b) → a = b :=
 begin
     intros a b ha hb hc,
@@ -122,6 +150,9 @@ begin
         {assumption}
 end
 
+/- Theorem
+If a set $S ⊂ ℝ$ has minimums $a$ and $b$, then $a = b$, i.e. the minimum of a set is unique.
+-/
 theorem neg_set_min (S : set ℝ) (s : ℝ) (h0 : s ∈ S) (h1 : ∀ x ∈ S, x ≤ s): 
     ∀ x ∈ {t : ℝ | -t ∈ S}, -s ≤ x ∧ -s ∈ {t : ℝ | -t ∈ S} :=
 begin
@@ -136,24 +167,56 @@ begin
     }
 end
 
--- Defining bounded in preperation for supremum and infimums
-
+/- Definition
+A set $S ⊂ ℝ$ is bounded above if and only if $∃ M ∈ ℝ, ∀ s ∈ S, s ≤ M$
+-/
 def bounded_above (S : set ℝ) := ∃ M : ℝ, ∀ s ∈ S, s ≤ M
+
+/- Definition
+We call $M$ a upper bound of $S ⊂ ℝ$ if and only if $∀ s ∈ S, s ≤ M$.
+-/
 def upper_bound (S : set ℝ) (M : ℝ) := ∀ s ∈ S, s ≤ M
 
+/-
+We can deduce some properties straight away from these definitions.
+-/
+
+/- Corollary
+A set $S ⊂ ℝ$ is bounded above if and only if there exists a $M ∈ ℝ$, $M$ is an upper bound of $S$
+-/
 theorem bdd_above_iff_have_upr_bd (S : set ℝ) : (∃ M : ℝ, upper_bound S M) ↔ bounded_above S :=
 by {split, all_goals {rintro ⟨M, hM⟩, use M, assumption} }
 
+/- Corollary
+If $S$ has an upperbound $M$, then $∀ x ∈ R, x ≥ M$ implies $x$ is a upper bound of $S$ 
+-/
 theorem bigger_upperbound (S : set ℝ) (s : ℝ) (h : upper_bound S s) :
     ∀ x : ℝ, s ≤ x → upper_bound S x :=
 by {intros x hx y hy, from le_trans (h y hy) hx}
 
+/-
+We will define lower bounds and bounded below in a similar fashion.
+-/
+
+/- Definition
+A set $S ⊂ ℝ$ is bounded below if and only if $∃ M ∈ ℝ, ∀ s ∈ S, s ≥ M$
+-/
 def bounded_below (S : set ℝ) := ∃ M : ℝ, ∀ s ∈ S, M ≤ s
+
+/- Definition
+We call $M$ a lower bound of $S ⊂ ℝ$ if and only if $∀ s ∈ S, s ≥ M$.
+-/
 def lower_bound (S : set ℝ) (M : ℝ) := ∀ s ∈ S, M ≤ s
 
+/- Corollary
+A set $S ⊂ ℝ$ is bounded below if and only if there exists a $M ∈ ℝ$, $M$ is an lower bound of $S$
+-/
 theorem bdd_below_iff_have_lwr_bd (S : set ℝ) : (∃ M : ℝ, lower_bound S M) ↔ bounded_below S :=
 by {split, all_goals {rintro ⟨M, hM⟩, use M, assumption} }
 
+/- Exercise
+If $s ∈ ℝ$ is an upper bound of a set $S ⊂ ℝ$, then $-s$ is a lower bound of the set ${t ∈ ℝ | -t ∈ S}$.
+-/
 theorem upr_bd_neg_set_lwr_bd (S : set ℝ) (s : ℝ) : upper_bound S s ↔ lower_bound {t : ℝ | -t ∈ S} (-s) :=
 begin
     split,
@@ -168,6 +231,9 @@ begin
         from h (-x) this
 end
 
+/- Definition
+We call a set $S ⊂ ℝ$ bounded if it is bounded above and below.
+-/
 def bounded (S : set ℝ) := bounded_above S ∧ bounded_below S
 
 -- Okay, so I've switched around the definition of supremums but dw, the two definitions are equiv.
@@ -302,8 +368,6 @@ theorem sqrt_three_in_R : ∃ x : ℝ, x ^ 2 = 3 :=
 begin
     sorry
 end
-
--- TO DO : Alternative construction : Dedekind cuts
 
 -- Triangle inequalities
 

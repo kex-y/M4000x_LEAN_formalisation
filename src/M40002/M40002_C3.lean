@@ -489,8 +489,7 @@ lemma cauchy_bounded (a : ℕ → ℝ) : cauchy a → seq_bounded a := by sorry
 -- Cauchy implies convergent
 lemma cauchy_to_conv (a : ℕ → ℝ) (h : cauchy a) : is_convergent a :=
 begin
-    have hα : seq_bounded a := cauchy_bounded a h,
-    rcases bolzano_weierstrass hα with ⟨b, ⟨⟨n, ⟨hb₁, hb₂⟩⟩, ⟨l, hl⟩⟩⟩,
+    rcases bolzano_weierstrass (cauchy_bounded a h) with ⟨b, ⟨⟨n, ⟨hb₁, hb₂⟩⟩, ⟨l, hl⟩⟩⟩,
     use l, intros ε hε,
     cases h (ε / 2) (half_pos hε) with N₁ hN₁,
     cases hl (ε / 2) (half_pos hε) with N₂ hN₂,
@@ -498,8 +497,8 @@ begin
     use N, intros i hi,
     suffices : abs (a i - a N) + abs (a N - l) < ε,
         apply lt_of_le_of_lt _ this,
-        have hα : a i - a N + (a N - l) = a i - l := by {linarith},
-        rw ←hα,
+        have hβ: a i - a N + (a N - l) = a i - l := by {linarith},
+        rw ←hβ,
         from abs_add (a i - a N) (a N - l),
     have hα : abs (a i - a N) + abs (a N - l) < ε / 2 + ε / 2 := 
         by {have : N = n (max N₁ N₂) := rfl,

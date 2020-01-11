@@ -13,6 +13,8 @@ Starting to formalise M40002.
 * C3. Convergence of Sequences
 * C3. Properties of Convergent Sequences
 * C3. Cauchy Sequence
+* C4. Basic Properties of Convergent Series
+* C4. Different Tests for Convergence 
 
 
 There are some other reference files too (no need to pay too much attention to them :) )!

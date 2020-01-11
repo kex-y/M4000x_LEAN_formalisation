@@ -80,7 +80,6 @@ begin
     rwa ←(equality_def c b)
 end
 
-#check finset.le_max_of_mem
 -- If (a n) is convergent then its bounded
 lemma converge_is_bdd_abv (b : ℕ → ℝ) : is_convergent b → seq_bounded_above b :=
 begin

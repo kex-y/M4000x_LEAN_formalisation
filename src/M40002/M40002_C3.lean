@@ -80,19 +80,60 @@ begin
     rwa ←(equality_def c b)
 end
 
+#check finset.le_max_of_mem
 -- If (a n) is convergent then its bounded
-theorem converge_is_bdd (a : ℕ → ℝ) : is_convergent a → seq_bounded a :=
+lemma converge_is_bdd_abv (b : ℕ → ℝ) : is_convergent b → seq_bounded_above b :=
 begin
-    unfold is_convergent,
-    unfold seq_bounded,
-    unfold seq_bounded_above,
-    unfold seq_bounded_below,
     rintro ⟨l, hl⟩,
-    have : (1 : ℝ) > 0 := by {linarith},
-    -- Note that we have (hl 1 this) == ∃ (N : ℕ), ∀ (n : ℕ), n ≥ N → abs (a n - l) < 1
-    -- then we can let the bound be max {a 1, a 2, ... , a (N - 1), l + 1}
-    -- But how can I type this in LEAN I've got no idea! :/
-    sorry
+    cases (hl 1 _) with N hN,
+    swap, linarith,
+    let U := finset.image b (finset.range (N + 1)) ∪ {l + 1},
+    have : b 0 ∈ U := by simp,  
+    cases finset.max_of_mem this with R hR,
+    use R, intro m,
+    cases le_or_lt m N,
+        {have : b m ∈ U :=
+            by{simp, left, use m, from ⟨(nat_le_imp_lt_succ N m).mp h, rfl⟩},
+        from finset.le_max_of_mem this hR
+        },
+        {have : l + 1 ∈ U := by {simp},
+        replace this : l + 1 ≤ R :=
+            by {from finset.le_max_of_mem this hR},
+        apply le_trans _ this,
+        replace this : abs (b m - l) < 1 := hN m (le_of_lt h),
+        rw abs_lt at this,
+        from le_of_lt (sub_lt_iff_lt_add'.mp this.right)
+        }
+end
+
+lemma converge_is_bdd_blw (b : ℕ → ℝ) : is_convergent b → seq_bounded_below b :=
+begin
+    rintro ⟨l, hl⟩,
+    cases (hl 1 _) with N hN,
+    swap, linarith,
+    let U := finset.image b (finset.range (N + 1)) ∪ {l + -1},
+    have : b 0 ∈ U := by simp,  
+    cases finset.min_of_mem this with R hR,
+    use R, intro m,
+    cases le_or_lt m N,
+        {have : b m ∈ U :=
+            by{simp, left, use m, from ⟨(nat_le_imp_lt_succ N m).mp h, rfl⟩},
+        from finset.min_le_of_mem this hR
+        },
+        {have : l + -1 ∈ U := by {simp},
+        replace this : R ≤ l + -1 :=
+            by {from finset.min_le_of_mem this hR},
+        apply le_trans this,
+        replace this : abs (b m - l) < 1 := hN m (le_of_lt h),
+        rw abs_lt at this,
+        from le_of_lt (lt_sub_iff_add_lt'.mp this.left)
+        }
+end
+
+theorem converge_is_bdd (b : ℕ → ℝ) : is_convergent b → seq_bounded b :=
+begin
+    intro h,
+    from ⟨converge_is_bdd_abv b h, converge_is_bdd_blw b h⟩
 end
 
 /- Can I define the addition of sequences through instances?

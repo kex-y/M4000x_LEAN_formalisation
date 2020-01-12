@@ -129,11 +129,7 @@ begin
         }
 end
 
-theorem converge_is_bdd (b : ℕ → ℝ) : is_convergent b → seq_bounded b :=
-begin
-    intro h,
-    from ⟨converge_is_bdd_abv b h, converge_is_bdd_blw b h⟩
-end
+theorem converge_is_bdd (b : ℕ → ℝ) : is_convergent b → seq_bounded b := λ h, ⟨converge_is_bdd_abv b h, converge_is_bdd_blw b h⟩
 
 /- Can I define the addition of sequences through instances?
 def seq := ℕ → ℝ
@@ -524,7 +520,56 @@ begin
 end
 
 -- Cauchy implies bounded
-lemma cauchy_bounded (a : ℕ → ℝ) : cauchy a → seq_bounded a := by sorry
+lemma cauchy_bounded_abv (b : ℕ → ℝ) : cauchy b → seq_bounded_above b :=
+begin
+    intro hb,
+    cases (hb 1 _) with N hN,
+    swap, linarith,
+    let U := finset.image b (finset.range (N + 1)) ∪ {b N + 1},
+    have : b 0 ∈ U := by simp,  
+    cases finset.max_of_mem this with R hR,
+    use R, intro m,
+    cases le_or_lt m N,
+        {have : b m ∈ U :=
+            by{simp, left, use m, from ⟨(nat_le_imp_lt_succ N m).mp h, rfl⟩},
+        from finset.le_max_of_mem this hR
+        },
+        {have : b N + 1 ∈ U := by {simp},
+        replace this : b N + 1 ≤ R :=
+            by {from finset.le_max_of_mem this hR},
+        apply le_trans _ this,
+        replace this : abs (b m - b N) < 1 := hN m N ⟨le_of_lt h, le_refl N⟩,
+        rw abs_lt at this,
+        from le_of_lt (sub_lt_iff_lt_add'.mp this.right)
+        }
+end
+
+lemma cauchy_bounded_blw (b : ℕ → ℝ) : cauchy b → seq_bounded_below b :=
+begin
+    intro hb,
+    cases (hb 1 _) with N hN,
+    swap, linarith,
+    let U := finset.image b (finset.range (N + 1)) ∪ {b N + -1},
+    have : b 0 ∈ U := by simp,  
+    cases finset.min_of_mem this with R hR,
+    use R, intro m,
+    cases le_or_lt m N,
+        {have : b m ∈ U :=
+            by{simp, left, use m, from ⟨(nat_le_imp_lt_succ N m).mp h, rfl⟩},
+        from finset.min_le_of_mem this hR
+        },
+        {have : b N + -1 ∈ U := by {simp},
+        replace this : R ≤ b N + -1 :=
+            by {from finset.min_le_of_mem this hR},
+        apply le_trans this,
+        replace this : abs (b m - b N) < 1 := hN m N ⟨le_of_lt h, le_refl N⟩,
+        rw abs_lt at this,
+        from le_of_lt (lt_sub_iff_add_lt'.mp this.left)
+        }
+end
+
+
+lemma cauchy_bounded (a : ℕ → ℝ) : cauchy a → seq_bounded a := λ h, ⟨cauchy_bounded_abv a h, cauchy_bounded_blw a h⟩
 
 -- Cauchy implies convergent
 lemma cauchy_to_conv (a : ℕ → ℝ) (h : cauchy a) : is_convergent a :=

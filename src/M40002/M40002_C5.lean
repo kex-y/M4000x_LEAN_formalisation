@@ -54,7 +54,7 @@ end
 def func_add_func (f g : ℝ → ℝ) := λ r : ℝ, f r + g r
 notation f ` + ` g := func_add_func f g
 
-theorem func_add_lim_conv (f g : ℝ → ℝ) (a b₁ b₂) : func_converges_to f a b₁ ∧ func_converges_to g a b₂ → func_converges_to (f + g) a (b₁ + b₂) :=
+theorem func_add_func_conv (f g : ℝ → ℝ) (a b₁ b₂) : func_converges_to f a b₁ ∧ func_converges_to g a b₂ → func_converges_to (f + g) a (b₁ + b₂) :=
 begin
 	rintro ⟨ha, hb⟩,
 	rw seq_contin,
@@ -63,6 +63,13 @@ begin
 	rw this,
 	apply add_lim_conv,
 	from ⟨seq_contin.mp ha s hs, seq_contin.mp hb s hs⟩
+end
+
+theorem func_add_func_contin (f g : ℝ → ℝ) : func_continuous f ∧ func_continuous g → func_continuous (f + g) :=
+begin
+	rintros ⟨ha, hb⟩ a,
+	apply func_add_func_conv,
+	from ⟨ha a, hb a⟩
 end
 
 def func_mul_func (f g : ℝ → ℝ) := λ r : ℝ, f r * g r
@@ -78,6 +85,13 @@ begin
 	apply mul_lim_conv,
 	from seq_contin.mp ha s hs,
 	from seq_contin.mp hb s hs,
+end
+
+theorem func_mul_func_contin (f g : ℝ → ℝ) : func_continuous f ∧ func_continuous g → func_continuous (f × g) :=
+begin
+	rintros ⟨ha, hb⟩ a,
+	apply func_mul_func_conv,
+	from ⟨ha a, hb a⟩
 end
 
 noncomputable def func_div_func (f g : ℝ → ℝ) := λ r : ℝ, (f r) / (g r)
@@ -106,5 +120,43 @@ begin
 	apply hb (func_seq_comp f s),
 	from ha s hs
 end
+
+theorem func_comp_func_contin (f g : ℝ → ℝ) : func_continuous f ∧ func_continuous g → func_continuous (g ∘ f) :=
+begin
+	repeat {unfold func_continuous},
+	rintros ⟨ha, hb⟩ a,
+	apply func_comp_func_conv,
+	swap, from f a,
+	from ⟨ha a, hb (f a)⟩
+end
+
+-- Starting to prove that all polynomials and rational functions are continuous
+
+lemma one_contin : func_continuous (λ x : ℝ, 1) :=
+begin
+	intros a ε hε,
+	simp, use ε,
+	from ⟨hε, λ x, λ hx, hε⟩
+end
+
+lemma x_contin : func_continuous (λ x : ℝ, x) :=
+begin
+	intros a ε hε,
+	simp, use ε,
+	from ⟨hε, λ x, λ hx, hx⟩
+end
+
+lemma xn_contin (n : ℕ) : func_continuous (λ x : ℝ, x ^ n) :=
+begin
+	induction n with k hk,
+		{simp, from one_contin},
+		{have : (λ (x : ℝ), x ^ nat.succ k) = func_mul_func (λ x : ℝ, x) (λ x : ℝ, x ^ k) := rfl,
+		rw this,
+		apply func_mul_func_contin,
+		from ⟨x_contin, hk⟩
+		}
+end
+
+
 
 end M40002

@@ -8,7 +8,7 @@ namespace M40002
 def func_converges_to (f : ℝ → ℝ) (a b : ℝ) := ∀ ε > 0, ∃ δ > 0, ∀ x : ℝ, abs (x - a) < δ → abs (f x - b) < ε
 
 -- Definition of continuity at a point
-def func_continuous_at (f : ℝ → ℝ) (a : ℝ) := ∃ b : ℝ, func_converges_to f a (f a)
+def func_continuous_at (f : ℝ → ℝ) (a : ℝ) := func_converges_to f a (f a)
 
 -- Definition of a continuous function
 def func_continuous (f : ℝ → ℝ) := ∀ a : ℝ, func_continuous_at f a
@@ -94,6 +94,17 @@ begin
 	from seq_contin.mp ha s hs,
 	from seq_contin.mp hb s hs,
 	norm_cast, assumption
+end
+
+theorem func_comp_func_conv (f g : ℝ → ℝ) (a b c : ℝ) : func_converges_to f a b ∧ func_converges_to g b c → func_converges_to (g ∘ f) a c :=
+begin
+	repeat {rw seq_contin},
+	rintro ⟨ha, hb⟩,
+	intros s hs,
+	have : func_seq_comp (g ∘ f) s = func_seq_comp g (func_seq_comp f s) := rfl,
+	rw this,
+	apply hb (func_seq_comp f s),
+	from ha s hs
 end
 
 end M40002

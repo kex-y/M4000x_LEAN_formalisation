@@ -17,7 +17,7 @@ def func_continuous (f : ℝ → ℝ) := ∀ a : ℝ, func_continuous_at f a
 def func_seq_comp (f : ℝ → ℝ) (s : ℕ → ℝ) (n : ℕ) := f (s n)
 
 -- Sequential continuity
-theorem seq_contin (f : ℝ → ℝ) (a b : ℝ) : (func_converges_to f a b) ↔ ∀ s : ℕ → ℝ, s ⇒ a → func_seq_comp f s ⇒ b :=
+theorem seq_contin {f : ℝ → ℝ} {a b : ℝ} : (func_converges_to f a b) ↔ ∀ s : ℕ → ℝ, s ⇒ a → func_seq_comp f s ⇒ b :=
 begin
     split,
         {intros h s hs ε hε,
@@ -50,5 +50,50 @@ begin
         }
 end
 
+-- Algebra of limits for functions
+def func_add_func (f g : ℝ → ℝ) := λ r : ℝ, f r + g r
+notation f ` + ` g := func_add_func f g
+
+theorem func_add_lim_conv (f g : ℝ → ℝ) (a b₁ b₂) : func_converges_to f a b₁ ∧ func_converges_to g a b₂ → func_converges_to (f + g) a (b₁ + b₂) :=
+begin
+	rintro ⟨ha, hb⟩,
+	rw seq_contin,
+	intros s hs,
+	have : func_seq_comp (f + g) s = func_seq_comp f s + func_seq_comp g s := rfl,
+	rw this,
+	apply add_lim_conv,
+	from ⟨seq_contin.mp ha s hs, seq_contin.mp hb s hs⟩
+end
+
+def func_mul_func (f g : ℝ → ℝ) := λ r : ℝ, f r * g r
+notation f ` × ` g := func_mul_func f g
+
+theorem func_mul_func_conv (f g : ℝ → ℝ) (a b₁ b₂) : func_converges_to f a b₁ ∧ func_converges_to g a b₂ → func_converges_to (f × g) a (b₁ * b₂) :=
+begin
+	rintro ⟨ha, hb⟩,
+	rw seq_contin,
+	intros s hs,
+	have : func_seq_comp (f × g) s = seq_mul_seq (func_seq_comp f s) (func_seq_comp g s) := rfl,
+	rw this,
+	apply mul_lim_conv,
+	from seq_contin.mp ha s hs,
+	from seq_contin.mp hb s hs,
+end
+
+noncomputable def func_div_func (f g : ℝ → ℝ) := λ r : ℝ, (f r) / (g r)
+notation f ` / ` g := func_div_func f g
+
+theorem func_div_func_conv (f g : ℝ → ℝ) (a b₁ b₂) (h : b₂ ≠ 0) : func_converges_to f a b₁ ∧ func_converges_to g a b₂ → func_converges_to (f / g) a (b₁ / b₂) :=
+begin
+	rintro ⟨ha, hb⟩,
+	rw seq_contin,
+	intros s hs,
+	have : func_seq_comp (f / g) s = seq_div_seq (func_seq_comp f s) (func_seq_comp g s) := rfl,
+	rw this,
+	apply div_lim_conv,
+	from seq_contin.mp ha s hs,
+	from seq_contin.mp hb s hs,
+	norm_cast, assumption
+end
 
 end M40002

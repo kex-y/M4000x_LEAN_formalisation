@@ -131,14 +131,6 @@ end
 
 theorem converge_is_bdd (b : ℕ → ℝ) : is_convergent b → seq_bounded b := λ h, ⟨converge_is_bdd_abv b h, converge_is_bdd_blw b h⟩
 
-/- Can I define the addition of sequences through instances?
-def seq := ℕ → ℝ
-
-def seq_add : seq → seq → seq
-
-instance seq_has_add : has_add seq := apply_instance
--/
-
 -- Defining addition for sequences
 def seq_add_seq (a : ℕ → ℝ) (b : ℕ → ℝ) := λ n : ℕ, a n + b n
 notation a ` + ` b := seq_add_seq a b
@@ -194,10 +186,7 @@ end
 
 -- Defining division of sequences (why is this noncomputable?)
 noncomputable def seq_div_seq (a : ℕ → ℝ) (b : ℕ → ℝ) := λ n : ℕ, (a n) / (b n) 
-notation a ` / ` b := seq_div_seq a b
-
-noncomputable def seq_div_real (a : ℕ → ℝ) (b : ℝ) := λ n : ℕ, a n / b
-notation a ` / ` b := seq_div_real a b
+noncomputable instance : has_div (ℕ → ℝ) := ⟨seq_div_seq⟩
 
 theorem div_lim_conv (a b : ℕ → ℝ) (l m : ℝ) (ha : a ⇒ l) (hb : b ⇒ m) (hc : m ≠ 0) : (a / b) ⇒ l / m :=
 begin

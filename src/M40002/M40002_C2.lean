@@ -333,10 +333,8 @@ begin -- proof essentially identical to that of sup_def
         }
 end
 
-theorem completeness (S : set ℝ) (h : bounded_above S) (h1 : S ≠ ∅) : ∃ s : ℝ, sup S s :=
-begin
-    sorry
-end
+-- Defining the Completeness axiom
+axiom completeness (S : set ℝ) (h : bounded_above S) (h1 : S ≠ ∅) : ∃ s : ℝ, sup S s
 
 -- Exercise 2.29
 theorem completeness_below (S : set ℝ) (h : bounded_below S) (h1 : S ≠ ∅) : ∃ s : ℝ, inf S s :=
@@ -364,10 +362,7 @@ begin
         all_goals {repeat {rw set.mem_set_of_eq}, simp}
 end
 
-theorem sqrt_three_in_R : ∃ x : ℝ, x ^ 2 = 3 :=
-begin
-    sorry
-end
+-- TODO: theorem sqrt_three_in_R : ∃ x : ℝ, x ^ 2 = 3 :=
 
 -- Triangle inequalities
 

@@ -1,7 +1,6 @@
 -- Intermediate Value Theorem
 
 import M40002.M40002_C5
-import tactic.abel
 
 namespace M40002
 
@@ -115,16 +114,14 @@ begin
 				},
 			replace this : abs (M + min (δ / 2) ((b - M) / 2) - M) < δ := 
 				by {apply lt_of_le_of_lt _ this,
-				simp, abel,
-				have hpos : 0 < min (δ / 2) ((b - M) / 2) :=
+				rw add_comm, simp,
+				have hpos : 0 < min (δ / 2) ((b + -M) / 2) :=
 					by {simp, split,
 					from half_pos hδ,
 					linarith
 					},
 				rw [abs_of_pos hpos, abs_of_pos (half_pos hδ)],
 				from min_le_left (δ / 2) ((b - M) / 2),
-
-				
 				},
 			replace this : abs (f (M + min (δ / 2) ((b - M) / 2)) - f M) < y - f M :=
 				by {from hhδ (M + min (δ / 2) ((b - M) / 2)) this},

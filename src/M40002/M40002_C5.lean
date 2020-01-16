@@ -17,6 +17,11 @@ def func_continuous (f : ℝ → ℝ) := ∀ a : ℝ, func_continuous_at f a
 def func_seq_comp (f : ℝ → ℝ) (s : ℕ → ℝ) (n : ℕ) := f (s n)
 
 -- Sequential continuity
+lemma seq_contin_conv_lem {s : ℕ → ℝ} {a : ℝ} (h : ∀ n : ℕ, abs (s n - a) < 1 / (n + 1)) : s ⇒ a :=
+begin
+	sorry
+end
+
 theorem seq_contin {f : ℝ → ℝ} {a b : ℝ} : (func_converges_to f a b) ↔ ∀ s : ℕ → ℝ, s ⇒ a → func_seq_comp f s ⇒ b :=
 begin
     split,
@@ -27,26 +32,35 @@ begin
         have : abs (s n - a) < δ := hN n hn,
         from hr (s n) this
         },
+
         {intros h,
         cases classical.em (func_converges_to f a b) with ha ha,
         from ha,
         unfold func_converges_to at ha,
         push_neg at ha,
         rcases ha with ⟨ε, ⟨hε, hδ⟩⟩,
-        -- let s : ℕ → ℝ := λ n : ℕ, ((hδ (1 / (n + 1)) _) n).some,
-
-        -- have h₁ : s ⇒ a := sorry,
-/-        have h₂ : ¬ (func_seq_comp f s ⇒ b) :=
+		have hα : ∀ n : ℕ, 1 / ((n : ℝ) + 1) > 0 := 
+			by {intro n, simp,
+			norm_cast, from nat.zero_lt_one_add n},
+        let s : ℕ → ℝ := λ n : ℕ, classical.some (hδ (1 / (n + 1)) (hα n)),
+		have h₀ : s  = λ n : ℕ, classical.some (hδ (1 / (n + 1)) (hα n)) := rfl,
+		have h₁ : s ⇒ a := 
+			by {have : ∀ n : ℕ, abs (s n - a) < 1 / ((n : ℝ) + 1) :=
+				by {intro n,
+					-- Property from the definition of s
+				sorry},
+			from seq_contin_conv_lem this
+			},
+        have h₂ : ¬ (func_seq_comp f s ⇒ b) :=
             by {unfold converges_to,
             push_neg, use ε,
             split, from hε,
             intro N, use N + 1,
             split, from nat.le_succ N,
-            from hδ (1 / (N + 1)) (zero_le (1 / (N + 1)))
-
-            }
--/
-        sorry
+			-- Property from the definition of s
+			sorry
+            },
+		exfalso; from h₂ (h s h₁)
         }
 end
 

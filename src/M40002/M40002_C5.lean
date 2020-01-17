@@ -189,17 +189,20 @@ begin
 		}
 end
 
-#print polynomial.induction_on
 theorem poly_contin (f : polynomial ℝ) : func_continuous (λ x, f.eval x) :=
 begin
 	apply polynomial.induction_on f,
-		{intro a, simp, 
+		{intro a, simp,
 		from constant_contin a
 		},
-		{intros p q hp hq,
-		sorry
+		{intros p q hp hq, simp, 
+		apply func_add_func_contin (λ x : ℝ, polynomial.eval x p) (λ x : ℝ, polynomial.eval x q),
+		from ⟨hp, hq⟩
 		},
-		sorry
+		simp,
+		intros n a hcon,
+		apply func_mul_func_contin,
+		from ⟨constant_contin a, xn_contin (n + 1)⟩
 end
 
 end M40002

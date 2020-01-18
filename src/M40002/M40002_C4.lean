@@ -126,7 +126,6 @@ begin
         }
 end
 
--- set_option trace.simplify.rewrite true
 theorem scalar_sum_lim_conv {a : ℕ → ℝ} {l m : ℝ} (h₁ : a ∑⇒ l) : (a × m) ∑⇒ l * m :=
 begin
     unfold sum_converges_to,
@@ -136,9 +135,42 @@ begin
     from cons_conv
 end
 
+--set_option trace.simplify.rewrite true
 -- Defining absolute convergence
 noncomputable def abs_seq (a : ℕ → ℝ) (n : ℕ) := abs (a n)
-def abs_converge (a : ℕ → ℝ) := ∑⇒ abs_seq a
+def abs_sum_converge (a : ℕ → ℝ) := ∑⇒ abs_seq a
+
+-- Absolutely convergen implies normal convergence
+lemma sum_diff {a : ℕ → ℝ} {n m : ℕ} (h₁ : n < m) : (partial_sum_to a m) - (partial_sum_to a n) = finset.sum (finset.Ico n m) a :=
+begin
+    unfold partial_sum_to, 
+    induction m with k hk,
+        {exfalso, from nat.not_succ_le_zero n h₁},
+        {rw [finset.sum_range_succ, finset.sum_Ico_succ_top],
+        swap, from nat.lt_succ_iff.mp h₁,
+        simp, 
+        sorry
+        }
+end
+
+theorem abs_conv_to_conv {a : ℕ → ℝ} : abs_sum_converge a → ∑⇒ a :=
+begin
+    intro h₁,
+    suffices : cauchy (∑ a),
+        cases cauchy_iff_conv.mp this with l hl,
+        use l, from hl,
+    have hcauchy : cauchy (∑ abs_seq a) := cauchy_iff_conv.mpr h₁,
+    unfold cauchy at hcauchy,
+    intros ε hε,
+    cases hcauchy ε hε with N hN,
+    use N, intros n m h₂,
+    replace hN : abs ((∑abs_seq a) n - (∑abs_seq a) m) < ε := hN n m h₂,
+    cases lt_trichotomy n m,
+        swap, cases h,
+        {rw h, simp, from hε},
+        {sorry},
+        {sorry}
+end
 
 
 end M40002

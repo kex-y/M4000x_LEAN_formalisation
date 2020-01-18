@@ -44,7 +44,16 @@ begin
         {rwa hc}
 end
 
--- Limits are unique! (I gotta admit this my proof is very terrible with alot of unnecessary lines :/)
+-- Constants converge to themselves
+theorem cons_conv {a : ℕ → ℝ} {c : ℝ} (h₁ : a = λ n, c) : a ⇒ c :=
+begin
+    intros ε hε,
+    use 0, intros n hn,
+    rw h₁, simp,
+    from hε
+end
+
+-- Limits are unique! (Unnecessartily complicated proof!)
 theorem unique_lim (a : ℕ → ℝ) (b c : ℝ) (hb : a ⇒ b) (hc : a ⇒ c) : b = c :=
 begin
     have : ∀ (ε : ℝ), ε > 0 → (∃ (N : ℕ), ∀ (n : ℕ), n ≥ N → abs (b - c) < ε) :=
@@ -184,7 +193,7 @@ begin
     sorry
 end
 
--- Defining division of sequences (why is this noncomputable?)
+-- Defining division of sequences
 noncomputable def seq_div_seq (a : ℕ → ℝ) (b : ℕ → ℝ) := λ n : ℕ, (a n) / (b n) 
 noncomputable instance : has_div (ℕ → ℝ) := ⟨seq_div_seq⟩
 

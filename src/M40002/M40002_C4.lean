@@ -92,5 +92,53 @@ begin
         }
 end
 
+-- Algebra of limits for sums
+lemma sum_add_sum_split {a b : ℕ → ℝ} : (∑ a) + (∑ b) = (∑ a + b) :=
+begin
+    rw [seq_add_seq, function.funext_iff], 
+    intro n,
+    unfold partial_sum_to,
+    induction n with k hk,
+        {simp},
+        {repeat {rw finset.sum_range_succ},
+        rw [←hk, seq_add_seq], simp
+        }
+end
+
+theorem add_sum_lim_conv {a b : ℕ → ℝ} {l m : ℝ} (h₁ : a ∑⇒ l) (h₂ : b ∑⇒ m) : (a + b) ∑⇒ (l + m) :=
+begin
+    unfold sum_converges_to,
+    rw ←sum_add_sum_split,
+    apply add_lim_conv,
+    from ⟨h₁, h₂⟩
+end
+
+lemma scalar_mul_sum_split {a : ℕ → ℝ} {m : ℝ} : ((∑ a) × m) = ∑ (a × m) :=
+begin
+    rw function.funext_iff,
+    intro n, rw seq_mul_real,
+    unfold partial_sum_to,
+    induction n with k hk,
+        {simp},
+        {rw [finset.sum_range_succ, add_mul, hk],
+        have : a k * m = (a × m) k := rfl,
+        rwa [this, ←finset.sum_range_succ]
+        }
+end
+
+-- set_option trace.simplify.rewrite true
+theorem scalar_sum_lim_conv {a : ℕ → ℝ} {l m : ℝ} (h₁ : a ∑⇒ l) : (a × m) ∑⇒ l * m :=
+begin
+    unfold sum_converges_to,
+    rw ←scalar_mul_sum_split,
+    apply mul_lim_conv, 
+    from h₁,
+    from cons_conv
+end
+
+-- Defining absolute convergence
+noncomputable def abs_seq (a : ℕ → ℝ) (n : ℕ) := abs (a n)
+def abs_converge (a : ℕ → ℝ) := ∑⇒ abs_seq a
+
 
 end M40002

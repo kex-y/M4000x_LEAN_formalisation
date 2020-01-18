@@ -45,11 +45,11 @@ begin
 end
 
 -- Constants converge to themselves
-theorem cons_conv {a : ℕ → ℝ} {c : ℝ} (h₁ : a = λ n, c) : a ⇒ c :=
+theorem cons_conv {c : ℝ} : (λ n : ℕ, c) ⇒ c :=
 begin
     intros ε hε,
     use 0, intros n hn,
-    rw h₁, simp,
+    simp,
     from hε
 end
 

@@ -15,7 +15,6 @@
 
 ### M40002_C4
 - Absolute convergence
-- Algebra of limit for series
 - Sandwich
 - Limit comparison test
 - Alternating series test

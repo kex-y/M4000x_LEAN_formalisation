@@ -135,21 +135,65 @@ begin
     from cons_conv
 end
 
---set_option trace.simplify.rewrite true
 -- Defining absolute convergence
 noncomputable def abs_seq (a : ℕ → ℝ) (n : ℕ) := abs (a n)
 def abs_sum_converge (a : ℕ → ℝ) := ∑⇒ abs_seq a
 
 -- Absolutely convergen implies normal convergence
-lemma sum_diff {a : ℕ → ℝ} {n m : ℕ} (h₁ : n < m) : (partial_sum_to a m) - (partial_sum_to a n) = finset.sum (finset.Ico n m) a :=
+lemma sum_diff {a : ℕ → ℝ} {n m : ℕ} (h₁ : n < m) : (∑ a) m - (∑ a) n = finset.sum (finset.Ico n m) a :=
 begin
     unfold partial_sum_to, 
     induction m with k hk,
         {exfalso, from nat.not_succ_le_zero n h₁},
         {rw [finset.sum_range_succ, finset.sum_Ico_succ_top],
         swap, from nat.lt_succ_iff.mp h₁,
-        simp, 
-        sorry
+        simp,
+        cases nat.lt_succ_iff_lt_or_eq.mp h₁,
+            {rw [←sub_eq_add_neg, hk h]},
+            {rw h, simp}
+        }
+end
+
+lemma sum_le (a b : ℕ → ℝ) {n m : ℕ} (h₁ : ∀ n : ℕ, a n ≤ b n) : finset.sum (finset.Ico n m) a ≤ finset.sum (finset.Ico n m) b :=
+begin
+    induction m with k hk,
+        {rw finset.Ico.eq_empty_iff.mpr (zero_le n), simp},
+        {cases le_or_lt n k,
+            {repeat {rw finset.sum_Ico_succ_top h},
+            apply add_le_add hk _,
+            from h₁ k
+            },
+            {rw finset.Ico.eq_empty_iff.mpr (nat.succ_le_iff.mpr h),
+            simp
+            }
+        }
+end
+
+lemma sum_pos {a : ℕ → ℝ} {n m : ℕ} (h₁ : ∀ k : ℕ, 0 ≤ a k) : 0 ≤ finset.sum (finset.Ico n m) a :=
+begin
+    induction m with k hk,
+        {rw finset.Ico.eq_empty_iff.mpr (zero_le n), simp},
+        {cases le_or_lt n k,
+            {rw finset.sum_Ico_succ_top h,
+            from add_nonneg hk (h₁ k)
+            },
+            {rw finset.Ico.eq_empty_iff.mpr (nat.succ_le_iff.mpr h),
+            simp
+            }
+        }
+end
+
+lemma neg_sum {a : ℕ → ℝ} {n m : ℕ} : - finset.sum (finset.Ico n m) a = finset.sum (finset.Ico n m) (a × -1) :=
+begin
+    induction m with k hk,
+        {rw finset.Ico.eq_empty_iff.mpr (zero_le n), simp},
+        {cases le_or_lt n k,
+            {repeat {rw finset.sum_Ico_succ_top h},
+            unfold seq_mul_real, simp
+            },
+            {rw finset.Ico.eq_empty_iff.mpr (nat.succ_le_iff.mpr h),
+            simp
+            }
         }
 end
 
@@ -168,9 +212,47 @@ begin
     cases lt_trichotomy n m,
         swap, cases h,
         {rw h, simp, from hε},
-        {sorry},
-        {sorry}
+        {rw sum_diff h,
+        rw sum_diff h at hN,
+        apply lt_of_le_of_lt _ hN,
+        rw abs_le,
+        split, swap,
+            {have : ∀ k : ℕ, a k ≤ abs_seq a k := λ k : ℕ,
+                by {from le_max_left (a k) (- a k)},
+            apply le_trans (sum_le a (abs_seq a) this),
+            from le_max_left (finset.sum (finset.Ico m n) (abs_seq a)) (-finset.sum (finset.Ico m n) (abs_seq a))
+            },
+            {rw abs_of_nonneg, swap, 
+                {apply sum_pos,
+                intro k, from abs_nonneg (a k)},
+                {rw neg_sum, apply sum_le,
+                intro n, unfold seq_mul_real,
+                simp, rw neg_le, from le_max_right (a n) (-a n)
+                }
+            }
+        },
+        {rw [abs_sub, sum_diff h],
+        rw [abs_sub, sum_diff h] at hN,
+        apply lt_of_le_of_lt _ hN,
+        rw abs_le,
+        split, swap,
+            {have : ∀ k : ℕ, a k ≤ abs_seq a k := λ k : ℕ,
+                by {from le_max_left (a k) (- a k)},
+            apply le_trans (sum_le a (abs_seq a) this),
+            from le_max_left (finset.sum (finset.Ico n m) (abs_seq a)) (-finset.sum (finset.Ico n m) (abs_seq a))
+            },
+            {rw abs_of_nonneg, swap, 
+                {apply sum_pos,
+                intro k, from abs_nonneg (a k)},
+                {rw neg_sum, apply sum_le,
+                intro n, unfold seq_mul_real,
+                simp, rw neg_le, from le_max_right (a n) (-a n)
+                }
+            }
+        }
 end
 
+
+-- set_option trace.simplify.rewrite true
 
 end M40002

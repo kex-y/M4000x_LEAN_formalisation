@@ -1,6 +1,4 @@
 -- Tactics
-
--- intros is the plural of intro
 -- revert is kinda the inverse of intro
 
 example (x : ℕ) : x = x :=
@@ -26,7 +24,7 @@ end
 -- use this when confused
 -- set_option pp.notation false
 
--- show what simp did
+-- shows what simp did
 -- set_option trace.simplify.rewrite true
 
 example (p q : Prop) : p → q → p := λ hp, λ hq, hp

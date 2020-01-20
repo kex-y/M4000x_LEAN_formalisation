@@ -252,7 +252,95 @@ begin
         }
 end
 
-
 -- set_option trace.simplify.rewrite true
+-- Sandwich theorem for sums (How do I use WLOG here to make the proof shorter?)
+theorem sum_sandwich {a b c : ℕ → ℝ} {h₁ : ∀ n : ℕ, c n ≤ a n ∧ a n ≤ b n} : (∑⇒ c) ∧ (∑⇒ b) → ∑⇒ a :=
+begin
+    intro h₂,
+    have hcauchyb : cauchy ∑ b := conv_to_cauchy (∑ b) h₂.right,
+    have hcauchyc : cauchy ∑ c := conv_to_cauchy (∑ c) h₂.left,
+    suffices : cauchy (∑ a),
+        cases cauchy_iff_conv.mp this with l hl,
+        use l, from hl,
+    intros ε hε,
+    cases hcauchyb ε hε with N₁ hN₁,
+    cases hcauchyc ε hε with N₂ hN₂,
+    let N : ℕ := max N₁ N₂,
+    use N, intros n m hnm,
+    cases lt_trichotomy n m,
+        rw [abs_sub, abs_lt],
+        split,
+            {have : N₂ ≤ n ∧ N₂ ≤ m :=
+                by {split,
+                apply le_trans _ hnm.left,
+                from le_max_right N₁ N₂,
+                apply le_trans _ hnm.right,
+                from le_max_right N₁ N₂
+                },
+            replace h₂ : -ε < (∑c) m - (∑c) n :=
+                by {have hα : abs ((∑c) n - (∑c) m) < ε := hN₂ n m this,
+                rw abs_sub at hα,
+                from (abs_lt.mp hα).left
+                },
+            apply lt_of_lt_of_le h₂,
+            repeat {rw sum_diff},
+            apply sum_le, intro n, from (h₁ n).left,
+            repeat {assumption}
+            },
+            {have : N₁ ≤ n ∧ N₁ ≤ m :=
+                by {split,
+                apply le_trans _ hnm.left,
+                from le_max_left N₁ N₂,
+                apply le_trans _ hnm.right,
+                from le_max_left N₁ N₂
+                },
+            replace h₂ : (∑b) m - (∑b) n < ε :=
+                by {have hα : abs ((∑b) n - (∑b) m) < ε := hN₁ n m this,
+                rw abs_sub at hα,
+                from (abs_lt.mp hα).right
+                },
+            apply lt_of_le_of_lt _ h₂,
+            repeat {rw sum_diff},
+            apply sum_le, intro n, from (h₁ n).right,
+            repeat {assumption}
+            },
+        cases h,
+            {rw h, simp, from hε},
+            {rw abs_lt,
+                split,
+                {have : N₂ ≤ n ∧ N₂ ≤ m :=
+                    by {split,
+                    apply le_trans _ hnm.left,
+                    from le_max_right N₁ N₂,
+                    apply le_trans _ hnm.right,
+                    from le_max_right N₁ N₂
+                    },
+                replace h₂ : -ε < (∑c) n - (∑c) m :=
+                    by {have hα : abs ((∑c) n - (∑c) m) < ε := hN₂ n m this,
+                    from (abs_lt.mp hα).left
+                    },
+                apply lt_of_lt_of_le h₂,
+                repeat {rw sum_diff},
+                apply sum_le, intro n, from (h₁ n).left,
+                repeat {assumption}
+                },
+                {have : N₁ ≤ n ∧ N₁ ≤ m :=
+                    by {split,
+                    apply le_trans _ hnm.left,
+                    from le_max_left N₁ N₂,
+                    apply le_trans _ hnm.right,
+                    from le_max_left N₁ N₂
+                    },
+                replace h₂ : (∑b) n - (∑b) m < ε :=
+                    by {have hα : abs ((∑b) n - (∑b) m) < ε := hN₁ n m this,
+                    from (abs_lt.mp hα).right
+                    },
+                apply lt_of_le_of_lt _ h₂,
+                repeat {rw sum_diff},
+                apply sum_le, intro n, from (h₁ n).right,
+                repeat {assumption}
+            }
+        }
+end
 
 end M40002

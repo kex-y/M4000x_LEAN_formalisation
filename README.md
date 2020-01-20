@@ -15,12 +15,16 @@ Starting to formalise M40002.
   
 ### Chapter 3 - Sequences
 * C3. Convergence of Sequences
+* C3. Some Properties of Sequences
 * C3. Algebra of Limits for Sequences
+* C3. Subsequences
 * C3. Cauchy Sequence
   
 ### Chapter 4 - Series
-* C4. Basic Properties of Convergent Series
-* C4. Different Tests for Convergence 
+* C4. Definition of Convergent Series
+* C4. Properties of Finite Sums
+* C4. Properties of Infinite Sums
+* C4. Different Tests for Convergence
   
 ### Chapter 5 - Continuity
 * C5. Definitions of Continuity

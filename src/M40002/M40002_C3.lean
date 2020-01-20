@@ -390,7 +390,7 @@ begin
 end
 
 -- Sandwich Theorem. Suppose that an ≤ bn ≤ cn ∀n and that an → a and cn → a, Then bn → a.
-theorem sandwich_theorem {a b c : ℕ → ℝ} {l : ℝ} (h₀ : a ⇒ l) (h₁ : c ⇒ l) : (a ≤* b) ∧ (b ≤* c) → b ⇒ l :=
+theorem sandwich {a b c : ℕ → ℝ} {l : ℝ} (h₀ : a ⇒ l) (h₁ : c ⇒ l) : (a ≤* b) ∧ (b ≤* c) → b ⇒ l :=
 begin
     rintro ⟨ha, hb⟩,
     intros ε hε,

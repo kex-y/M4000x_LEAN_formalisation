@@ -14,8 +14,6 @@
 - Prove the Bolzano-Weierstrass theorem
 
 ### M40002_C4
-- Absolute convergence
-- Sandwich
 - Limit comparison test
 - Alternating series test
 - Ratio test

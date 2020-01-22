@@ -22,7 +22,7 @@ by {unfold partial_sum_to,
 }
 
 -- ∑ a is convergent implies a → 0
-theorem trivial_test (a : ℕ → ℝ) : (∑⇒ a) → a ⇒ 0 :=
+theorem test_trivial (a : ℕ → ℝ) : (∑⇒ a) → a ⇒ 0 :=
 begin
     intros h ε hε,
     cases h with l hl,
@@ -72,7 +72,7 @@ begin
 end
 
 -- Comparison Test. If 0 ≤ a ≤ b, and if ∑ b converges then so do ∑ a
-theorem comparison_test {a b : ℕ → ℝ} : (∀ n : ℕ, 0 ≤ a n ∧ a n ≤ b n) ∧ (∑⇒ b) → ∑⇒ a := 
+theorem test_comparison {a b : ℕ → ℝ} : (∀ n : ℕ, 0 ≤ a n ∧ a n ≤ b n) ∧ (∑⇒ b) → ∑⇒ a := 
 begin
     rintro ⟨hα, ⟨l, hl⟩⟩,
     apply sum_bdd_abv_conv,
@@ -90,6 +90,21 @@ begin
             },
         from le_trans this (hN n)
         }
+end
+
+lemma sum_split {a : ℕ → ℝ} : ∀ n m : ℕ, m ≤ n → (∑ a) n = (∑ a) m + finset.sum (finset.Ico (m + 1) (n + 1)) a :=
+begin
+    sorry
+end
+
+theorem test_comparison_stronger {a b : ℕ → ℝ} : (∃ N : ℕ, ∀ n : ℕ, N ≤ n → 0 ≤ a n ∧ a n ≤ b n) ∧ (∑⇒ b) → ∑⇒ a := 
+begin
+    rintro ⟨⟨N, hN⟩, ⟨l, hl⟩⟩,
+    let c : ℕ → ℝ := λ m : ℕ, a (m + N),
+    unfold sum_convergent,
+    unfold sum_converges_to,
+    sorry
+
 end
 
 -- Algebra of limits for sums
@@ -254,7 +269,7 @@ end
 
 -- set_option trace.simplify.rewrite true
 -- Sandwich theorem for sums (How do I use WLOG here to make the proof shorter?)
-theorem sum_sandwich {a b c : ℕ → ℝ} {h₁ : ∀ n : ℕ, c n ≤ a n ∧ a n ≤ b n} : (∑⇒ c) ∧ (∑⇒ b) → ∑⇒ a :=
+theorem test_sum_sandwich {a b c : ℕ → ℝ} {h₁ : ∀ n : ℕ, c n ≤ a n ∧ a n ≤ b n} : (∑⇒ c) ∧ (∑⇒ b) → ∑⇒ a :=
 begin
     intro h₂,
     have hcauchyb : cauchy ∑ b := conv_to_cauchy (∑ b) h₂.right,
@@ -270,6 +285,7 @@ begin
     cases lt_trichotomy n m,
         rw [abs_sub, abs_lt],
         split,
+-- These parts are essentially the same
             {have : N₂ ≤ n ∧ N₂ ≤ m :=
                 by {split,
                 apply le_trans _ hnm.left,
@@ -287,6 +303,7 @@ begin
             apply sum_le, intro n, from (h₁ n).left,
             repeat {assumption}
             },
+-- 1
             {have : N₁ ≤ n ∧ N₁ ≤ m :=
                 by {split,
                 apply le_trans _ hnm.left,
@@ -308,6 +325,7 @@ begin
             {rw h, simp, from hε},
             {rw abs_lt,
                 split,
+-- 2
                 {have : N₂ ≤ n ∧ N₂ ≤ m :=
                     by {split,
                     apply le_trans _ hnm.left,
@@ -324,6 +342,7 @@ begin
                 apply sum_le, intro n, from (h₁ n).left,
                 repeat {assumption}
                 },
+-- 3
                 {have : N₁ ≤ n ∧ N₁ ≤ m :=
                     by {split,
                     apply le_trans _ hnm.left,
@@ -341,6 +360,18 @@ begin
                 repeat {assumption}
             }
         }
+end
+
+theorem test_limit_comparison (a b : ℕ → ℝ) (l : ℝ) : (a / b) ⇒ l ∧ abs_sum_converge b → abs_sum_converge a :=
+begin
+    rintro ⟨hab, hbconv⟩,
+    suffices : ∀ n : ℕ, abs_seq a n ≤ abs_seq b n,
+        replace this : ∀ n : ℕ, 0 ≤ abs_seq a n ∧ abs_seq a n ≤ abs_seq b n := λ n : ℕ, ⟨abs_nonneg (a n), this n⟩,
+        apply test_comparison ⟨this, hbconv⟩,
+    intro n,
+    unfold converges_to at hab,
+    sorry
+
 end
 
 end M40002

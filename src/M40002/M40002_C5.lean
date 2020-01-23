@@ -435,16 +435,25 @@ begin
 	from set.subset.trans hδ₂ h₃
 end
 
+lemma element_of_Inter {S : ℕ → set ℝ} {n i : ℕ} : ∀ x ∈ ⋂ i ∈ finset.range n, S i, i ∈ finset.range n → x ∈ S i :=
+by {intros x hx hi, rw set.mem_Inter at hx, finish}
+
+-- TODO : finset has min
+
 -- The intersection of finitely many of open sets is also open
 theorem inter_open_is_open {S : ℕ → set ℝ} (h₁ : ∀ n : ℕ, ∀ i ∈ finset.range n, is_open (S i)) : 
 ∀ n : ℕ, ∀ i ∈ finset.range n, is_open (⋂ i ∈ finset.range n, S i) :=
 begin
 	intros n i hi x hx,
-	rw set.mem_Inter at hx,
-	replace h₁ : ∃ δ > 0, open_interval (x - δ) (x + δ) ⊆ S i,
-		sorry,
-	sorry,
-
+	replace h₁ : ∀ i₁ ∈ finset.range n, ∃ δ > 0, open_interval (x - δ) (x + δ) ⊆ S i₁,
+		intros i₁ hi₁,
+		have : x ∈ S i₁ := by {apply element_of_Inter, repeat {assumption}},
+		from h₁ n i₁ hi₁ x this,
+	simp only [classical.skolem] at h₁,
+	rcases h₁ with ⟨f, ⟨hf₁, hf₂⟩⟩,
+	let S : set ℝ := {t : ℝ | ∀ i (hi : i ∈ finset.range n), t = (f i hi)},
+	sorry
+	
 end
 
 end M40002

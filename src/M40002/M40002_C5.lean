@@ -396,4 +396,55 @@ begin
 		}
 end
 
+-- The union of open sets is also open
+theorem two_union_open_is_open {S T : set ℝ} (h₁ : is_open S) (h₂ : is_open T) : is_open (S ∪ T) :=
+begin
+	intros x hx,
+	rw (set.mem_union x S T) at hx,
+	cases hx,
+		{rcases (h₁ x hx) with ⟨δ, ⟨hδ₁, hδ₂⟩⟩,
+		use δ, use hδ₁,
+		intros a ha, left,
+		from hδ₂ ha
+		},
+		{rcases (h₂ x hx) with ⟨δ, ⟨hδ₁, hδ₂⟩⟩,
+		use δ, use hδ₁,
+		intros a ha, right,
+		from hδ₂ ha
+		}
+end
+
+-- The empty set is open
+theorem empty_open : is_open ∅ := 
+begin
+	intros x hx,
+	exfalso, from hx
+end
+
+-- The union of a collection of open sets is also open
+theorem union_open_is_open {I : Type} {S : I → set ℝ} (h₁ : ∀ i : I, is_open (S i)) : is_open ⋃ i : I, S i :=
+begin
+	intros x hx,
+	rw set.mem_Union at hx,
+	cases hx with i hi,
+	have h₂ : is_open (S i) := h₁ i,
+	unfold is_open at h₂,
+	have h₃ : S i ⊆ ⋃ (i : I), S i := set.subset_Union S i,
+	rcases h₂ x hi with ⟨δ, ⟨hδ₁, hδ₂⟩⟩,
+	use δ, use hδ₁,
+	from set.subset.trans hδ₂ h₃
+end
+
+-- The intersection of finitely many of open sets is also open
+theorem inter_open_is_open {S : ℕ → set ℝ} (h₁ : ∀ n : ℕ, ∀ i ∈ finset.range n, is_open (S i)) : 
+∀ n : ℕ, ∀ i ∈ finset.range n, is_open (⋂ i ∈ finset.range n, S i) :=
+begin
+	intros n i hi x hx,
+	rw set.mem_Inter at hx,
+	replace h₁ : ∃ δ > 0, open_interval (x - δ) (x + δ) ⊆ S i,
+		sorry,
+	sorry,
+
+end
+
 end M40002

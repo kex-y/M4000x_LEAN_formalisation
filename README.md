@@ -31,6 +31,6 @@ Starting to formalise M40002.
 * C5. Sequential Continuity
 * C5. Algebra of Limits for Functions
 * C5. Continuity of Polynomials
-* IVT. Intermediate Value Theorem
+* C5. Intermediate Value Theorem
 
 There are some other reference files too (no need to pay too much attention to them :) )!

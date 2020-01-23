@@ -22,3 +22,5 @@
 - Exponential power series
 
 ### M40002_C5
+- Extreme value theorem
+- Continuous and injective implies inverse is continuous

@@ -11,6 +11,11 @@ notation `∑` a := partial_sum_to a
 def sum_converges_to (a : ℕ → ℝ) (l : ℝ) := (partial_sum_to a) ⇒ l
 notation a ` ∑⇒ ` l := sum_converges_to a l
 
+/- Maybe use this notation instead
+def X (f : real ->Prop) (x : real) := f x
+notation `∑` binders `, ` r:(scoped P, sum_converges_to P) := r
+infixr ` ⇛ `: 50 := X  -/
+
 def sum_convergent (a : ℕ → ℝ) := ∃ l : ℝ, a ∑⇒ l
 notation ` ∑⇒ ` a := sum_convergent a
 
@@ -268,7 +273,7 @@ begin
 end
 
 -- set_option trace.simplify.rewrite true
--- Sandwich theorem for sums (How do I use WLOG here to make the proof shorter?)
+-- Sandwich theorem for sums
 theorem test_sum_sandwich {a b c : ℕ → ℝ} {h₁ : ∀ n : ℕ, c n ≤ a n ∧ a n ≤ b n} : (∑⇒ c) ∧ (∑⇒ b) → ∑⇒ a :=
 begin
     intro h₂,
@@ -281,7 +286,8 @@ begin
     cases hcauchyb ε hε with N₁ hN₁,
     cases hcauchyc ε hε with N₂ hN₂,
     let N : ℕ := max N₁ N₂,
-    use N, intros n m hnm,
+    use N,
+    intros n m hnm,  
     cases lt_trichotomy n m,
         rw [abs_sub, abs_lt],
         split,

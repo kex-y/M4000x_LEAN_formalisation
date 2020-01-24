@@ -364,12 +364,33 @@ def func_bounded_below {S : set ℝ} (f : S → ℝ) := bounded_below {t : ℝ |
 -- TODO Extreme value theorem
 
 def closed_interval (a b : ℝ) := {x : ℝ | a ≤ x ∧ x ≤ b}
+
+lemma mem_of_closed_interval {a b x : ℝ} : x ∈ closed_interval a b ↔ a ≤ x ∧ x ≤ b :=
+by {unfold closed_interval, rw set.mem_set_of_eq}
+
+lemma abs_le_closed_interval {x y δ : ℝ} : y ∈ closed_interval (x - δ) (x + δ) ↔ abs (y - x) ≤ δ :=
+begin
+	unfold closed_interval,
+	rw [set.mem_set_of_eq, abs_le],
+	split, repeat {rintro ⟨hα, hβ⟩, split, repeat {linarith}}
+end
+
 def open_interval (a b : ℝ) := {x : ℝ | a < x ∧ x < b}
+
+lemma mem_of_open_interval {a b x : ℝ} : x ∈ open_interval a b ↔ a < x ∧ x < b := 
+by {unfold open_interval, rw set.mem_set_of_eq}
+
+lemma abs_lt_open_interval {x y δ : ℝ} : y ∈ open_interval (x - δ) (x + δ) ↔ abs (y - x) < δ :=
+begin
+	unfold open_interval,
+	rw [set.mem_set_of_eq, abs_lt],
+	split, repeat {rintro ⟨hα, hβ⟩, split, repeat {linarith}}
+end
 
 def is_open (S : set ℝ) := ∀ x ∈ S, ∃ δ > 0, open_interval (x - δ) (x + δ) ⊆ S
 
 -- An open interval is open
-theorem open_interval_is_open {a b : ℝ} : is_open (open_interval a b) :=
+theorem open_interval_is_open (a b : ℝ) : is_open (open_interval a b) :=
 begin
 	unfold open_interval,
 	intros x hx,
@@ -451,9 +472,43 @@ begin
 		from h₁ n i₁ hi₁ x this,
 	simp only [classical.skolem] at h₁,
 	rcases h₁ with ⟨f, ⟨hf₁, hf₂⟩⟩,
-	let S : set ℝ := {t : ℝ | ∀ i (hi : i ∈ finset.range n), t = (f i hi)},
-	sorry
+	let T := finset.image (λ x : {x | x ∈ finset.range n}, f x.1 x.2) (finset.range n).attach,
+
 	
+
+	repeat {sorry}
+end
+
+-- A function f : ℝ → ℝ is continuous iff. ∀ U ⊆ R, f⁻¹(U) is open
+theorem contin_open_pre_image {f : ℝ → ℝ} : func_continuous f ↔ ∀ U : set ℝ, is_open U → is_open {x : ℝ | f x ∈ U} :=
+begin
+	split,
+		{intros h₁ U hU x hx,
+		have hf : f x ∈ U := by {rw set.mem_set_of_eq at hx, assumption},
+		rcases hU (f x) hf with ⟨ε, ⟨hε, hrang⟩⟩,
+		rcases h₁ x ε hε with ⟨δ, ⟨hδ, hcontin⟩⟩,
+		use δ, use hδ,
+		intros y hy,
+		rw set.mem_set_of_eq,
+		rw abs_lt_open_interval at hy,
+		suffices : f y ∈ open_interval (f x - ε) (f x + ε),
+			from hrang this,
+		rw abs_lt_open_interval,
+		from hcontin y hy
+		},
+		{intros hU y ε hε,
+		let U : set ℝ := open_interval (f y - ε) (f y + ε),
+		have : f y ∈ U := by {rw abs_lt_open_interval, simpa},
+		rcases hU U (open_interval_is_open (f y - ε) (f y + ε)) y this with ⟨δ, ⟨hδ, hrang⟩⟩,
+		use δ, use hδ,
+		intros x hx,
+		rw ←abs_lt_open_interval at hx,
+		rw ←abs_lt_open_interval,
+		suffices : x ∈ {x : ℝ | f x ∈ U},
+			rw set.mem_set_of_eq at this,
+			assumption,
+		from hrang hx
+		}
 end
 
 end M40002

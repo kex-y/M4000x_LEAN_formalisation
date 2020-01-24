@@ -5,6 +5,73 @@ namespace M40001
 -- end header
 
 /- Section
+Chapter 1. Sets and Logic
+-/
+
+/- Sub-section
+1.1 Proposition and logic
+-/
+
+/- Definition
+A logical proposition, usually just called a proposition, is a true/false statement. 
+In LEAN we say $P$ is a proposition if it has type Prop, and we write (P : Prop).
+-/
+
+/-
+Some examples of logical propositions include:
+
+$2 + 2 = 4.$
+
+$2 + 2 = 5.$
+
+For all real numbers $x$ and $y$, $x + y = y + x$.
+
+The statement of Pythagoras' theorem.
+
+The statement of the Riemann Hypothesis.
+-/
+
+/-
+Each of these statements is either true, or false. In fact, the first, third and fourth statements are true, the second one is false, and nobody knows whether the last one is true or false.
+-/
+
+/-
+Here are some examples of mathematical objects which are not propositions:
+
+$2 + 2$
+
+$+$
+
+$\pi$
+
+The proof of Pythagoras' theorem.
+-/
+
+/-
+None of these are true/false statements. The first and third of them are numbers, the second one is a function (which takes two numbers $a$ and $b$ in and outputs their sum $a+b$), and the last one is a proof, which is a sequence of logical arguments.
+-/
+
+/- Sub-section
+1.2 Doing mathematics with propositions
+-/
+
+/-
+You all know that if you want to do mathematics with a general real number, you can just call it $x$. Then you can talk about things like $x-3$ or $x^2+2x+1$ and so on. You can also do mathematics with matrices; you can let $A$ and $B$ be general two by two matrices, and then talk about things like $A+B$.
+-/
+
+/-
+During your degree here, you will learn that you can also do mathematics with some far more general things. You will do mathematics with numbers, matrices, groups, elements of groups, rings, elements of rings, vector spaces, elements of vector spaces and so on. In this section, we will do mathematics with propositions.
+-/
+
+/-
+If you're doing mathematics with real numbers like $x$ and $y$, you can do things like considering $x+y$ (a number) or $x^2/y$ (a number, as long as $y$ isn't zero), or $x=y$ (a proposition), or $x<y$ (a proposition).
+-/
+
+/-
+If you're doing mathematics with propositions, there are different things you can do. In this section we will see the most important things we can do with propositions.
+-/
+
+/- Section
 1.3 Relations
 -/
 

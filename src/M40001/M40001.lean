@@ -71,6 +71,10 @@ If you're doing mathematics with real numbers like $x$ and $y$, you can do thing
 If you're doing mathematics with propositions, there are different things you can do. In this section we will see the most important things we can do with propositions.
 -/
 
+/- Sub-section
+1.2.1 And ($∧$)
+-/
+
 /- Section
 1.3 Relations
 -/

@@ -75,6 +75,20 @@ If you're doing mathematics with propositions, there are different things you ca
 1.2.1 And ($∧$)
 -/
 
+/-
+Good variable names for propositions are things like $P$ or $Q$ or $R$.
+-/
+
+/-
+If $P$ and $Q$ are propositions, we can make a new proposition called $P∧ Q$. The symbol $∧$ is pronounced ``and''. The definition of $P ∧ Q$ is that $P ∧ Q$ is true if, and only if, both $P$ and $Q$ are true.
+-/
+
+/-
+Unlike number variables like $x$, proposition variables like $P$ can only take two values - true and false. So we can explain precisely what $P ∧ Q$ is by writing down the so-called truth table for $∧$:
+-/
+
+
+
 /- Section
 1.3 Relations
 -/

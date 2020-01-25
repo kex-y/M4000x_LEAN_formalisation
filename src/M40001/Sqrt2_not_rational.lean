@@ -1,4 +1,5 @@
 import tactic.ring
+import tactic.linarith
 import data.rat.basic
 import data.rat.cast
 

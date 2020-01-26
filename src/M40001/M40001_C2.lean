@@ -618,50 +618,7 @@ end
 def rs (A : set (set(X))) (s t : X) := ∃ B ∈ A, s ∈ B ∧ t ∈ B
 
 /-
-Bonus. Furthermore, it turns out that if $X$ is a set and $R$ an equivalence relation on $X$. Then any partition of $X$ can form a equivalence relation.
+Bonus Exercise. Furthermore, it turns out that if $X$ is a set and $R$ an equivalence relation on $X$. Then any partition of $X$ can form a equivalence relation. Try to prove it <href = "https://leanprover-community.github.io/lean-web-editor/#url=https%3A%2F%2Fraw.githubusercontent.com%2FJasonKYi%2FM4000x_LEAN_formalisation%2Fmaster%2Fhtml%2FExercises%2FExercies4.lean">here</href> and if you get stuck, <href = "https://leanprover-community.github.io/lean-web-editor/#url=https%3A%2F%2Fraw.githubusercontent.com%2FJasonKYi%2FM4000x_LEAN_formalisation%2Fmaster%2Fhtml%2FExercises%2FExercies4_sol.lean">here</href> are the solutions.
 -/
-
-/- Theorem
-Let $X$ be a set and let $R$ be an equivalence relation on $X$. Then any partition of $X$ can form a equivalence relation. 
--/
-theorem partition_equiv_relation -- I have defined rs to be: def rs (A : set (set(X))) (s t : X) := ∃ B ∈ A, s ∈ B ∧ t ∈ B
-    (C : set (set(X))) (h : partition C) : equivalence (rs C) :=
-begin
-    split,
--- Proving reflexivity
-    {intro x,
-    cases h with ha hb,
-    replace ha : 
-        ∃ (B : set X) (H : B ∈ C), x ∈ B ∧ ∀ (D : set X), D ∈ C → x ∈ D → B = D := ha x,
-    rcases ha with ⟨ha, ⟨hb, ⟨hc, hd⟩⟩⟩,
-    use ha, use hb,
-    split,
-    repeat {assumption}
-    },
--- Proving symmtric
-    {split,
-        {rintros x y ⟨ha, ⟨hb, ⟨hc, hd⟩⟩⟩,
-        use ha, use hb,
-        split,
-        repeat {assumption}
-        },
--- Proving transitive
-        {rintros x y z ⟨⟨ha, ⟨hb, ⟨hd, he⟩⟩⟩, ⟨hf, ⟨hg, ⟨hk, hl⟩⟩⟩⟩,
-        use ha, use hb,
-        cases h with hm hn,
-        replace hm : 
-            ∃ (B : set X) (H : B ∈ C), y ∈ B ∧ ∀ (D : set X), D ∈ C → y ∈ D → B = D := hm y,
-        rcases hm with ⟨ho, ⟨hp, ⟨hq, hr⟩⟩⟩,
-        have : hf = ha, 
-            {suffices : hf = ho, {rw this, apply hr ha, repeat {assumption}},
-            rwa hr hf, repeat {assumption},
-            },
-        split,
-        {assumption},
-        {rwa ←this},
-        }
-    }
-end
-
 
 end M40001

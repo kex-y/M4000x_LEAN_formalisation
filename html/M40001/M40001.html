@@ -44,6 +44,276 @@ In LEAN we say $P$ is a proposition if it has type Prop, and we write (P : Prop)
   </div>
 </div>
 
+<<<<<<< HEAD
+<br>
+Here are some examples of logical propositions:
+<ul>
+  <li>$2+2=4$.</li>
+  <li>$2+2=5$.</li>
+  <li>For all real numbers $x$ and $y$, $x+y=y+x$.</li>
+  <li>The statement of Pythagoras' theorem.</li>
+  <li>The statement of the Riemann Hypothesis.</li>
+</ul>
+
+<br>
+Each of these statements is either true, or false. In fact, the first, third and fourth statements are true, the second one is false, and nobody knows whether the last one is true or false.
+
+<br>
+Here are some examples of mathematical objects which are <em>not</em> propositions:
+<ul>
+  <li>$2+2$</li>
+  <li>$+$</li>
+  <li>$\pi$</li>
+  <li>The proof of Pythagoras' theorem.</li>
+</ul>
+
+<br>
+None of these are true/false statements. The first and third of them are numbers, the second one is a function (which takes two numbers $a$ and $b$ in and outputs their sum $a+b$), and the last one is a proof, which is a sequence of logical arguments.
+
+<h2>1.2 Doing mathematics with propositions</h2>
+You all know that if you want to do mathematics with a general real number, you can just call it $x$. Then you can talk about things like $x-3$ or $x^2+2x+1$ and so on. You can also do mathematics with matrices; you can let $A$ and $B$ be general two by two matrices, and then talk about things like $A+B$.
+<br>
+<br>
+During your degree here, you will learn that you can also do mathematics with some far more general things. You will do mathematics with numbers, matrices, groups, elements of groups, rings, elements of rings, vector spaces, elements of vector spaces and so on. In this section, we will do mathematics with propositions.
+<br>
+<br>
+If you're doing mathematics with real numbers like $x$ and $y$, you can do things like considering $x+y$ (a number) or $x^2/y$ (a number, as long as $y$ isn't zero), or $x=y$ (a proposition), or $x &lt; y$ (a proposition).
+<br>
+<br>
+If you're doing mathematics with propositions, there are different things you can do. In this section we will see the most important things we can do with propositions.
+
+<h2>1.2.1 And ($∧$)</h2>
+Good variable names for propositions are things like $P$ or $Q$ or $R$.
+<br>
+<br>
+If $P$ and $Q$ are propositions, we can make a new proposition called $P\land Q$. The symbol $\land$ is pronounced "and". The definition of $P\land Q$ is that $P\land Q$ is true if, and only if, both $P$ and $Q$ are true.
+<br>
+<br>
+Unlike number variables like $x$, proposition variables like $P$ can only take two values - $\tt{true}$ and $\tt{false}$. So we can explain precisely what $P\land Q$ is by writing down the so-called <em>truth table</em> for $\land$:
+
+<style type="text/css">
+  .tg  {border-collapse:collapse;border-spacing:0;}
+  .tg td{font-family:Arial, sans-serif;font-size:14px;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:black;}
+  .tg th{font-family:Arial, sans-serif;font-size:14px;font-weight:normal;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:black;}
+  .tg .tg-pi0s{font-family:"Courier New", Courier, monospace !important;;text-align:center;vertical-align:middle}
+  </style>
+  <table class="tg">
+    <tr>
+      <th class="tg-pi0s">$P$</th>
+      <th class="tg-pi0s">$Q$</th>
+      <th class="tg-pi0s">$P \land Q$</th>
+    </tr>
+    <tr>
+      <td class="tg-pi0s">false</td>
+      <td class="tg-pi0s">false</td>
+      <td class="tg-pi0s">false</td>
+    </tr>
+    <tr>
+      <td class="tg-pi0s">false</td>
+      <td class="tg-pi0s">true</td>
+      <td class="tg-pi0s">false</td>
+    </tr>
+    <tr>
+      <td class="tg-pi0s">true</td>
+      <td class="tg-pi0s">false</td>
+      <td class="tg-pi0s">false</td>
+    </tr>
+    <tr>
+      <td class="tg-pi0s">true</td>
+      <td class="tg-pi0s">true</td>
+      <td class="tg-pi0s">true</td>
+    </tr>
+  </table>
+
+For example, $(2+2=4)\land(2+2=5)$ is false, because $2+2=5$ is false.
+
+<h2>1.2.2 Or ($\lor$)</h2>
+A companion to and is the "or" function. If $P$ and $Q$ are propositions, then $P\lor Q$ is the proposition which is true when either $P$, or $Q$, <em>or both</em>, are true. Be careful! The word "or" is sometimes used differently in English. For example, in the sentence "you get down from that tree, or I will call the police", if $P$ is the proposition "you get down from that tree" and $Q$ is the proposition "I will call the police", then the sentence <em>implies</em> that $P$ and $Q$ will not both be true - it will be one or the other. The mathematical $P \lor Q$ is happy for both $P$ and $Q$ to be true. Here's the truth table:
+
+<style type="text/css">
+  .tg  {border-collapse:collapse;border-spacing:0;}
+  .tg td{font-family:Arial, sans-serif;font-size:14px;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:black;}
+  .tg th{font-family:Arial, sans-serif;font-size:14px;font-weight:normal;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:black;}
+  .tg .tg-pi0s{font-family:"Courier New", Courier, monospace !important;;text-align:center;vertical-align:middle}
+  </style>
+  <table class="tg">
+    <tr>
+      <th class="tg-pi0s">$P$</th>
+      <th class="tg-pi0s">$Q$</th>
+      <th class="tg-pi0s">$P \lor Q$</th>
+    </tr>
+    <tr>
+      <td class="tg-pi0s">false</td>
+      <td class="tg-pi0s">false</td>
+      <td class="tg-pi0s">false</td>
+    </tr>
+    <tr>
+      <td class="tg-pi0s">false</td>
+      <td class="tg-pi0s">true</td>
+      <td class="tg-pi0s">true</td>
+    </tr>
+    <tr>
+      <td class="tg-pi0s">true</td>
+      <td class="tg-pi0s">false</td>
+      <td class="tg-pi0s">true</td>
+    </tr>
+    <tr>
+      <td class="tg-pi0s">true</td>
+      <td class="tg-pi0s">true</td>
+      <td class="tg-pi0s">true</td>
+    </tr>
+  </table>
+
+<h2>1.2.3 Not ($\lnot$)</h2>
+If $P$ is a proposition, then $\lnot P$ is the "opposite one". It is the proposition which is true if $P$ is false, and false if $P$ is true. Here is the truth table:
+
+<style type="text/css">
+  .tg  {border-collapse:collapse;border-spacing:0;}
+  .tg td{font-family:Arial, sans-serif;font-size:14px;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:black;}
+  .tg th{font-family:Arial, sans-serif;font-size:14px;font-weight:normal;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:black;}
+  .tg .tg-pi0s{font-family:"Courier New", Courier, monospace !important;;text-align:center;vertical-align:middle}
+  </style>
+  <table class="tg">
+    <tr>
+      <th class="tg-pi0s">$P$</th>
+      <th class="tg-pi0s">$\lnot P$</th>
+    </tr>
+    <tr>
+      <td class="tg-pi0s">false</td>
+      <td class="tg-pi0s">true</td>
+    </tr>
+    <tr>
+      <td class="tg-pi0s">true</td>
+      <td class="tg-pi0s">false</td>
+    </tr>
+  </table>
+
+As an example, if $P$ is the statement of the Riemann Hypothesis, then $P\lor\lnot P$ is true, because $P$ is either true or false, exactly one of $P$ and $\lnot P$ will be true.
+
+<h2>1.2.4 Implies ($\implies$)</h2>
+In some sense, this is the most subtle of the functions associated with propositions. If $P$ and $Q$ are propositions, then $P\implies Q$ is also a proposition, defined in English as "if $P$ is true, then $Q$ is true". Let's think a little about what this means.
+<br>
+<br>
+The easiest way to think about this definition is to ask how it can go wrong. When is $P\implies Q$ false? The only way it can fail, is that $P$ is true, but $Q$ is not true. This means that the truth table must look like this:
+
+<style type="text/css">
+  .tg  {border-collapse:collapse;border-spacing:0;}
+  .tg td{font-family:Arial, sans-serif;font-size:14px;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:black;}
+  .tg th{font-family:Arial, sans-serif;font-size:14px;font-weight:normal;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:black;}
+  .tg .tg-pi0s{font-family:"Courier New", Courier, monospace !important;;text-align:center;vertical-align:middle}
+  .tg .tg-r5us{font-family:"Courier New", Courier, monospace !important;;text-align:center;vertical-align:top}
+  </style>
+  <table class="tg">
+    <tr>
+      <th class="tg-pi0s">$P$</th>
+      <th class="tg-pi0s">$Q$</th>
+      <th class="tg-r5us">$P \implies Q$</th>
+    </tr>
+    <tr>
+      <td class="tg-pi0s">false</td>
+      <td class="tg-pi0s">false</td>
+      <td class="tg-r5us">true</td>
+    </tr>
+    <tr>
+      <td class="tg-pi0s">false</td>
+      <td class="tg-pi0s">true</td>
+      <td class="tg-r5us">true</td>
+    </tr>
+    <tr>
+      <td class="tg-r5us">true</td>
+      <td class="tg-r5us">false</td>
+      <td class="tg-r5us">false</td>
+    </tr>
+    <tr>
+      <td class="tg-r5us">true</td>
+      <td class="tg-r5us">true</td>
+      <td class="tg-r5us">true</td>
+    </tr>
+  </table>
+
+Does this agree with our intuition for how $\implies$ behaves?
+<br>
+<br>
+If $x$, $y$ and $a$ are real numbers, and if we know $x=y$, then multiplying both sides by $a$ we deduce that $ax=ay$. So we can write that for all real numbers $x$, $y$ and $a$, we have
+$$x=y\implies ax=ay.$$ Whatever values $x$ and $y$ and $a$ take, $x=y\implies ax=ay$ will be true.
+<br>
+<br>
+Let's try some example values for $x$, $y$ and $a$, to see what we can deduce.
+<br>
+<br>
+Trying $x=y=1$ and $a=2$, we deduce that $1=1\implies 2=2$.
+<br>
+<br>
+Trying $x=1$, $y=2$, $a=3$, we deduce that $1=2\implies 3=6$.
+<br>
+<br>
+Trying $x=1$, $y=2$, $a=0$ we deduce that $1=2\implies 0=0$.
+<br>
+<br>
+Because we are happy with $x=y\implies ax=ay$, we must then also be happy that $\tt{true}\implies\tt{true}$, $\tt{false}\implies\tt{false}$ and $\tt{false}\implies\tt{true}$ are all true.
+<br>
+<br>
+On the other hand, we can never prove a false result from a true result (assuming we don't make any mistakes!). So we should also be happy with the idea that $\tt{true}\implies\tt{false}$ should be false.
+<br>
+<br>
+One final note - this symbol is sometimes used backwards. When we say $Q\impliedby P$ we just mean $P\implies Q$
+
+<h2>1.2.5 Logical equivalence ($\iff$)</h2>
+Two propositions $P$ and $Q$ are said to be <em>logically equivalent</em> if $P\implies Q$ and $Q\implies P$. We could write this as $(P\implies Q)\land (Q\implies P)$. In words - "if $P$ is true, then $Q$ is true, and if $Q$ is true, then $P$ is true". Let's investigate this idea using truth tables.
+
+<style type="text/css">
+  .tg  {border-collapse:collapse;border-spacing:0;}
+  .tg td{font-family:Arial, sans-serif;font-size:14px;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:black;}
+  .tg th{font-family:Arial, sans-serif;font-size:14px;font-weight:normal;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:black;}
+  .tg .tg-pi0s{font-family:"Courier New", Courier, monospace !important;;text-align:center;vertical-align:middle}
+  .tg .tg-r5us{font-family:"Courier New", Courier, monospace !important;;text-align:center;vertical-align:top}
+  </style>
+  <table class="tg">
+    <tr>
+      <th class="tg-pi0s">$P$</th>
+      <th class="tg-pi0s">$Q$</th>
+      <th class="tg-pi0s">$P \implies Q$</th>
+      <th class="tg-r5us">$Q \implies P$</th>
+      <th class="tg-r5us">$(P \implies Q) \land (Q \implies P)$</th>
+    </tr>
+    <tr>
+      <td class="tg-pi0s">false</td>
+      <td class="tg-pi0s">false</td>
+      <td class="tg-pi0s">true</td>
+      <td class="tg-r5us">true</td>
+      <td class="tg-r5us">true</td>
+    </tr>
+    <tr>
+      <td class="tg-pi0s">false</td>
+      <td class="tg-pi0s">true</td>
+      <td class="tg-pi0s">true</td>
+      <td class="tg-r5us">false</td>
+      <td class="tg-r5us">false</td>
+    </tr>
+    <tr>
+      <td class="tg-pi0s">true</td>
+      <td class="tg-pi0s">false</td>
+      <td class="tg-pi0s">false</td>
+      <td class="tg-r5us">true</td>
+      <td class="tg-r5us">false</td>
+    </tr>
+    <tr>
+      <td class="tg-pi0s">true</td>
+      <td class="tg-pi0s">true</td>
+      <td class="tg-pi0s">true</td>
+      <td class="tg-r5us">true</td>
+      <td class="tg-r5us">true</td>
+    </tr>
+  </table>
+
+What is going on here? The third column comes from the definition of $\implies$, and the fourth column does too. The fifth column comes from the definition of $\land$, applied to the third and fourth column.
+<br>
+<br>
+We deduce that $P\iff Q$ is true when both $P$ and $Q$ are true, and also when both $P$ and $Q$ are false, but it is false otherwise. In fact, $P\iff Q$ looks rather like $P=Q$! But actually we do not usually talk about two propositions being <em>equal</em>. Do you think that $2+2=4$ is <em>equal</em> to $3+4=7$? They don't look equal to me. But they are logically equivalent: $2+2=4\iff 3+4=7$. In general, we do not talk about propositions being <em>equal</em>, instead we talk about them being logically equivalent, or "equivalent" for short.
+  
+<h2>1.3 Relations between these concepts</h2>
+Here we talk about relations between $\land$, $\lor$, $\lnot$, $\implies$ and $\iff$. There are only two possible "values" for a proposition - namely $\tt{true}$ and $\tt{false}$. On the other hand we have introduced five ways of being able to make new propositions from old ones, namely $\land$, $\lor$, $\lnot$, $\implies$ and $\iff$. So it is not surprising that there are some relations between these terms. Let's start with the easiest one.
+=======
   <p>Some examples of logical propositions include:</p>
 
 
@@ -114,6 +384,7 @@ In LEAN we say $P$ is a proposition if it has type Prop, and we write (P : Prop)
   <p>If $P$ and $Q$ are propositions, we can make a new proposition called $P∧ Q$. The symbol $∧$ is pronounced ``and''. The definition of $P ∧ Q$ is that $P ∧ Q$ is true if, and only if, both $P$ and $Q$ are true.</p>
 
 
+>>>>>>> 43030207038156f067988eadca7302a9d2e19fe7
 
   <p>Unlike number variables like $x$, proposition variables like $P$ can only take two values - true and false. So we can explain precisely what $P ∧ Q$ is by writing down the so-called truth table for $∧$:</p>
 
@@ -123,7 +394,7 @@ In LEAN we say $P$ is a proposition if it has type Prop, and we write (P : Prop)
 <h2>1.3.1 The Law of the Excluded Middle
 </h2>
 
-  <p>The Law of the Excluded Middle states that for any proposition $P$, either $P$, or its negation $¬ P$ is true.</p>
+<p>The Law of the Excluded Middle states that for any proposition $P$, either $P$, or its negation $¬ P$ is true.</p>
 
 
 <div class="theorem_wrapper">
@@ -1445,8 +1716,27 @@ In LEAN we say $P$ is a proposition if it has type Prop, and we write (P : Prop)
     <span class="proof_qed">QED.</span>
   </div>
 </div>
+<<<<<<< HEAD
+
+<br>
+<b>Excercise. </b>As you can see, writing LEAN proofs is so much more fun than drawing truth tables! Why don't you try it out by proving $\lnot P \iff (P \implies \tt{false})$ <a href="https://leanprover-community.github.io/lean-web-editor/#url=https%3A%2F%2Fraw.githubusercontent.com%2FJasonKYi%2FM4000x_LEAN_formalisation%2Fmaster%2Fhtml%2FExercises%2FExercies1.lean">here</a>?
+
+<h2>1.3.3 Transitivity of Implications, and the Contrapositive</h2>
+In this subsection we talk about two basic properties of $\implies$, both of them of fundamental importance.
+<br>
+<br>
+The first result is the following. If $P$, $Q$ and $R$ are propositions, and we know $P\implies Q$ and $Q\implies R$, we can deduce that $P\implies R$. Thinking about our definition of $P\implies Q$ as "if $P$ is true, then $Q$ is true", we can argue as follows.
+<br>
+<br>
+Say $P\implies Q$ and $Q\implies R$ are both true. We want to prove that $P\implies R$ is true. OK then, let's assume that $P$ is true. Because $P\implies Q$, we deduce that $Q$ is true. Now because $Q\implies R$, we can deduce that $R$ is true. This is what we had to prove, so we're done.
+<br>
+<br>
+Alternatively, one can of course check that $((P\implies Q)\land (Q\implies R))\implies(P\implies R)$ by checking all eight cases, but, that is no fun, so let's write it in LEAN instead!
+
+=======
 <h2>1.3.3 Transitivity of Implications, and the Contrapositive
 </h2>
+>>>>>>> 43030207038156f067988eadca7302a9d2e19fe7
 <div class="theorem_wrapper">
   <span class="theorem_label">Theorem</span>
   <div class="theorem_content">
@@ -1567,6 +1857,28 @@ In LEAN we say $P$ is a proposition if it has type Prop, and we write (P : Prop)
     <span class="proof_qed">QED.</span>
   </div>
 </div>
+<<<<<<< HEAD
+
+<br>
+This result is called <em>transitivity of $\implies$</em>. Another well-known transitive operation is $\le$ on real numbers: if $x\leq y$ and $y\leq z$ then $x\leq z$.
+<br>
+<br>
+The other result we want to talk about in this section is something called the <em>contrapositive</em> of an implication. In symbols, here is the claim:
+<br>
+<br>
+$$(P\implies Q)\implies(\lnot Q\implies \lnot P).$$
+<br>
+<br>
+Say we know that if $P$ is true, then $Q$ is true (i.e., we know that $P$ implies $Q$). Let's say we <em>also</em> know that $Q$ is in fact false! Then for sure $P$ cannot be true, because if $P$ were true then, because $P\implies Q$ is also true, we would be able to deduce that $Q$ were true.
+<br>
+<br>
+This means that if we know that $P\implies Q$ is true, and we also know that $Q$ is false, then we can deduce that $P$ is also false. So if $P\implies Q$, then knowing $\lnot Q$ is true, we can deduce $\lnot P$ is true. This is exactly what the statement above says.
+<br>
+<br>
+Wrtting this down formally, we have:
+
+=======
+>>>>>>> 43030207038156f067988eadca7302a9d2e19fe7
 <div class="theorem_wrapper">
   <span class="theorem_label">Theorem</span>
   <div class="theorem_content">
@@ -1824,8 +2136,24 @@ In LEAN we say $P$ is a proposition if it has type Prop, and we write (P : Prop)
     <span class="proof_qed">QED.</span>
   </div>
 </div>
+<<<<<<< HEAD
+
+<br>
+<b>Excercise. </b> What can we deduce if we apply the contrapositive to $\lnot Q \implies \lnot P$? Try it out <a href="https://leanprover-community.github.io/lean-web-editor/#url=https%3A%2F%2Fraw.githubusercontent.com%2FJasonKYi%2FM4000x_LEAN_formalisation%2Fmaster%2Fhtml%2FExercises%2FExercies2.lean">here</a>?
+
+<h2>1.3.4 Distributivity</h2>
+
+Distributivity is what mathematicians call "expanding out the brackets" when they want to look clever. More precisely, the well-known fact that
+$$a\times(b+c)=a\times b+a\times c$$
+is called "distributivity of multiplication over addition". It's true for real numbers, and it's true for matrices as well. On the other hand, addition does not distribute over multiplication: if we switch $\times$ and $+$ in $a\times(b+c)=a\times b+a\times c$, then we get $a+(b\times c)=(a+b)\times(a+c)$ which is in general not true. 
+<br>
+<br>
+It turns out that $\land$ distributes over $\lor$, and also $\lor$ distributes over $\land$. In other words:
+
+=======
 <h2>1.3.4 Distributivity
 </h2>
+>>>>>>> 43030207038156f067988eadca7302a9d2e19fe7
 <div class="theorem_wrapper">
   <span class="theorem_label">Theorem</span>
   <div class="theorem_content">
@@ -2631,6 +2959,205 @@ In LEAN we say $P$ is a proposition if it has type Prop, and we write (P : Prop)
     <span class="proof_qed">QED.</span>
   </div>
 </div>
+<<<<<<< HEAD
+
+<h2>1.3.5 Appendix: we don't need all the symbols</h2>
+Strictly speaking, we do not need $\implies$ at all in our mathematics of propositions. It is not hard to check that $P\implies Q$ is logically equivalent to $(\lnot P)\lor Q$. Indeed, the only way that $P\implies Q$ can be false is when $P$ is true and $Q$ is false, and the only way that $(\lnot P)\lor Q$ can be false is when both $\lnot P$ and $Q$ are false, which is equivalent to $P$ being true and $Q$ being false. Hence we can build $\implies$ from $\lor$ and $\lnot$.
+<br>
+<br>
+Similarly, $P\iff Q$ is defined to mean $(P\implies Q)\land (Q\implies P)$, so we can build $\iff$ from $\land$ and $\lor$ and $\lnot$.
+<br>
+<br>
+Finally, it is a consequence of de Morgan's laws that $P\land Q$ is logically equivalent to $\lnot(\lnot P\lor \lnot Q)$, meaning that we can build $\land$ from $\lnot$ and $\lor$. We conclude that given $\lnot$ and $\lor$, we can build all of the other logical functions that we have been talking about in this section. So why do we use all these other functions? The main reason is that if we were to build everything using $\lnot$ and $\lor$, then all our formulae would be much bigger, and much harder to understand. We have a good grasp of what $P\implies Q$ means, and $(\lnot P)\lor Q$ just looks more complicated.
+
+<h2>1.4 An application</h2>
+<b>Remark.</b> In this section Kevin proved that $\sqrt{2}$ is in fact an irrational number. While I did in fact also prove this in LEAN and would love to present it here, the entire proof is a bit too long and not very elegant to look at.
+However, if you are indeed truly LEAN curious, it is avalible to be awed upon <a href="https://leanprover-community.github.io/lean-web-editor/#url=https%3A%2F%2Fraw.githubusercontent.com%2FJasonKYi%2FM4000x_LEAN_formalisation%2Fmaster%2Fsrc%2FM40001%2FSqrt2_not_rational.lean">here</a>. 
+
+<h2>1.4.1 $\sqrt{2}$ is irrational</h2>
+
+It is not at all obvious that there exists a positive real number whose square is 2. You will learn the techniques needed to prove this later on this year. However, it is easier to prove that there is no <em>rational</em> number whose square is 2, and we shall do this here, using some of the techniques introduced earlier.
+
+<div class="theorem_wrapper">
+  <span class="theorem_label">Lemma</span>
+  <div class="theorem_content">
+	<div class="theorem_text">
+	  <p>If $n$ is an integer, then $n$ is even if and only if $n^2$ is even.</p>
+
+  </div>
+  </div>
+</div>
+
+More formally, if we fix an integer $n$, and let $P$ be the proposition "$n$ is even'' and let $Q$ be the proposition "$n^2$ is even'', then the lemma claims that
+$$P\iff Q$$
+is true.
+<br>
+<br>
+<em>Proof.</em>
+The definition of $P\iff Q$ is: $P\implies Q$, and $Q\implies P$. So we need to prove two things: firstly, that if $n$ is even then $n^2$ is even, and secondly, that if $n^2$ is even, then $n$ is even.
+<br>
+<br>
+Proving that if $n$ is even then $n^2$ is even: this is easy. We let $n=2t$ with $t$ an integer, and then $n^2=4t^2=2(2t^2)$ is twice an integer and hence even.
+<br>
+<br>
+But how to prove that if $n^2$ is even, then $n$ is even? We could start by writing $n^2=2u$ with $u$ an integer. Then $n=\sqrt{2u}$. Now what? We will talk about this in lectures.
+<br>
+<b>QED.</b>
+
+<br>
+<br>
+We will now embark on our proof that there is no rational number whose square is two. Along the way, we will run into the concept of "proof by contradiction'', which many of you have met before, and which we will explain during the proof.
+
+<div class="theorem_wrapper">
+  <span class="theorem_label">Theorem</span>
+  <div class="theorem_content">
+	<div class="theorem_text">
+	  <p>There is no rational number whose square is 2.</p>
+
+  </div>
+  </div>
+</div>
+
+Hence, <em>if</em> there is a real number whose square is 2, it must be irrational.
+
+<br>
+<br>
+<em>Proof.</em>
+We will prove this result by a technique known by mathematicians as <em>proof by contradiction</em>. The idea is simple. Let $P$ be the statement that there is a rational number whose square is 2. We want to prove that $\lnot P$ is true. But we saw that $\lnot P$ is logically equivalent to $P\implies\tt {false}$, so it will suffice to prove that $P\implies\tt {false}$. We will do this by <em>assuming</em> (incorrectly!) that $P$ is true, and deducing that a false statement is true.
+<br>
+<br>
+Let me explain this in another way. If we are doing correct mathematics, then we will not be able to prove anything false. If we do correct mathematics <em>apart from in one step</em> where we make an assumption that we are not sure about, and we manage to prove something false, then we must have made an incorrect move somewhere. If everything else is correct, then the one step where we made the dubious assumption must be the incorrect step, and hence we can deduce that our assumption is false. Note in particular the importance of considering false propositions when doing mathematics.
+<br>
+<br>
+So let's assume that there is a rational number whose square is 2. This is our dubious assumption! Let's press on and prove something false.
+<br>
+<br>
+By changing the sign of the rational number if necessary, we can assume that it is positive (note that 0 doesn't work because 0^2=0 which isn't 2). Write it as a fraction $a/b$, with $a$ and $b$ positive integers. Of course, if $a$ and $b$ are both even, then we can cancel a factor of two from both, so we may furthermore assume that at least one of $a$ and $b$ is odd. Our assumption $(a/b)^2=2$ easily simplifies to $a^2=2b^2$.
+<br>
+<br>
+Now because $a^2=2b^2$, we deduce that $a^2$ is even. By the above lemma we can deduce that $a=2t$ is even. Substituting in, we deduce $(2t)^2=2b^2$ and, expanding out and cancelling 2, that $2t^2=b^2$. Hence $b^2$ is even, and hence again by the above lemma, $b$ is even. This means that both $a$ and $b$ are even. We also know that at least one of them is odd! We have proved a contradiction, so we must have made a mistake. The only possible mistake is the <em>dubious assumption</em>, which must hence be false.
+<br>
+We conclude that there is no rational number whose square is 2.
+<br>
+<b>QED.</b>
+
+<h2>1.5 Sets</h2>
+A set is a collection of stuff. The things in a set are called its elements. In this course, this is all you need to know about what a set "is". Mathematicians have got a completely precise list of all the ways you can make sets, and the basic axioms which sets satisfy, but we will not worry about these - take the third year course on logic and set theory if you want to know more.
+<br>
+<br>
+We use these squiggly brackets $\{$ and $\}$ to make sets. For example if we write "Let $X=\{1,2,6\}$'' then we mean that $X$ is the set with three elements, the numbers $1$, $2$ and $6$. Sets can only have elements in once - the set $\{1,1,1\}$ is equal to the set $\{1\}$. Furthermore, the elements of sets don't come in any particular order: the set $\{1,2,6\}$ is equal to the set $\{1,6,2\}$. To give a more convoluted example, if $X=\{1,1,1,2,2,2,2,3,3,3\}$ and $Y=\{3,2,1\}$, then $X=Y$.
+<br>
+<br>
+We have special notation for the empty set $\{\}$ - it is written as $\varnothing$. Historical note: this is not a Greek $\phi$, it's the Norwegian/Danish letter. We also have special notation for some infinite sets of numbers:
+<br>
+<u1>
+  <li>The <em>natural numbers</em>> $\mathbb{N}$ are either $\{0,1,2,3,\ldots\}$ or $\{1,2,3,\ldots\}$ - there are unfortunately two conventions. They exist in maths because of an axiom of maths, and induction works because of another axiom.</li>
+  <li>The <em>integers</em> $\mathbb{Z}$ are $\{\ldots,-2,-1,0,1,2,\ldots\}$.</li>
+  <li>The <em>rationals</em> $\mathbb{Q}$ are ratios $a/b$ of integers with $b\not=0$.</li>
+  <li>The <em>reals</em> $\mathbb{R}$ are the limits of convergent sequences of rationals (NB it is hard work to make this precise; you will learn more about this later).</li>
+  <li>The <em>complexes</em> $\mathbb{C}$ are numbers of the form $x+iy$ with $x$ and $y$ real.</li>
+</u1>
+<br>
+<br>
+If an element $x$ is in a set $X$, then we write $x\in X$. This is pronounced "$x$ is an element of $X$'', or "$x$ is in $X$''. It is a proposition. If $\mathbb{N}$ denotes the <em>natural numbers</em>, then every mathematician knows that $3\in\mathbb{N}$ is true, and that $-3\in\mathbb{N}$ is false. Different mathematicians have different opinions about whether $0\in\mathbb{N}$. For example in France this is usually believed to be true, and in the UK it is often believed to be false, at least in the maths department. On the other hand, computer scientists seem to be much more consistent about this matter, believing that $0\in\mathbb{N}$ is true.
+<br>
+<br>
+If $a\in X$ is false, so $a$ is not an element of $X$, then we often write $a\not\in X$.
+<br>
+<br>
+Sets can be finite or infinite. The squiggly bracket notation above works great for finite sets, but for infinite sets it is more problematic. We can write things like $\mathbb{Z}=\{\ldots,-2,-1,0,1,2,3,\ldots\}$, but it's hard to imagine writing $\mathbb{R}=\{\pi,\sqrt{2},73,-29\frac{1}{2},\ldots\}$ because what does that "$\ldots$'' there even <em>mean</em>? 
+<br>
+<br>
+There is a second usage of the squiggly bracket $\{$,$\}$ notation, to make subsets of sets. For example, the set of real numbers whose square is less than 7 can be written
+$$\{x\in\mathbb{R}\,:\,x^2 &lt 7\}.$$
+We'll say a bit more about this notation when we talk about subsets.
+<br>
+<br>
+One very common mistake I see with students, is that they confuse the set $\{4\}$ with the element $4$. A set is not <em>equal</em> to its elements, it <em>contains</em> its elements.
+
+<h2>1.6 New notation for use with sets</h2>
+Like we did mathematics with propositions, we can do mathematics with sets. We can define some new operators and look for relations between them.
+
+<h2>1.6.1 Unions</h2>
+We start with some notation you might be familiar with. If $X$ and $Y$ are sets, then their <em>union</em> $X\cup Y$ is the set of all the things which are either in $X$ or in $Y$. Symbolically, we can write it like this:
+$$X\cup Y=\{t\,:\,t\in X\lor t\in Y\}.$$
+Notice that $\cup$ looks a bit similar to $\lor$. 
+<br>
+For example, if $X=\{1,2,3\}$ and $Y=\{3,4,5\}$ then $X\cup Y=\{1,2,3,4,5\}$.
+
+<h2>1.6.2 Intersections</h2>
+The <em>intersection</em> $X\cap Y$ of $X$ and $Y$ is the set of all the elements which are in both $X$ and $Y$. So we can write this:
+$$X\cap Y=\{t\,:\,t\in X\land t\in Y\}.$$
+Notice that $\cap$ looks a bit similar to $\land$. 
+<br>
+For example, if $X=\{1,2,3\}$ and $Y=\{3,4,5\}$ then $X\cap Y=\{3\}$.
+
+<h2>1.6.3 Set-theoretic difference</h2>
+If $X$ and $Y$ are sets, then the set $X\backslash Y$ is "what you get if you remove $Y$ from $X$.'' Formally it is defined like this:
+$$X\backslash Y=\{x\in X,\:\,x\not\in Y\}.$$
+For example, if $X=\{1,2,3\}$ and $Y=\{3,4,5\}$ then $X\backslash Y=\{1,2\}$.
+
+<h2>1.6.4 Subsets and inclusion</h2>
+If $X$ and $Y$ are sets, and every element of $X$ is an element of $Y$, then we say that $X$ is a <em>subset</em> of $Y$, and
+we write $X\subseteq Y$. Note that some people write $X\subset Y$ for this, but I am not a big fan of this notation and
+I will stick to $X\subseteq Y$. For example, if $X=\{1,2\}$ and $Y=\{1,2,3,4,5\}$ then $X\subseteq Y$.
+<br>
+<br>
+If $X$ is not a subset of $Y$, we sometimes write $X\not\subseteq Y$. For example $\{1,2,3\}\not\subseteq\{3,4,5\}$.
+<br>
+<br>
+We saw the notation $\{x\in\mathbb{R}\,:\,x^2 &lt 7\}$ earlier. This generalises in the following way. Let $X$ be any set, and for each $x\in X$, let $P(x)$ be a proposition. For example if $X$ is the real numbers then $P(x)$ could be the proposition $x^2 &lt 7$. Then we can consider the subset of $X$ consisting of the $x$ such that $P(x)$ is true, and we can write it
+$$\{x\in X\,:\,P(x)\}.$$
+Every subset of $X$ is of this form. For if $Y$ is any subset of $X$, we can define $P(x)$ for $x\in X$ to be the proposition $x\in Y$, and then $Y=\{x\in X\,:\,P(x)\}$ (because they have the same elements). In this way, we can identify the subsets of $X$ with the maps $P:X\to\{{\tt true},\ {\tt false}\}$.
+<br>
+<br>
+There are certain subsets of the real numbers of this form which come up so often that they've got their own specialised notation. For example the <em>open interval</em> $(a,b)$ is defined to be $\{x\in\mathbb{R}\,:\,a&ltx&ltb\}$, the <em>closed interval</em> $[a,b]$ is defined to be $\{x\in\mathbb{R},\:,a\leq x\leq b\}$. What do you think $(a,b]$ means? Note to French people: I know you learnt $]a,b]$ at school for this set of reals, but this notation is never used in the UK and it confuses British markers who've never studied in France, so please try and avoid it if you can.
+
+<h2>1.6.5 Interlude: a little philosophy</h2>
+This little subsection is non-examinable, and can be omitted by students uninterested in foundational matters.
+<br>
+<br>
+You can make sets from anything. For example you can make sets of sets. If $X=\{1,2,3\}$ and $Y=\{3,4,5\}$ you can define
+a new set $Z=\{X,Y\}$, and then you could make a new set $W=\{\pi,X,Z\}$ and so on. One of the foundations of mathematics is
+called "ZFC set theory'' and in this way of setting up mathematics, <em>every mathematical object is a set</em>. This is a bit
+ridiculous if you think about it, because it means that $\pi$ is a set, which is not really how we think about $\pi$
+(what are its elements? If you know the foundations, you'll realise that the answer to this question depends on whether $\pi$ is a Dedekind cut or an equivalence class of Cauchy sequences\ldots), and it means that $+$ is a set, and so on. Not only that, but sets like $W$ above are
+not really useful mathematical objects; one element of $W$ is a number, one is a set of numbers, and one is a set of sets of numbers.
+<br>
+<br>
+Another way to set up the foundations of mathematics is to use something called "dependent type theory''. In type theory,
+you can <em>only</em> make sets of elements which are "all of the same type''. For example, the real numbers are a type
+in dependent type theory, so you can make sets of real numbers. Sets of real numbers are a type too, so you can make
+sets of sets of real numbers. But you can't make a set like $W$ above, because $\pi$ and $X$ and $Z$ all have different types. Turns out it's OK, because you can use types to make any mathematical structure you need.
+<br>
+<br>
+In the next section we will talk about subsets of a fixed "universe'' set $\Omega$. In practice, every set you run into will be a subset of a sensible "universe''. For example the set $X=\{1,2,3\}$ is a subset of the real numbers $\mathbb{R}$.
+
+<h2>1.6.6 Complements</h2>
+Let $\Omega$ be a set (for example, the real numbers). In this subsection we will only consider subsets of $\Omega$.
+<br>
+<br>
+If $X$ and $Y$ are subsets of $\Omega$, then it is easy to see that $X\cup Y$ and $X\cap Y$ are also subsets of $\Omega$.
+But there are other complements of $\Omega$ that we can make. For example, the <em>complement</em> $\overline{X}$ of $X$
+is all the elements of $\Omega$ which are <em>not</em> in $X$. Symbolically we can write this:
+$$\overline{X}=\{t\in\Omega\,:\, t\not\in X\}.$$
+Example: if $\Omega$ is the integers, and $X$ is the even numbers, then $\overline{X}$ is the odd numbers -- all the integers which are not even.
+<br>
+Example: if $\Omega=\{1,2,3,4,5\}$, and $X=\{1,2,3\}$, then $\overline{X}=\{4,5\}$.
+<br>
+<br>
+More worryingly, if $\Omega$ is $\{1,2,3,4\}$ is different but $X=\{1,2,3\}$ stays the same, then $\overline{X}$ is now $\{4\}$.
+This means that the notation $\overline{X}$ is rather dubious notation, because $\overline{X}$ <em>depends on</em> $\Omega$ but
+$\Omega$ is not mentioned in the notation. However, usually this does not matter, because when we are using
+complements, $\Omega$ is almost always a fixed space. For example, $\Omega$ can often be a probability space -- a space
+of possibilities, for example $\Omega=\{\mathrm{heads},\mathrm{tails}\}$. If $X\subseteq\Omega$ is a subset, for example $X=\{\mathrm{heads}\}$
+then $\overline{X}$ is the elements of $\Omega$ which are not in $X$, so in this case $\overline{X}=\{\mathrm{tails}\}$.
+If we were in this probability situation, and if $p$ is the probability that a random sample from $\Omega$ lands in $X$,
+then the chances that it lands in $\overline{X}$ would be $1-p$.
+
+
+=======
+>>>>>>> 43030207038156f067988eadca7302a9d2e19fe7
 </div>
 <div id="dragbar"></div>
 <div id="tactic_state_wrapper">

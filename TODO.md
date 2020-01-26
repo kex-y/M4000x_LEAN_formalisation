@@ -1,8 +1,5 @@
 # TO DOs
 
-## M40001 (Introduction to University Mathematics)
-- Add proper comments to all proofs
-
 ## M40002 (Analysis I)
 - Add comments to the important proofs
 
@@ -24,3 +21,4 @@
 ### M40002_C5
 - Extreme value theorem
 - Continuous and injective implies inverse is continuous
+- Closed sets

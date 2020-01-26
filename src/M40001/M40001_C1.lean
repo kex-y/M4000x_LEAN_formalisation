@@ -240,7 +240,7 @@ variable {Ω : Type*}
 -- Let $Ω$ be a fixed set with subsets $X$ and $Y$, then
 
 /- Theorem
-(1) $\bar{X ∪ Y} = \bar{X} ∩ \bar{Y}$,
+(1) $\bar{X ∪ Y} = \bar{X} ∩ \bar{Y}$.
 -/
 theorem de_morg_set_a (X Y : set Ω) : - (X ∪ Y) = - X ∩ - Y :=
 begin
@@ -274,7 +274,7 @@ end
 Remark. Would you look at that! Proving the de Morgan's law with one single line. Now thats a nice proof if I ever seen one!
 -/
 
-/- Section
+/- Sub-section
 1.7.1 "For All" and "There Exists"
 -/
 

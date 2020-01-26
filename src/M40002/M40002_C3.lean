@@ -16,6 +16,8 @@ def seq_bounded_below (a : ℕ → ℝ) := ∃ R : ℝ, ∀ m : ℕ, R ≤ a m
 
 def seq_bounded (a : ℕ → ℝ) := seq_bounded_above a ∧ seq_bounded_below a
 
+def seq_in (a : ℕ → ℝ) (S : set ℝ) := ∀ n : ℕ, a n ∈ S
+
 -- Example 3.4 (1 / n → 0)
 example (a : ℕ → ℝ) (ha : a = λ n : ℕ, 1 / n) : a ⇒ 0 :=
 begin

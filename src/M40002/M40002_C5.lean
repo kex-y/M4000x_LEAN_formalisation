@@ -387,9 +387,14 @@ begin
 	split, repeat {rintro ⟨hα, hβ⟩, split, repeat {linarith}}
 end
 
+-- Defining open and closed sets
 def is_open (S : set ℝ) := ∀ x ∈ S, ∃ δ > 0, open_interval (x - δ) (x + δ) ⊆ S
+def is_closed (S : set ℝ) := ∀ a : ℕ → ℝ, seq_in a S → ∃ l : ℝ, a ⇒ l → l ∈ S -- This definition is a bit rubbish...
+
+def is_compact (S : set ℝ) := is_closed S ∧ bounded S
 
 -- An open interval is open
+
 theorem open_interval_is_open (a b : ℝ) : is_open (open_interval a b) :=
 begin
 	unfold open_interval,
@@ -415,6 +420,14 @@ begin
 		have : min (x - a) (b - x) ≤ b - x := min_le_right (x - a) (b - x),
 		linarith
 		}
+end
+
+-- A closed interval is closed
+theorem closed_interval_is_closed (a b : ℝ) : is_closed (closed_interval a b) :=
+begin
+	intros a ha,
+	sorry
+
 end
 
 -- The union of open sets is also open

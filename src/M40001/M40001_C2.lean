@@ -3,12 +3,16 @@ import M40001.M40001_C1
 import data.real.basic
 
 namespace M40001
--- end header
 
 open function 
 universe u
+-- end header
 
 /- Section
+Functions
+-/
+
+/- Sub-section
 2.2.1 Function Composition
 -/
 
@@ -23,7 +27,7 @@ This is essentially saying we are mapping $\tt{x}$ with type $\tt{A}$ to $\tt{g(
 Read more about lambda abstraction <a href = "shorturl.at/hGPX1">here</a> or <a href = "https://en.wikipedia.org/wiki/Lambda_calculus">here<a>.
 -/
 
-/- Section
+/- Sub-section
 2.3 Injectivity, Surjectivity and Bijectivity
 -/
 
@@ -109,7 +113,7 @@ begin
     repeat {assumption}
 end
 
-/-Section
+/-Sub-section
 2.4 Inverses
 -/
 
@@ -168,7 +172,7 @@ begin
     assumption
 end
 
-/-Section
+/-Sub-section
 2.5 Binary Relations
 -/
 variables {X V : Type u}
@@ -178,7 +182,7 @@ A binary relation $R$ on a set $X$ is a function $R : X^2 → \tt{Prop}$.
 -/
 def bin_rel (X) := X → X → Prop
 
-/- Section 
+/- Sub-section 
 2.6 Common Predicates on Binary Relations
 -/
 
@@ -246,7 +250,7 @@ end
 
 /-
 Remark. Notice that in the above proof I used a lot of curly bracket. This will limit the tactic state to only show the the goal within the brackets and thus also limit clutter.
-Read more about how to structure LEAN proofs nicely <href = "https://leanprover.github.io/theorem_proving_in_lean/tactics.html#structuring-tactic-proofs">here</href>.
+Read more about how to structure LEAN proofs nicely <a href = "https://leanprover.github.io/theorem_proving_in_lean/tactics.html#structuring-tactic-proofs">here</a>.
 -/
 
 /- Definition
@@ -276,7 +280,7 @@ begin
     from le_trans h.left h.right
 end
 
-/- Section
+/- Sub-section
 2.7 Partial and Total Orders
 -/
 
@@ -319,7 +323,7 @@ begin
 end
 
 /-
-Remark. The last line of this LEAN proof uses something called $\tt{tactic combinators}$. Read about is <href = "https://leanprover.github.io/theorem_proving_in_lean/tactics.html#tactic-combinators">here</href>.
+Remark. The last line of this LEAN proof uses something called $\tt{tactic combinators}$. Read about is <a href = "https://leanprover.github.io/theorem_proving_in_lean/tactics.html#tactic-combinators">here</a>.
 -/
 
 /- Theorem
@@ -333,10 +337,10 @@ begin
 end
 
 /-
-Remark. Notice how I tagged some of the theorems above with $\tt{@[simp]}$? This tells LEAN to try to uses theses theorems whenever I use the tactive $\tt{simp}$. Read more about it <href = "https://leanprover.github.io/theorem_proving_in_lean/tactics.html#using-the-simplifier">here</href>.
+Remark. Notice how I tagged some of the theorems above with $\tt{@[simp]}$? This tells LEAN to try to uses theses theorems whenever I use the tactive $\tt{simp}$. Read more about it <a href = "https://leanprover.github.io/theorem_proving_in_lean/tactics.html#using-the-simplifier">here</a>.
 -/
 
-/- Section
+/- Sub-section
 2.7 Equivalence Relations
 -/
 
@@ -481,10 +485,10 @@ begin
 end
 
 /-
-Exercise. I have defined one more binary relation $\mathtt{\sim}>$. Can you try to prove it <href = "https://leanprover-community.github.io/lean-web-editor/#url=https%3A%2F%2Fraw.githubusercontent.com%2FJasonKYi%2FM4000x_LEAN_formalisation%2Fmaster%2Fhtml%2FExercises%2FExercies3.lean">here</href>?
+Exercise. I have defined one more binary relation $\mathtt{\sim}>$. Can you try to prove it <a href = "https://leanprover-community.github.io/lean-web-editor/#url=https%3A%2F%2Fraw.githubusercontent.com%2FJasonKYi%2FM4000x_LEAN_formalisation%2Fmaster%2Fhtml%2FExercises%2FExercies3.lean">here</a>?
 -/
 
-/- Section
+/- Sub-section
 2.9 Quotients and Equivalence Classes
 -/
 
@@ -618,7 +622,7 @@ end
 def rs (A : set (set(X))) (s t : X) := ∃ B ∈ A, s ∈ B ∧ t ∈ B
 
 /-
-Bonus Exercise. Furthermore, it turns out that if $X$ is a set and $R$ an equivalence relation on $X$. Then any partition of $X$ can form a equivalence relation. Try to prove it <href = "https://leanprover-community.github.io/lean-web-editor/#url=https%3A%2F%2Fraw.githubusercontent.com%2FJasonKYi%2FM4000x_LEAN_formalisation%2Fmaster%2Fhtml%2FExercises%2FExercies4.lean">here</href> and if you get stuck, <href = "https://leanprover-community.github.io/lean-web-editor/#url=https%3A%2F%2Fraw.githubusercontent.com%2FJasonKYi%2FM4000x_LEAN_formalisation%2Fmaster%2Fhtml%2FExercises%2FExercies4_sol.lean">here</href> are the solutions.
+Bonus Exercise. Furthermore, it turns out that if $X$ is a set and $R$ an equivalence relation on $X$. Then any partition of $X$ can form a equivalence relation. Try to prove it <a href = "https://leanprover-community.github.io/lean-web-editor/#url=https%3A%2F%2Fraw.githubusercontent.com%2FJasonKYi%2FM4000x_LEAN_formalisation%2Fmaster%2Fhtml%2FExercises%2FExercies4.lean">here</a> and if you get stuck, <a href = "https://leanprover-community.github.io/lean-web-editor/#url=https%3A%2F%2Fraw.githubusercontent.com%2FJasonKYi%2FM4000x_LEAN_formalisation%2Fmaster%2Fhtml%2FExercises%2FExercies4_sol.lean">here</a> are the solutions.
 -/
 
 end M40001

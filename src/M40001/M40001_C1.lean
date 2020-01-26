@@ -5,6 +5,10 @@ namespace M40001
 -- end header
 
 /- Section
+Sets and Logic
+-/
+
+/- Sub-section
 1.3 Relations
 -/
 
@@ -230,7 +234,7 @@ begin
     right, split, repeat {assumption},
 end
 
-/- Section
+/- Sub-section
 1.7 Sets and Propositions
 -/
 

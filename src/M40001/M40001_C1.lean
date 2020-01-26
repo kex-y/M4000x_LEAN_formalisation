@@ -5,105 +5,6 @@ namespace M40001
 -- end header
 
 /- Section
-Chapter 1. Sets and Logic
--/
-
-/- Sub-section
-1.1 Proposition and logic
--/
-
-/- Definition
-A logical proposition, usually just called a proposition, is a true/false statement. 
-In LEAN we say $P$ is a proposition if it has type Prop, and we write (P : Prop).
--/
-
-/-
-Some examples of logical propositions include:
-
-$2 + 2 = 4.$
-
-$2 + 2 = 5.$
-
-For all real numbers $x$ and $y$, $x + y = y + x$.
-
-The statement of Pythagoras' theorem.
-
-The statement of the Riemann Hypothesis.
--/
-
-/-
-Each of these statements is either true, or false. In fact, the first, third and fourth statements are true, the second one is false, and nobody knows whether the last one is true or false.
--/
-
-/-
-Here are some examples of mathematical objects which are not propositions:
-
-$2 + 2$
-
-$+$
-
-$\pi$
-
-The proof of Pythagoras' theorem.
--/
-
-/-
-None of these are true/false statements. The first and third of them are numbers, the second one is a function (which takes two numbers $a$ and $b$ in and outputs their sum $a+b$), and the last one is a proof, which is a sequence of logical arguments.
--/
-
-/- Sub-section
-1.2 Doing mathematics with propositions
--/
-
-/-
-You all know that if you want to do mathematics with a general real number, you can just call it $x$. Then you can talk about things like $x-3$ or $x^2+2x+1$ and so on. You can also do mathematics with matrices; you can let $A$ and $B$ be general two by two matrices, and then talk about things like $A+B$.
--/
-
-/-
-During your degree here, you will learn that you can also do mathematics with some far more general things. You will do mathematics with numbers, matrices, groups, elements of groups, rings, elements of rings, vector spaces, elements of vector spaces and so on. In this section, we will do mathematics with propositions.
--/
-
-/-
-If you're doing mathematics with real numbers like $x$ and $y$, you can do things like considering $x+y$ (a number) or $x^2/y$ (a number, as long as $y$ isn't zero), or $x=y$ (a proposition), or $x<y$ (a proposition).
--/
-
-/-
-If you're doing mathematics with propositions, there are different things you can do. In this section we will see the most important things we can do with propositions.
--/
-
-/- Sub-section
-1.2.1 And ($∧$)
--/
-
-/-
-Good variable names for propositions are things like $P$ or $Q$ or $R$.
--/
-
-/-
-If $P$ and $Q$ are propositions, we can make a new proposition called $P∧ Q$. The symbol $∧$ is pronounced ``and''. The definition of $P ∧ Q$ is that $P ∧ Q$ is true if, and only if, both $P$ and $Q$ are true.
--/
-
-/-
-Unlike number variables like $x$, proposition variables like $P$ can only take two values - true and false. So we can explain precisely what $P ∧ Q$ is by writing down the so-called truth table for $∧$:
--/
-
-/- Sub-section
-1.2.2 Or($∨$)
--/
-
-/-
-A companion to and is the "or" function. If $P$ and $Q$ are propositions, then $P\lor Q$ is the proposition which is true when either $P$, or $Q$, <em>or both</em>, are true. Be careful! The word "or" is sometimes used differently in English. For example, in the sentence "you get down from that tree, or I will call the police", if $P$ is the proposition "you get down from that tree" and $Q$ is the proposition "I will call the police", then the sentence <em>implies</em> that $P$ and $Q$ will not both be true - it will be one or the other. The mathematical $P \lor Q$ is happy for both $P$ and $Q$ to be true. Here's the truth table:
--/
-
-/-
-For example, $(2+2=4)\land(2+2=5)$ is false, because $2+2=5$ is false.
--/
-
-/- Sub-section
-1.2.3 Not($¬$)
--/
-
-/- Section
 1.3 Relations
 -/
 
@@ -135,6 +36,20 @@ begin
     intros hp hnp,
     -- But this is true by definition, so we have nothing left to prove!
     contradiction,
+end
+
+/-
+Remark. Note that for many simple propositions alike the one above, LEAN is able to use automation to complete our proof. Indeed, by using the tactic $\tt{finish}$, the above proof becomes a one-liner!
+-/
+
+/- Theorem
+If $P$ is a proposition, then $ ¬ (¬ P) ⇔ P$. (This time proven using $\tt{finish}$)
+-/
+theorem not_not_P_is_P_tauto
+    (P : Prop) : ¬ (¬ P) ↔ P :=
+begin
+    -- As we can see, $\tt{finish}$ finished the proof!
+    finish
 end
 
 /- Sub-section
@@ -206,6 +121,10 @@ begin
         contradiction,
 end
 
+/-
+Excercise. As you can see, writing LEAN proofs is so much more fun than drawing truth tables! Why don't you try it out by proving $\lnot P \iff (P \implies \tt{false})$ <a href="https://leanprover-community.github.io/lean-web-editor/#url=https%3A%2F%2Fraw.githubusercontent.com%2FJasonKYi%2FM4000x_LEAN_formalisation%2Fmaster%2Fhtml%2FExercises%2FExercies1.lean">here</a>?
+-/
+
 /- Sub-section
 1.3.3 Transitivity of Implications, and the Contrapositive
 -/
@@ -246,6 +165,10 @@ begin
     -- But $¬ Q$ implies $¬ P$ which contradicts with $P$, therefore, $¬ Q$ must be false as requied.
     exact h hnq hp,
 end
+
+/-
+Excercise. What can we deduce if we apply the contrapositive to $\lnot Q \implies \lnot P$? Try it out <a href="https://leanprover-community.github.io/lean-web-editor/#url=https%3A%2F%2Fraw.githubusercontent.com%2FJasonKYi%2FM4000x_LEAN_formalisation%2Fmaster%2Fhtml%2FExercises%2FExercies2.lean">here</a>?
+-/
 
 /- Sub-section
 1.3.4 Distributivity
@@ -305,6 +228,91 @@ begin
     cases hpr with hp hr,
     left, assumption,
     right, split, repeat {assumption},
+end
+
+/- Section
+1.7 Sets and Propositions
+-/
+
+universe u
+variable {Ω : Type*}
+
+-- Let $Ω$ be a fixed set with subsets $X$ and $Y$, then
+
+/- Theorem
+(1) $\bar{X ∪ Y} = \bar{X} ∩ \bar{Y}$,
+-/
+theorem de_morg_set_a (X Y : set Ω) : - (X ∪ Y) = - X ∩ - Y :=
+begin
+    -- What exactly does $\bar{(X ∪ Y)}$ and $\bar{X} ∩ \bar{Y}$ mean? Well, lets find out!
+    ext,
+    -- As we can see, to show that $\bar{X ∪ Y} = \bar{X} ∩ \bar{Y}$, we in fact need to prove $x ∈ \bar{(X ∪ Y)} ↔ x ∈ \bar{X} ∩ \bar{Y}$.
+    split,
+    -- So let's first prove that $x ∈ \bar{X ∪ Y} → x ∈ \bar{X} ∩ \bar{Y}$. Suppose $x ∈ \bar{X ∪ Y}$, then $x$ is not in $X$ and $x$ is not in $Y$.
+    dsimp, intro h,
+    push_neg at h,
+    -- But this is exactly what we need!
+    assumption,
+    -- Now, let's consider the backwards implication. Similarly, $x ∈ \bar{X} ∩ \bar{Y}$ means $x$ is not in $X$ and $x$ is not in $Y$.
+    dsimp, intro h,
+    -- But this is what $x ∈ \bar{X ∪ Y}$ means, so we're done!
+    push_neg,
+    assumption
+    
+end
+
+/- Theorem
+(2) $\bar{X ∩ Y} = \bar{X} ∪ \bar{Y}$.
+-/
+theorem de_morg_set_b (X Y : set Ω) : - (X ∩ Y) = - X ∪ - Y :=
+begin
+    -- Rather than proving this manually, why not try some automation this time.
+    ext, finish
+end
+
+/-
+Remark. Would you look at that! Proving the de Morgan's law with one single line. Now thats a nice proof if I ever seen one!
+-/
+
+/- Section
+1.7.1 "For All" and "There Exists"
+-/
+
+/- Theorem
+Given a propositon $P$ whose truth value is dependent on $x ∈ X$, then $∀ x ∈ X, ¬ P(x) ⇔ ¬ (∃ x ∈ X, P(x))$, and
+-/
+theorem neg_exist_is_all (X : Type) (P : X → Prop) : (∀ x : X, ¬ P x) ↔ ¬ (∃ x : X, P x) :=
+begin
+    -- (⇒) Let's first prove the forward implication, i.e. suppose that $∀ x ∈ X, ¬ P(x)$, we need to show that $¬ ∃ x ∈ X, P(x)$.
+    split,
+    -- Let's prove this by contradiction! Let's suppose that $¬ ∃ x ∈ X, P(x)$ is in fact $\tt{false}$ and there is actually a $x$ out there where $P(x)$ is true!
+    rintro h ⟨x, hx⟩,
+    -- But, by our assumption $∀ x ∈ X$, $P(x)$ is false, thus a contradiction! 
+    from (h x) hx,
+    -- (⇐) Now let's consider the other direction. Suppose that there does not exist a $x$ such that $P(x)$ is true, i.e. $¬ ∃ x ∈ X, P(x)$.
+    intro ha,
+    -- Similarly, let's suppose that $∀ x ∈ X, ¬P x$ is not true.
+    intros x hx,
+    -- But then, there must be a $x$ such that $P(x)$ is true, again, a contradiction!
+    have : ∃ (x : X), P x,  
+        existsi x, assumption,
+    contradiction,
+end
+
+/- Theorem
+$¬ (∀ x ∈ X, ¬ P(x)) ⇔ ∃ x ∈ X, P(x)$.
+-/
+theorem neg_all_is_exist (X : Type) (P : X → Prop) : ¬ (∀ x : X, ¬ P x) ↔ ∃ x : X, P x :=
+begin
+    -- Now that we have gone through quite a lot of LEAN proofs, try to understand this one yourself!
+    split,
+        {intro h,
+        apply classical.by_contradiction,
+        push_neg, contradiction
+        },
+        {rintro ⟨x, hx⟩ h,
+        from (h x) hx
+        }
 end
 
 end M40001

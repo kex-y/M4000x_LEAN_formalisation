@@ -2,10 +2,26 @@
 
 Formalising lecture notes from 1st year Imperial Mathematics course.
 
-Done with the M40001 lecture notes in LEAN (maybe some formating issues left but I don't want to deal with that yet :/)!
-Starting to formalise M40002.
+Currently working on open and closed sets. See [here](https://github.com/JasonKYi/M4000x_LEAN_formalisation/blob/master/TODO.md).
 
-## Table of Contents (src/M40002)
+## M40001 Table of Contents (src/M40001)
+
+### Chapter 1 - Sets and Logic
+* C1. Law of the Excluded Middle
+* C1. De Morgan's Laws
+* C1. Transitivity, Contrapositives, and Distirbutivity
+* C1. De Morgan's Laws for Sets
+* C1. "For all" and "There exists"
+
+### Chapter 2 - Functions and Equivalence Relations
+* C2. Function Composition
+* C2. Injective, Surjective, and Bijective
+* C2. Binary Relations
+* C2. Predicates on Binary Relations
+* C2. Quotients and Equivalence Classes
+
+
+## M40002 Table of Contents (src/M40002)
 
 ### Chapter 2 - Numbers
 * C2. Well-Ordered Principle 

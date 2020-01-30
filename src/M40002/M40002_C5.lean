@@ -389,7 +389,7 @@ end
 
 -- Defining open and closed sets
 def is_open (S : set ℝ) := ∀ x ∈ S, ∃ δ > 0, open_interval (x - δ) (x + δ) ⊆ S
-def is_closed (S : set ℝ) := ∀ a : ℕ → ℝ, seq_in a S → ∃ l : ℝ, a ⇒ l → l ∈ S -- This definition is a bit rubbish...
+def is_closed (S : set ℝ) := ∀ a : ℕ → ℝ, seq_in a S → (∃ l : ℝ, a ⇒ l) → ∃ l ∈ S, a ⇒ l -- This definition is a bit rubbish...
 
 def is_compact (S : set ℝ) := is_closed S ∧ bounded S
 
@@ -423,11 +423,55 @@ begin
 end
 
 -- A closed interval is closed
-theorem closed_interval_is_closed (a b : ℝ) : is_closed (closed_interval a b) :=
+theorem closed_interval_is_compact (a b : ℝ) : is_compact (closed_interval a b) :=
 begin
-	intros a ha,
-	sorry
-
+	split,
+		{unfold is_closed,
+		rintros s ha ⟨l, hl⟩,
+		use l,
+		have h : l ∈ closed_interval a b :=
+			by{unfold closed_interval,
+			rw set.mem_set_of_eq,
+			split,
+				{let c : ℕ → ℝ := λ n : ℕ, a,
+				have : c ⇒ a := cons_conv,
+				apply le_lim c s a l,
+				repeat {assumption},
+				intro n,
+				show a ≤ s n,
+				suffices : s n ∈ closed_interval a b,
+					unfold closed_interval at this,
+					rw set.mem_set_of_eq at this,
+					from this.left,
+				from ha n
+				},
+				{let c : ℕ → ℝ := λ n : ℕ, b,
+				have : c ⇒ b := cons_conv,
+				apply le_lim s c l b,
+				repeat {assumption},
+				intro n,
+				show s n ≤ b,
+				suffices : s n ∈ closed_interval a b,
+					unfold closed_interval at this,
+					rw set.mem_set_of_eq at this,
+					from this.right,
+				from ha n
+				}
+			},
+		use h, assumption
+		},
+		{split,
+			{use b, intro s,
+			unfold closed_interval,
+			rw set.mem_set_of_eq,
+			intro h, from h.right
+			},
+			{use a, intro s,
+			unfold closed_interval,
+			rw set.mem_set_of_eq,
+			intro h, from h.left
+			}
+		}
 end
 
 -- The union of open sets is also open
@@ -472,26 +516,6 @@ end
 lemma element_of_Inter {S : ℕ → set ℝ} {n i : ℕ} : ∀ x ∈ ⋂ i ∈ finset.range n, S i, i ∈ finset.range n → x ∈ S i :=
 by {intros x hx hi, rw set.mem_Inter at hx, finish}
 
--- TODO : finset has min
-
--- The intersection of finitely many of open sets is also open
-theorem inter_open_is_open {S : ℕ → set ℝ} (h₁ : ∀ n : ℕ, ∀ i ∈ finset.range n, is_open (S i)) : 
-∀ n : ℕ, ∀ i ∈ finset.range n, is_open (⋂ i ∈ finset.range n, S i) :=
-begin
-	intros n i hi x hx,
-	replace h₁ : ∀ i₁ ∈ finset.range n, ∃ δ > 0, open_interval (x - δ) (x + δ) ⊆ S i₁,
-		intros i₁ hi₁,
-		have : x ∈ S i₁ := by {apply element_of_Inter, repeat {assumption}},
-		from h₁ n i₁ hi₁ x this,
-	simp only [classical.skolem] at h₁,
-	rcases h₁ with ⟨f, ⟨hf₁, hf₂⟩⟩,
-	let T := finset.image (λ x : {x | x ∈ finset.range n}, f x.1 x.2) (finset.range n).attach,
-
-	
-
-	repeat {sorry}
-end
-
 -- A function f : ℝ → ℝ is continuous iff. ∀ U ⊆ R, f⁻¹(U) is open
 theorem contin_open_pre_image {f : ℝ → ℝ} : func_continuous f ↔ ∀ U : set ℝ, is_open U → is_open {x : ℝ | f x ∈ U} :=
 begin
@@ -523,5 +547,83 @@ begin
 		from hrang hx
 		}
 end
+
+-- a n → l iff ∀ U ⊆ ℝ, U an open set, l ∈ U ⇒ ∃ N ∈ ℕ, ∀ n ≥ N, a n ∈ U (Unseen 2 Term 2)
+lemma seq_converge_imples_all_open {a : ℕ → ℝ} {l : ℝ} : a ⇒ l → ∀ U : set ℝ, is_open U ∧ l ∈ U → ∃ N : ℕ, ∀ n : ℕ, N ≤ n → (a n) ∈ U :=
+begin
+	rintros hconv U ⟨hU, hlU⟩,
+	rcases hU l hlU with ⟨δ, ⟨hδ₁, hδ₂⟩⟩,
+	cases hconv δ hδ₁ with N hN,
+	use N, intros n hn,
+	suffices : a n ∈ open_interval (l - δ) (l + δ),
+		from hδ₂ this,
+	rw abs_lt_open_interval,
+	from hN n hn
+end
+
+lemma all_open_imples_seq_converge {a : ℕ → ℝ} {l : ℝ} : (∀ U : set ℝ, is_open U ∧ l ∈ U → ∃ N : ℕ, ∀ n : ℕ, N ≤ n → (a n) ∈ U) → a ⇒ l :=
+begin
+	intros hU ε hε,
+	let U : set ℝ := open_interval (l - ε) (l + ε),
+	have hopen : is_open U :=
+		by {apply open_interval_is_open},
+	have hlU : l ∈ open_interval (l - ε) (l + ε) :=
+		by {unfold open_interval,
+			rw set.mem_set_of_eq,
+			split, all_goals {linarith},
+		},
+	cases hU U ⟨hopen, hlU⟩ with N hN,
+	use N, intros n hn,
+	rw ←abs_lt_open_interval,
+	from hN n hn
+end
+
+theorem seq_converge_iff_all_open {a : ℕ → ℝ} {l : ℝ} : a ⇒ l ↔ ∀ U : set ℝ, is_open U ∧ l ∈ U → ∃ N : ℕ, ∀ n : ℕ, N ≤ n → (a n) ∈ U :=
+by {split, all_goals {try {from seq_converge_imples_all_open <|> from all_open_imples_seq_converge}}}
+
+-- Uniform continuity and convergence
+def unif_contin (f : ℝ → ℝ) := ∀ ε > 0, ∃ δ > 0, ∀ x y : ℝ, abs (x - y) < δ → abs (f x - f y) < ε
+
+-- Uniformly continuous implies continuous (hence is stronger)
+theorem unif_contin_implies_contin {f : ℝ → ℝ} : unif_contin f → func_continuous f :=
+begin
+	intros h₁ a ε hε,
+	rcases h₁ ε hε with ⟨δ, ⟨hδ₁, hδ₂⟩⟩,
+	use δ, use hδ₁, intro x,
+	from hδ₂ x a
+end
+
+def func_pointwise_converge_to (f : ℕ → ℝ → ℝ) (g : ℝ → ℝ) := ∀ x : ℝ, ∀ ε > 0, ∃ N : ℕ, ∀ n : ℕ, N ≤ n → abs (f n x - g x) < ε
+def func_converge_uniform (f : ℕ → ℝ → ℝ) (g : ℝ → ℝ) := ∀ ε > 0, ∃ N : ℕ, ∀ x : ℝ, ∀ n : ℕ, N ≤ n → abs (f n x - g x) < ε
+
+-- function.swap swaps 
+-- f: ℕ → ℝ → ℝ = fₙ(x)
+
+-- If a sequence of uniformly continuous functions f n converges to f, then f is uniformly continuous
+theorem unif_contin_lim_unif_contin (f : ℕ → ℝ → ℝ) (g : ℝ → ℝ) (h : ∀ n : ℕ, unif_contin (f n)) : func_converge_uniform f g → unif_contin g :=
+begin
+	intros h₁ ε hε,
+	have  hε₂: 0 < ε / 3 := by linarith,
+	cases h₁ (ε / 3) hε₂ with N hN,
+	rcases h N (ε / 3) hε₂ with ⟨δ, ⟨hδ₁, hδ₂⟩⟩,
+	use δ, use hδ₁, 
+	intros x y hxy,
+	suffices : abs (g x -f N x) + abs (f N x - f N y) + abs (f N y - g y) < ε,
+		{apply lt_of_le_of_lt _ this,
+		 convert le_trans (abs_add (g x - f N y) (f N y - g y)) _, simp,
+		 apply add_le_add_right',
+		 convert abs_add (g x - f N x) (f N x - f N y),
+		 simp
+		},
+	have : ε = ε / 3 + ε / 3 + ε / 3 := by {linarith},
+	rw this,
+	repeat {apply add_lt_add},
+		{rw abs_sub,
+		from hN x N (le_refl N)},
+		{from hδ₂ x y hxy},
+		{from hN y N (le_refl N)}
+end
+
+
 
 end M40002

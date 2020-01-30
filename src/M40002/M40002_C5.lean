@@ -624,6 +624,4 @@ begin
 		{from hN y N (le_refl N)}
 end
 
-
-
 end M40002

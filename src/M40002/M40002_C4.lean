@@ -97,21 +97,6 @@ begin
         }
 end
 
-lemma sum_split {a : ℕ → ℝ} : ∀ n m : ℕ, m ≤ n → (∑ a) n = (∑ a) m + finset.sum (finset.Ico (m + 1) (n + 1)) a :=
-begin
-    sorry
-end
-
-theorem test_comparison_stronger {a b : ℕ → ℝ} : (∃ N : ℕ, ∀ n : ℕ, N ≤ n → 0 ≤ a n ∧ a n ≤ b n) ∧ (∑⇒ b) → ∑⇒ a := 
-begin
-    rintro ⟨⟨N, hN⟩, ⟨l, hl⟩⟩,
-    let c : ℕ → ℝ := λ m : ℕ, a (m + N),
-    unfold sum_convergent,
-    unfold sum_converges_to,
-    sorry
-
-end
-
 -- Algebra of limits for sums
 lemma sum_add_sum_split {a b : ℕ → ℝ} : (∑ a) + (∑ b) = (∑ a + b) :=
 begin
@@ -366,18 +351,6 @@ begin
                 repeat {assumption}
             }
         }
-end
-
-theorem test_limit_comparison (a b : ℕ → ℝ) (l : ℝ) : (a / b) ⇒ l ∧ abs_sum_converge b → abs_sum_converge a :=
-begin
-    rintro ⟨hab, hbconv⟩,
-    suffices : ∀ n : ℕ, abs_seq a n ≤ abs_seq b n,
-        replace this : ∀ n : ℕ, 0 ≤ abs_seq a n ∧ abs_seq a n ≤ abs_seq b n := λ n : ℕ, ⟨abs_nonneg (a n), this n⟩,
-        apply test_comparison ⟨this, hbconv⟩,
-    intro n,
-    unfold converges_to at hab,
-    sorry
-
 end
 
 end M40002

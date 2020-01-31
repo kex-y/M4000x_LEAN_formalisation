@@ -161,7 +161,7 @@ begin
 	from ⟨ha a, hb (f a)⟩
 end
 
--- Starting to prove that all polynomials and rational functions are continuous
+-- All polynomials and rational functions are continuous
 
 lemma constant_contin (c : ℝ) : func_continuous (λ x : ℝ, c) :=
 begin
@@ -389,12 +389,11 @@ end
 
 -- Defining open and closed sets
 def is_open (S : set ℝ) := ∀ x ∈ S, ∃ δ > 0, open_interval (x - δ) (x + δ) ⊆ S
-def is_closed (S : set ℝ) := ∀ a : ℕ → ℝ, seq_in a S → (∃ l : ℝ, a ⇒ l) → ∃ l ∈ S, a ⇒ l -- This definition is a bit rubbish...
+def is_closed (S : set ℝ) := ∀ a : ℕ → ℝ, seq_in a S → (∃ l : ℝ, a ⇒ l) → ∃ l ∈ S, a ⇒ l
 
 def is_compact (S : set ℝ) := is_closed S ∧ bounded S
 
 -- An open interval is open
-
 theorem open_interval_is_open (a b : ℝ) : is_open (open_interval a b) :=
 begin
 	unfold open_interval,

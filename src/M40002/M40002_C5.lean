@@ -515,6 +515,64 @@ end
 lemma element_of_Inter {S : ℕ → set ℝ} {n i : ℕ} : ∀ x ∈ ⋂ i ∈ finset.range n, S i, i ∈ finset.range n → x ∈ S i :=
 by {intros x hx hi, rw set.mem_Inter at hx, finish}
 
+lemma comp_open_to_closed {S : set ℝ} : is_open S → is_closed (-S) :=
+begin
+	intro hopen,
+	rintros a x ⟨l, hl⟩,
+	use l,
+	have : l ∈ -S :=
+		by {intro hS,
+		rcases hopen l hS with ⟨δ, ⟨hδ₁, hδ₂⟩⟩,
+		cases hl δ hδ₁ with N hN,
+		apply x N,
+		suffices : a N ∈ open_interval (l - δ) (l + δ),
+			from hδ₂ this,
+		rw abs_lt_open_interval,
+		apply hN N (le_refl N)
+		},
+	use this, assumption
+end
+
+lemma comp_closed_to_open {S : set ℝ} : is_closed S → is_open (-S) :=
+begin
+	intros hclosed x hx,
+	apply classical.by_contradiction,
+	push_neg,
+	intro hnopen,
+	have : ∀ n : ℕ, ∃ s ∈ open_interval (x - (1 / (n + 1))) (x + (1 / (n + 1))), s ∈ S :=
+		by {intros n,
+		apply classical.by_contradiction,
+		push_neg,
+		intro h,
+		suffices : open_interval (x - (1 / (n + 1))) (x + (1 / (n + 1))) ⊆ -S,
+			from hnopen (1 / (n + 1)) nat.one_div_pos_of_nat this,
+		intros s hs,
+		from h s hs
+		},
+	let t : ℕ → ℝ := λ n : ℕ, classical.some (this n),
+	have ht : t ⇒ x :=
+		by {sorry},
+	unfold is_closed at hclosed,
+	have hseqin : seq_in t S :=
+		by {intro n, sorry},
+	have hcontra : ∃ (l : ℝ) (H : l ∈ S), t ⇒ l :=
+		by {apply hclosed t hseqin,
+		use x, assumption},
+	rcases hcontra with ⟨l, ⟨hl₁, hl₂⟩⟩,
+	have hleqx : l = x := unique_lim t l x hl₂ ht,
+	apply hx, rwa ←hleqx
+end
+
+theorem comp_open_iff_closed {S : set ℝ} : is_open S ↔ is_closed (-S) :=
+begin
+	split,
+		from comp_open_to_closed,
+		have h₁ : (- -S) = S := by {simp},
+		have h₂ : (- - -S) = -S :=by {simp},
+		rw [←h₁, h₂],
+		from comp_closed_to_open
+end
+
 -- A function f : ℝ → ℝ is continuous iff. ∀ U ⊆ R, f⁻¹(U) is open
 theorem contin_open_pre_image {f : ℝ → ℝ} : func_continuous f ↔ ∀ U : set ℝ, is_open U → is_open {x : ℝ | f x ∈ U} :=
 begin

@@ -188,6 +188,24 @@ begin
         }
 end
 
+lemma sum_triangle {a : ℕ → ℝ} {n m : ℕ} : abs (finset.sum (finset.Ico n m) a) ≤ finset.sum (finset.Ico n m) (abs_seq a) :=
+begin
+    induction m with k hk,
+        {rw finset.Ico.eq_empty_iff.mpr (zero_le n), simp},
+        {cases le_or_lt n k,
+            {repeat {rw finset.sum_Ico_succ_top h},
+            apply le_trans (abs_add (finset.sum (finset.Ico n k) a) (a k)),
+            show abs (finset.sum (finset.Ico n k) a) + abs (a k) ≤ finset.sum (finset.Ico n k) (abs_seq a) + abs (a k),
+            suffices : abs (finset.sum (finset.Ico n k) a) ≤ finset.sum (finset.Ico n k) (abs_seq a),
+                simpa,
+            assumption
+            },
+            {rw finset.Ico.eq_empty_iff.mpr (nat.succ_le_iff.mpr h),
+            simp
+            }
+        }
+end
+
 lemma neg_sum {a : ℕ → ℝ} {n m : ℕ} : - finset.sum (finset.Ico n m) a = finset.sum (finset.Ico n m) (a × -1) :=
 begin
     induction m with k hk,

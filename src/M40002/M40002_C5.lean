@@ -656,7 +656,7 @@ def func_converge_uniform (f : ℕ → ℝ → ℝ) (g : ℝ → ℝ) := ∀ ε 
 -- function.swap swaps 
 -- f: ℕ → ℝ → ℝ = fₙ(x)
 
--- If a sequence of uniformly continuous functions f n converges to f, then f is uniformly continuous
+-- If a sequence of uniformly continuous functions fₙ converges to f, then f is uniformly continuous
 theorem unif_contin_lim_unif_contin (f : ℕ → ℝ → ℝ) (g : ℝ → ℝ) (h : ∀ n : ℕ, unif_contin (f n)) : func_converge_uniform f g → unif_contin g :=
 begin
 	intros h₁ ε hε,
@@ -680,5 +680,32 @@ begin
 		{from hδ₂ x y hxy},
 		{from hN y N (le_refl N)}
 end
+
+-- A similar but weaker proposition than the above: If a sequence of continuous functions fₙ converges to f, then f is continuous
+theorem contin_lim_contin (f : ℕ → ℝ → ℝ) (g : ℝ → ℝ) (h : ∀ n : ℕ, func_continuous (f n)) : func_converge_uniform f g → func_continuous g :=
+begin
+	intros h₁ y ε hε,
+	have hε₂ : 0 < ε / 3 := by linarith,
+	cases h₁ (ε / 3) hε₂ with N hN,
+	rcases h N y (ε / 3) hε₂ with ⟨δ, ⟨hδ₁, hδ₂⟩⟩,
+	use δ, use hδ₁,
+	intros x hxy,
+	suffices : abs (g x -f N x) + abs (f N x - f N y) + abs (f N y - g y) < ε,
+		{apply lt_of_le_of_lt _ this,
+		 convert le_trans (abs_add (g x - f N y) (f N y - g y)) _, simp,
+		 apply add_le_add_right',
+		 convert abs_add (g x - f N x) (f N x - f N y),
+		 simp
+		},
+	have : ε = ε / 3 + ε / 3 + ε / 3 := by {linarith},
+	rw this,
+	repeat {apply add_lt_add},
+		{rw abs_sub,
+		from hN x N (le_refl N)},
+		{from hδ₂ x hxy},
+		{from hN y N (le_refl N)}
+end
+
+-- TODO: define sum of functions and prove Weierstrass M-test
 
 end M40002

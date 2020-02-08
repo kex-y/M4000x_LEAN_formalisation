@@ -48,5 +48,7 @@ Currently working on open and closed sets. See [here](https://github.com/JasonKY
 * C5. Algebra of Limits for Functions
 * C5. Continuity of Polynomials
 * C5. Intermediate Value Theorem
+* C5. Open and Closed Sets
+* C5. Uniform Continuity and Convergence
 
 There are some other reference files too (no need to pay too much attention to them :) )!

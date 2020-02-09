@@ -17,6 +17,35 @@ def func_continuous (f : ℝ → ℝ) := ∀ a : ℝ, func_continuous_at f a
 -- Defintion composition of functions and sequences for sequential continuity
 def func_seq_comp (f : ℝ → ℝ) (s : ℕ → ℝ) (n : ℕ) := f (s n)
 
+-- The definition for limits can have an alternative restriction of 0 < abs (x - a)
+theorem func_continuous_at_to_pos (f : ℝ → ℝ) (a : ℝ) : func_continuous_at f a ↔ ∀ ε > 0, ∃ δ > 0, ∀ x : ℝ, 0 < abs (x - a) ∧ abs (x - a) < δ → abs (f x - f a) < ε :=
+begin
+	split,
+		{intros hconv ε hε,
+		rcases hconv ε hε with ⟨δ, ⟨hδ₁, hδ₂⟩⟩,
+		use δ, use hδ₁,
+		intros x hx,
+		from hδ₂ x hx.right
+		},
+		{intros hconv ε hε,
+		rcases hconv ε hε with ⟨δ, ⟨hδ₁, hδ₂⟩⟩,
+		use δ, use hδ₁,
+		intros x hx,
+		cases lt_or_le 0 (abs (x - a)),
+			from hδ₂ x ⟨h, hx⟩,
+			have : x = a :=
+				by {suffices : abs (x - a) = 0,
+				from eq_of_abs_sub_eq_zero this,
+				cases lt_or_eq_of_le h,
+				rw ←not_le at h_1, exfalso,
+				apply h_1, from abs_nonneg (x - a),
+				assumption
+				},
+			rw this, simp,
+			assumption,		
+		}
+end
+
 -- Sequential continuity
 lemma seq_contin_conv_lem {s : ℕ → ℝ} {a : ℝ} (h : ∀ n : ℕ, abs (s n - a) < 1 / (n + 1)) : s ⇒ a :=
 begin

@@ -42,7 +42,7 @@ begin
 				assumption
 				},
 			rw this, simp,
-			assumption,		
+			assumption		
 		}
 end
 

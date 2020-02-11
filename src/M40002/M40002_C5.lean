@@ -679,6 +679,19 @@ begin
 	from hδ₂ x a
 end
 
+-- Uniformly continuous functions will map a Cauchy sequence to another Cauchy sequence
+theorem unif_contin_map_cauchy {f : ℝ → ℝ} {a : ℕ → ℝ} (h : unif_contin f) : cauchy a → cauchy (λ n : ℕ, f (a n)) :=
+begin
+	intros hcauchy ε hε,
+	rcases h ε hε with ⟨δ, ⟨hδ₁, hδ₂⟩⟩,
+	cases hcauchy δ hδ₁ with N hN,
+	use N,
+	intros n m hnm,
+	show abs (f (a n) - f (a m)) < ε,
+	convert hδ₂ (a n) (a m) _,
+	from hN n m hnm
+end
+
 def func_pointwise_converge_to (f : ℕ → ℝ → ℝ) (g : ℝ → ℝ) := ∀ x : ℝ, ∀ ε > 0, ∃ N : ℕ, ∀ n : ℕ, N ≤ n → abs (f n x - g x) < ε
 def func_converge_uniform (f : ℕ → ℝ → ℝ) (g : ℝ → ℝ) := ∀ ε > 0, ∃ N : ℕ, ∀ x : ℝ, ∀ n : ℕ, N ≤ n → abs (f n x - g x) < ε
 

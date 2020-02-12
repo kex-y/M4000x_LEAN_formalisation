@@ -450,7 +450,7 @@ begin
 		}
 end
 
--- A closed interval is closed
+-- A closed interval is compact
 theorem closed_interval_is_compact (a b : ℝ) : is_compact (closed_interval a b) :=
 begin
 	split,

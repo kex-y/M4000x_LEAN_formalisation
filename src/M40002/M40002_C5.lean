@@ -155,7 +155,7 @@ begin
 end
 
 noncomputable def func_div_func (f g : ℝ → ℝ) := λ r : ℝ, (f r) / (g r)
-notation f ` / ` g := func_div_func f g
+noncomputable instance func_div : has_div (ℝ → ℝ) := ⟨func_div_func⟩
 
 theorem func_div_func_conv (f g : ℝ → ℝ) (a b₁ b₂) (h : b₂ ≠ 0) : func_converges_to f a b₁ ∧ func_converges_to g a b₂ → func_converges_to (f / g) a (b₁ / b₂) :=
 begin
@@ -577,13 +577,23 @@ begin
 			from hnopen (1 / (n + 1)) nat.one_div_pos_of_nat this,
 		intros s hs,
 		from h s hs
-		},
-	let t : ℕ → ℝ := λ n : ℕ, classical.some (this n),
+		}, 
+	simp only [classical.skolem] at this,
+	rcases this with ⟨t, ht₁, ht₂⟩,
 	have ht : t ⇒ x :=
-		by {sorry},
+		by {intros ε hε,
+		cases exists_nat_gt (1 / ε) with N hN,
+		use N, intros n hn,
+		rw ←abs_lt_open_interval,
+		suffices : open_interval  (x - 1 / (n + 1)) (x + 1 / (n + 1)) ⊆ open_interval (x - ε) (x + ε),
+			apply this, from ht₁ n,
+		unfold open_interval,
+		simp only [set.set_of_subset_set_of],
+		intros a, sorry
+		},
 	unfold is_closed at hclosed,
 	have hseqin : seq_in t S :=
-		by {intro n, sorry},
+		by {intro n, from ht₂ n},
 	have hcontra : ∃ (l : ℝ) (H : l ∈ S), t ⇒ l :=
 		by {apply hclosed t hseqin,
 		use x, assumption},

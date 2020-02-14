@@ -5,7 +5,8 @@ import M40002.M40002_C5
 namespace M40002
 
 -- Definition of a function being differntiable at a point
-def differentiable_at (f : ℝ → ℝ) (a : ℝ) := ∃ l : ℝ, func_converges_to (λ x : ℝ, (f x - f a) / (x - a)) a l
+def is_derivative (f : ℝ → ℝ) (a l : ℝ) := func_converges_to (λ x : ℝ, (f x - f a) / (x - a)) a l
+def differentiable_at (f : ℝ → ℝ) (a : ℝ) := ∃ l : ℝ, is_derivative f a l
 def differentiable (f : ℝ → ℝ) := ∀ a : ℝ, differentiable_at f a
 
 -- Differentiable at a point implies continuity at a point
@@ -55,5 +56,82 @@ begin
     intros hdiff a,
     apply diff_at_to_contin_at, from hdiff a
 end
+
+-- Local and global maximums and minimums
+def local_max (f : ℝ → ℝ) (x₀ : ℝ) := ∃ δ > 0, ∀ x ∈ open_interval (x₀ - δ) (x₀ + δ), f x₀ < f x
+def local_min (f : ℝ → ℝ) (x₀ : ℝ) := ∃ δ > 0, ∀ x ∈ open_interval (x₀ - δ) (x₀ + δ), f x < f x₀
+
+def global_max (f : ℝ → ℝ) (x₀ : ℝ) := ∀ x : ℝ, f x₀ < f x
+def global_min (f : ℝ → ℝ) (x₀ : ℝ) := ∀ x : ℝ, f x < f x₀
+
+theorem global_max_is_local_max {f : ℝ → ℝ} {x₀ : ℝ} : global_max f x₀ → local_max f x₀ :=
+begin
+    intro hgmax,
+    use 1,
+    split, norm_num,
+    intros x hx,
+    from hgmax x
+end
+
+theorem global_min_is_local_min {f : ℝ → ℝ} {x₀ : ℝ} : global_min f x₀ → local_min f x₀ := 
+begin
+    intro hgmix,
+    use 1,
+    split, norm_num,
+    intros x hx,
+    from hgmix x
+end
+
+--set_option trace.simplify.rewrite true
+-- Fermat's theorem
+theorem local_min_diff_zero {f : ℝ → ℝ} {x₀ : ℝ} (h : local_min f x₀) : differentiable_at f x₀ → is_derivative f x₀ 0 :=
+begin
+    rintro ⟨l, hl⟩,
+    rcases h with ⟨δ, hδ₁, hδ₂⟩,
+    cases lt_trichotomy l 0,
+        {exfalso,
+        let ε : ℝ := - l / 2,
+        have hε : 0 < ε := show 0 < - l / 2, by linarith,
+        rcases hl ε hε with ⟨ω, hω₁, hω₂⟩,
+        let μ : ℝ := min δ ω,
+        have hμ : 0 < μ :=
+            by {show 0 < min δ ω,
+            rw lt_min_iff,
+            from ⟨hδ₁, hω₁⟩
+            },
+        let x : ℝ := x₀ + 1 / 2 * μ,
+        have h₀ : x ∈ open_interval (x₀ - δ) (x₀ + δ) :=
+            by {unfold open_interval, dsimp,
+            split,
+                {rw add_lt_add_iff_left, suffices : 0 < 2⁻¹ * μ,
+                convert lt_trans _ this, norm_num, linarith,
+                apply mul_pos', norm_num,
+                from hμ
+                },
+                rw add_lt_add_iff_left, 
+                suffices : μ ≤ δ, linarith,
+                from min_le_left δ ω
+            },
+        have h₁ : abs (x - x₀) < ω :=
+            by {rw ←abs_lt_open_interval,
+            unfold open_interval, dsimp,
+            split,
+                {rw add_lt_add_iff_left, suffices : 0 < 2⁻¹ * μ,
+                convert lt_trans _ this, norm_num, linarith,
+                apply mul_pos', norm_num,
+                from hμ
+                },
+                rw add_lt_add_iff_left, 
+                suffices : μ ≤ ω, linarith,
+                from min_le_right δ ω
+            },
+        
+        --rw abs_lt at hω₂,
+        --convert hω₂ x h₁, simp,
+        sorry
+        },
+    sorry
+end
+
 
 end M40002

@@ -2,7 +2,7 @@
 
 Formalising lecture notes from 1st year Imperial Mathematics course.
 
-Currently working on open and closed sets. See [here](https://github.com/JasonKYi/M4000x_LEAN_formalisation/blob/master/TODO.md).
+Currently working on differentiation. See [here](https://github.com/JasonKYi/M4000x_LEAN_formalisation/blob/master/TODO.md).
 
 ## M40001 Table of Contents (src/M40001)
 
@@ -51,4 +51,7 @@ Currently working on open and closed sets. See [here](https://github.com/JasonKY
 * C5. Open and Closed Sets
 * C5. Uniform Continuity and Convergence
 
-There are some other reference files too (no need to pay too much attention to them :) )!
+### Chapter 6 - Differentiation
+* C6. Definition of Differentiation
+* C6. Some Basic Propterties of Differentiation
+* C6. Fermat's Theorem for Stationary Points

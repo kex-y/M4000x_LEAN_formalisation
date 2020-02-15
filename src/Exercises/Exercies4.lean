@@ -1,5 +1,5 @@
 /-
-Exercise 3.
+Exercise 4.
 Let us define the binary relation ~> as follow:
 Let X and Y be two sets, and f : X → V be some function between the sets, then ∀ x, y ∈ X, x ~> y if and only if f(x) = f(y).
 
@@ -15,9 +15,7 @@ variables {X V : Type u}
 def bin_rel (X) := X → X → Prop
 def equivalence_rel (r : bin_rel X) := reflexive r ∧ symmetric r ∧ transitive r
 def cls (r : bin_rel X) (s : X) := {x : X | r s x}
-
 def partition (A : set (set X)) : Prop := (∀ x : X, (∃ B ∈ A, x ∈ B ∧ ∀ C ∈ A, x ∈ C → B = C)) ∧ ∅ ∉ A
-
 def rs (A : set (set(X))) (s t : X) := ∃ B ∈ A, s ∈ B ∧ t ∈ B
 -- The code above is simply used to esablish the definitions!
 

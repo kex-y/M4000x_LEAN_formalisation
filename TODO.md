@@ -4,7 +4,7 @@
 - Add comments to the important proofs
 
 ### M40002_C2
-- Add an example to show that the $\sqrt 3$ is a real number
+- Add an example to show that the square root of 2 is a real number
 
 ### M40002_C3
 - Prove the algebra of limits for multiplication and division
@@ -21,4 +21,4 @@
 ### M40002_C5
 - Extreme value theorem
 - Continuous and injective implies inverse is continuous
-- Closed sets
+

@@ -82,7 +82,6 @@ begin
     from hgmix x
 end
 
---set_option trace.simplify.rewrite true
 -- Fermat's theorem
 theorem local_min_diff_zero {f : ℝ → ℝ} {x₀ : ℝ} (h : local_min f x₀) : differentiable_at f x₀ → is_derivative f x₀ 0 :=
 begin

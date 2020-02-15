@@ -562,6 +562,17 @@ begin
 	use this, assumption
 end
 
+lemma lt_ε_ge_zero {N : ℕ} {ε : ℝ} (h : 0 < ε) : 1 / ε < N → 1 / (N : ℝ) < ε :=
+by {intro hα,
+	have hβ : 0 < N, cases lt_or_le 0 N, assumption,
+	exfalso, apply not_le.mpr h,
+	suffices : 1 / ε ≤ 0, simp only [one_div_eq_inv, inv_nonpos] at this, assumption,
+	apply le_of_lt, apply lt_of_lt_of_le hα, norm_cast, assumption,
+
+	rw [div_lt_iff, mul_comm], rwa div_lt_iff at hα,
+	assumption, norm_cast, assumption
+}
+
 lemma comp_closed_to_open {S : set ℝ} : is_closed S → is_open (-S) :=
 begin
 	intros hclosed x hx,
@@ -589,7 +600,24 @@ begin
 			apply this, from ht₁ n,
 		unfold open_interval,
 		simp only [set.set_of_subset_set_of],
-		intros a, sorry
+		rintros a ⟨hα, hβ⟩,
+		split,
+			apply lt_trans _ hα, swap,
+			apply lt_trans hβ,
+			all_goals {
+				simp only [neg_lt_neg_iff, add_lt_add_iff_left, sub_eq_add_neg],
+				apply lt_trans _ ((lt_ε_ge_zero hε) hN),
+				have hγ : 0 < (N : ℝ), norm_cast,
+					cases lt_or_le 0 N, assumption,
+					exfalso, apply not_le.mpr hε,
+					suffices : 1 / ε ≤ 0, simp only [one_div_eq_inv, inv_nonpos] at this, assumption,
+					apply le_of_lt, apply lt_of_lt_of_le hN, norm_cast, assumption,
+				have : 0 < (n : ℝ) + 1,
+					norm_cast, norm_cast at hγ,
+					apply lt_trans hγ,
+					apply lt_of_le_of_lt hn, linarith,
+				rw (one_div_lt_one_div this hγ), norm_cast, linarith
+			}
 		},
 	unfold is_closed at hclosed,
 	have hseqin : seq_in t S :=

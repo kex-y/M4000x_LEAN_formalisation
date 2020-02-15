@@ -485,7 +485,7 @@ begin
 end
 
 /-
-Exercise. I have defined one more binary relation $\mathtt{\sim}>$. Can you try to prove it <a href = "https://leanprover-community.github.io/lean-web-editor/#url=https%3A%2F%2Fraw.githubusercontent.com%2FJasonKYi%2FM4000x_LEAN_formalisation%2Fmaster%2Fhtml%2FExercises%2FExercies3.lean">here</a>?
+Exercise. I have defined one more binary relation $\mathtt{\sim}>$. Can you try to prove it <a href = "https://leanprover-community.github.io/lean-web-editor/#url=https%3A%2F%2Fraw.githubusercontent.com%2FJasonKYi%2FM4000x_LEAN_formalisation%2Fmaster%2Fsrc%2FExercises%2FExercies3.lean">here</a>?
 -/
 
 /- Sub-section
@@ -622,7 +622,7 @@ end
 def rs (A : set (set(X))) (s t : X) := ∃ B ∈ A, s ∈ B ∧ t ∈ B
 
 /-
-Bonus Exercise. Furthermore, it turns out that if $X$ is a set and $R$ an equivalence relation on $X$. Then any partition of $X$ can form a equivalence relation. Try to prove it <a href = "https://leanprover-community.github.io/lean-web-editor/#url=https%3A%2F%2Fraw.githubusercontent.com%2FJasonKYi%2FM4000x_LEAN_formalisation%2Fmaster%2Fhtml%2FExercises%2FExercies4.lean">here</a> and if you get stuck, <a href = "https://leanprover-community.github.io/lean-web-editor/#url=https%3A%2F%2Fraw.githubusercontent.com%2FJasonKYi%2FM4000x_LEAN_formalisation%2Fmaster%2Fhtml%2FExercises%2FExercies4_sol.lean">here</a> are the solutions.
+Bonus Exercise. Furthermore, it turns out that if $X$ is a set and $R$ an equivalence relation on $X$. Then any partition of $X$ can form a equivalence relation. Try to prove it <a href = "https://leanprover-community.github.io/lean-web-editor/#url=https%3A%2F%2Fraw.githubusercontent.com%2FJasonKYi%2FM4000x_LEAN_formalisation%2Fmaster%2Fsrc%2FExercises%2FExercies4.lean">here</a> and if you get stuck, <a href = "https://raw.githubusercontent.com/JasonKYi/M4000x_LEAN_formalisation/master/src/Exercises/Exercies4_sol.lean">here</a> are the solutions.
 -/
 
 end M40001

@@ -126,7 +126,7 @@ begin
 end
 
 /-
-Excercise. As you can see, writing LEAN proofs is so much more fun than drawing truth tables! Why don't you try it out by proving $\lnot P \iff (P \implies \tt{false})$ <a href="https://leanprover-community.github.io/lean-web-editor/#url=https%3A%2F%2Fraw.githubusercontent.com%2FJasonKYi%2FM4000x_LEAN_formalisation%2Fmaster%2Fhtml%2FExercises%2FExercies1.lean">here</a>?
+Excercise. As you can see, writing LEAN proofs is so much more fun than drawing truth tables! Why don't you try it out by proving $\lnot P \iff (P \implies \tt{false})$ <a href="https://leanprover-community.github.io/lean-web-editor/#url=https%3A%2F%2Fraw.githubusercontent.com%2FJasonKYi%2FM4000x_LEAN_formalisation%2Fmaster%2Fsrc%2FExercises%2FExercies1.lean">here</a>?
 -/
 
 /- Sub-section
@@ -171,7 +171,7 @@ begin
 end
 
 /-
-Excercise. What can we deduce if we apply the contrapositive to $\lnot Q \implies \lnot P$? Try it out <a href="https://leanprover-community.github.io/lean-web-editor/#url=https%3A%2F%2Fraw.githubusercontent.com%2FJasonKYi%2FM4000x_LEAN_formalisation%2Fmaster%2Fhtml%2FExercises%2FExercies2.lean">here</a>?
+Excercise. What can we deduce if we apply the contrapositive to $\lnot Q \implies \lnot P$? Try it out <a href="https://leanprover-community.github.io/lean-web-editor/#url=https%3A%2F%2Fraw.githubusercontent.com%2FJasonKYi%2FM4000x_LEAN_formalisation%2Fmaster%2Fsrc%2FExercises%2FExercies2.lean">here</a>?
 -/
 
 /- Sub-section

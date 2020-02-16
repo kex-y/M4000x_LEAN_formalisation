@@ -258,9 +258,3 @@ end
 
 example (a b : ℕ) : a + a = b + b → a = b :=
 by{ring, rw nat.mul_left_inj, intro; assumption, simp}
-
-theorem wellordered
-  (S : set ℕ) : S ≠ ∅ → ∃ s ∈ S, ∀ x ∈ S, s ≤ x :=
-begin
-  sorry,
-end

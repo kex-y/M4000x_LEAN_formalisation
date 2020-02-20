@@ -22,7 +22,7 @@ Given two functions $f : A → B$, $g : B → C$ where $A, B, C$ are sets, then 
 def my_composition {A B C : Type u} (f : A → B) (g : B → C) := λ x : A, g (f x)
 
 /-
-Remark. Here, to define $\tt{my\_composition}$ we used something called lambda abstraction $\tt{λ x : A, g (f x)}$. 
+Remark. Here, to define $\tt{my\\_composition}$ we used something called lambda abstraction $\tt{λ x : A, g (f x)}$. 
 This is essentially saying we are mapping $\tt{x}$ with type $\tt{A}$ to $\tt{g(f(x))}$. 
 Read more about lambda abstraction <a href = "shorturl.at/hGPX1">here</a> or <a href = "https://en.wikipedia.org/wiki/Lambda_calculus">here</a>.
 -/

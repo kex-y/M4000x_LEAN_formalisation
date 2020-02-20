@@ -1,3 +1,5 @@
+import data.real.basic
+
 -- Tactics
 -- revert is kinda the inverse of intro
 
@@ -63,5 +65,89 @@ iff.intro
     (assume hpq : p ∧ q, ⟨hpq.right, hpq.left⟩)
     (assume hqp : q ∧ p, ⟨hqp.right, hqp.left⟩)
 
+inductive names : Type
+| Johanson : names
+| Kristian : names
+| Marlin : names
+| Maria : names
+| NoOne : names
 
+namespace names
+  #check Maria
 
+  def age_of_person (person : names) : ℕ :=
+  names.cases_on person 18 19 18 23 99999
+
+  #reduce age_of_person Maria
+
+  def next_person (person : names) : names :=
+  names.rec_on person Kristian Marlin Maria NoOne Johanson
+
+  meta def an_older_person : names → names
+  | person := if age_of_person (next_person person) > age_of_person person then (next_person person)
+              else an_older_person (next_person person)
+  
+  #reduce an_older_person Kristian --What?
+end names
+
+namespace hidden
+
+  inductive nat
+  | zero : nat
+  | succ (n : nat) : nat
+
+  namespace nat
+
+    def add : nat → nat → nat
+    | m zero := m
+    | m (succ n) := succ (add m n)
+
+    notation m ` + ` n := add m n
+
+    def mul : nat → nat → nat
+    | m zero := zero
+    | m (succ n) := add (mul m n) m
+
+    notation m ` × ` n := mul m n
+
+    theorem add_zero (x : nat) : x + zero = x := rfl
+
+    theorem add_succ (x y : nat) : x + succ y = succ (x + y) := rfl
+
+    theorem add_assoc (x y z : nat) : (x + y) + z = x + (y + z) :=
+    begin
+      induction z with k hk,
+        repeat {rw add_zero},
+        repeat {rw add_succ},
+        rw hk
+    end
+
+    theorem zero_add (x : nat) : zero + x = x :=
+    begin
+      induction x with k hk,
+        rw add_zero,
+        rw [add_succ, hk]
+    end
+
+    theorem succ_add (x y : nat) : (succ x) + y = succ (x + y) :=
+    begin
+      induction y with k hk,
+        repeat {rw add_zero},
+        rw [add_succ, hk, add_succ]
+    end
+
+    theorem add_comm (x y : nat) : x + y = y + x :=
+    begin
+      induction y with k hk,
+        rw [add_zero, zero_add],
+        rw [add_succ, succ_add, hk]
+    end
+  end nat
+
+  universes u v
+
+  inductive sum (α : Type u) (β : Type v)
+  | inl {} : α → sum
+  | inr {} : β → sum
+
+end hidden

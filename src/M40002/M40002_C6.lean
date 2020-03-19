@@ -51,11 +51,20 @@ begin
 end
 
 -- Cor. Differentiable implies continuity
-theorem diff_to_contin (f : ℝ → ℝ) (a : ℝ) : differentiable f → func_continuous f :=
+theorem diff_to_contin (f : ℝ → ℝ) : differentiable f → func_continuous f :=
 begin
     intros hdiff a,
     apply diff_at_to_contin_at, from hdiff a
 end
+
+-- If f and g are both differentiable then so is f + g
+theorem diff_sum_diff_func (f g : ℝ → ℝ)  (hf : differentiable f) (hg : differentiable g) : 
+differentiable (f + g) :=
+begin
+    simp,
+end
+
+#exit
 
 -- Local and global maximums and minimums
 def local_max (f : ℝ → ℝ) (x₀ : ℝ) := ∃ δ > 0, ∀ x ∈ open_interval (x₀ - δ) (x₀ + δ), f x₀ < f x

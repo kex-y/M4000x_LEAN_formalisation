@@ -83,11 +83,6 @@ namespace names
   def next_person (person : names) : names :=
   names.rec_on person Kristian Marlin Maria NoOne Johanson
 
-  meta def an_older_person : names → names
-  | person := if age_of_person (next_person person) > age_of_person person then (next_person person)
-              else an_older_person (next_person person)
-  
-  #reduce an_older_person Kristian --What?
 end names
 
 namespace hidden
@@ -150,4 +145,19 @@ namespace hidden
   | inl {} : α → sum
   | inr {} : β → sum
 
+  variable {α : Type u}
+
 end hidden
+
+example (F G H : Type → Prop) (h : ∀ x : Type, (F x → (¬ G x → H x))) : ∀ x : Type, (F x → (G x ∨ H x)) :=
+begin
+  intros x hF, -- So I'm fixing x and supposing F x is true. We now need to show G x ∨ H x
+  cases classical.em (G x) with hG hG, -- By excluded middle (I assume we can use classical logic since we are not cs?) either G x is true or its false
+  left, from hG, -- If G x is true than G x ∨ H x is true so we are done!
+  right, from h x hF hG -- If G x is false then as from assumption (h : ∀ x : Type, (F x → (¬ G x → H x))), we have not G x implies H x is true so G x or H x is true!
+end
+
+example (F G H : Type → Prop) (h : ∀ x : Type, (F x → (¬ G x → H x))) : ∀ x : Type, (F x → (G x ∨ H x)) :=
+begin
+  finish
+end

@@ -6,14 +6,14 @@ Currently working on differentiation. See [here](https://github.com/JasonKYi/M40
 
 ## M40001 Table of Contents (src/M40001)
 
-### Chapter 1 - Sets and Logic
+### Chapter 1 - [Sets and Logic](http://wwwf.imperial.ac.uk/~buzzard/M4000x_html/M40001/M40001_C1.html)
 * C1. Law of the Excluded Middle
 * C1. De Morgan's Laws
 * C1. Transitivity, Contrapositives, and Distirbutivity
 * C1. De Morgan's Laws for Sets
 * C1. "For all" and "There exists"
 
-### Chapter 2 - Functions and Equivalence Relations
+### Chapter 2 - [Functions and Equivalence Relations](http://wwwf.imperial.ac.uk/~buzzard/M4000x_html/M40001/M40001_C2.html)
 * C2. Function Composition
 * C2. Injective, Surjective, and Bijective
 * C2. Binary Relations

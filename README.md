@@ -2,7 +2,7 @@
 
 Formalising lecture notes from 1st year Imperial Mathematics course.
 
-Currently working on differentiation. See [here](https://github.com/JasonKYi/M4000x_LEAN_formalisation/blob/master/TODO.md).
+Currently planning to refactor M40002 with comments.
 
 ## M40001 Table of Contents (src/M40001)
 

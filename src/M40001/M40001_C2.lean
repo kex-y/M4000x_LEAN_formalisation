@@ -552,7 +552,7 @@ begin
     -- We prove by contradiction. Suppose $cl(t) ∩ cl(s) ≠ ∅$.
     intros ha hb,
     -- Then, there must be some $x$ in $cl(t) ∩ cl(s)$.
-    have hx : ∃ x, x ∈ cls R t ∩ cls R s := set.exists_mem_of_ne_empty hb,
+    have hx : ∃ x, x ∈ cls R t ∩ cls R s := set.ne_empty_iff_nonempty.1 hb,
     rcases hx with ⟨x, ⟨hα, hβ⟩⟩,
     -- Thus, by definition, $R(t, x)$ and $R(s, t)$ must both be true!
     rcases h with ⟨href, ⟨hsym, htrans⟩⟩,

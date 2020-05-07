@@ -20,7 +20,6 @@ Currently planning to refactor M40002 with comments.
 * C2. Predicates on Binary Relations
 * C2. Quotients and Equivalence Classes
 
-
 ## M40002 Table of Contents (src/M40002)
 
 ### Chapter 2 - Numbers

@@ -61,7 +61,7 @@ end
 theorem diff_sum_diff_func (f g : ℝ → ℝ)  (hf : differentiable f) (hg : differentiable g) : 
 differentiable (f + g) :=
 begin
-    simp,
+    sorry
 end
 
 #exit

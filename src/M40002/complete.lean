@@ -16,31 +16,31 @@ If a set $S ⊂ ℝ$ has maximums $a$ and $b$, then $a = b$, i.e. the maximum of
 -/
 theorem unique_max (S : set ℝ) : ∀ a b ∈ S, (∀ x ∈ S, x ≤ a ∧ x ≤ b) → a = b :=
 begin
-    intros a b ha hb hc,
-    have : a ≤ b := (hc a ha).right,
-    cases lt_or_eq_of_le this,
-        {have : b ≤ a := (hc b hb).left,
-        rw ←not_lt at this,
-        contradiction
-        },
-        {assumption}
+  intros a b ha hb hc,
+  have : a ≤ b := (hc a ha).right,
+  cases lt_or_eq_of_le this,
+    {have : b ≤ a := (hc b hb).left,
+    rw ←not_lt at this,
+    contradiction
+    },
+    {assumption}
 end
 
 /- Theorem
 If a set $S ⊂ ℝ$ has minimums $a$ and $b$, then $a = b$, i.e. the minimum of a set is unique.
 -/
 theorem neg_set_min (S : set ℝ) (s : ℝ) (h0 : s ∈ S) (h1 : ∀ x ∈ S, x ≤ s): 
-    ∀ x ∈ {t : ℝ | -t ∈ S}, -s ≤ x ∧ -s ∈ {t : ℝ | -t ∈ S} :=
+  ∀ x ∈ {t : ℝ | -t ∈ S}, -s ≤ x ∧ -s ∈ {t : ℝ | -t ∈ S} :=
 begin
-    intros x hx,
-    split,
-    {rwa neg_le,
-    rw set.mem_set_of_eq at hx,
-    apply h1, assumption
-    },
-    {rwa set.mem_set_of_eq,
-    simpa
-    }
+  intros x hx,
+  split,
+  {rwa neg_le,
+  rw set.mem_set_of_eq at hx,
+  apply h1, assumption
+  },
+  {rwa set.mem_set_of_eq,
+  simpa
+  }
 end
 
 /- Definition
@@ -67,7 +67,7 @@ by {split, all_goals {rintro ⟨M, hM⟩, use M, assumption} }
 If $S$ has an upperbound $M$, then $∀ x ∈ R, x ≥ M$ implies $x$ is a upper bound of $S$ 
 -/
 theorem bigger_upperbound (S : set ℝ) (s : ℝ) (h : upper_bound S s) :
-    ∀ x : ℝ, s ≤ x → upper_bound S x :=
+  ∀ x : ℝ, s ≤ x → upper_bound S x :=
 by {intros x hx y hy, from le_trans (h y hy) hx}
 
 /-
@@ -95,16 +95,16 @@ If $s ∈ ℝ$ is an upper bound of a set $S ⊂ ℝ$, then $-s$ is a lower boun
 -/
 theorem upr_bd_neg_set_lwr_bd (S : set ℝ) (s : ℝ) : upper_bound S s ↔ lower_bound {t : ℝ | -t ∈ S} (-s) :=
 begin
-    split,
-        all_goals {intros h x hx},
-        {rw set.mem_set_of_eq at hx,
-        suffices : (-x) ≤ s, rwa neg_le,
-        from h (-x) hx
-        },
-        unfold lower_bound at h,
-        suffices : (-s) ≤ (-x), simp at this, assumption,
-        have : (-x) ∈ {t : ℝ | -t ∈ S} := by {rwa set.mem_set_of_eq, simp, assumption},
-        from h (-x) this
+  split,
+    all_goals {intros h x hx},
+    {rw set.mem_set_of_eq at hx,
+    suffices : (-x) ≤ s, rwa neg_le,
+    from h (-x) hx
+    },
+    unfold lower_bound at h,
+    suffices : (-s) ≤ (-x), simp at this, assumption,
+    have : (-x) ∈ {t : ℝ | -t ∈ S} := by {rwa set.mem_set_of_eq, simp, assumption},
+    from h (-x) this
 end
 
 /- Definition
@@ -119,94 +119,94 @@ def inf (S : set ℝ) (x : ℝ) := lower_bound S x ∧ (∀ y : ℝ, x < y → �
 -- Exercise 2.24
 theorem unique_sup (S : set ℝ) : ∀ a b ∈ S, sup S a ∧ sup S b → a = b :=
 begin
-    rintros a b ha hb ⟨⟨bda, supa⟩, ⟨bdb,supb⟩⟩,
-    have hc : ∀ s ∈ S, s ≤ a ∧ s ≤ b := by {intros s hs, from ⟨bda s hs, bdb s hs⟩},
-    from unique_max S a b ha hb hc
+  rintros a b ha hb ⟨⟨bda, supa⟩, ⟨bdb,supb⟩⟩,
+  have hc : ∀ s ∈ S, s ≤ a ∧ s ≤ b := by {intros s hs, from ⟨bda s hs, bdb s hs⟩},
+  from unique_max S a b ha hb hc
 end
 
 theorem sup_non_empty (S : set ℝ) (s : ℝ) (h : sup S s) : S ≠ ∅ :=
 begin
-    cases h with ha hb,
-    intro, 
-    have hc : upper_bound S (s - 1) := 
-        by {intros x hx,
-        rw a at hx,
-        simp at hx, contradiction
-        },
-    have hd : s - 1 < s := by linarith,
-    replace hb : ¬ upper_bound S (s - 1) := by {apply hb (s - 1) hd},
-    contradiction
+  cases h with ha hb,
+  intro, 
+  have hc : upper_bound S (s - 1) := 
+    by {intros x hx,
+    rw a at hx,
+    simp at hx, contradiction
+    },
+  have hd : s - 1 < s := by linarith,
+  replace hb : ¬ upper_bound S (s - 1) := by {apply hb (s - 1) hd},
+  contradiction
 end
 
 theorem neg_set_inf (S : set ℝ) (s : ℝ) (h : sup S s) : 
-    inf {t : ℝ | -t ∈ S} (-s) :=
+  inf {t : ℝ | -t ∈ S} (-s) :=
 begin
-    cases h with hbd hlub,
-    split,
-        {intros x hx,
-        apply classical.by_contradiction,
-        intro h, push_neg at h,
-        have : -s ≤ x := by {rw neg_le, from (hbd (-x) hx)},
-        apply not_le_of_lt h, assumption
+  cases h with hbd hlub,
+  split,
+    {intros x hx,
+    apply classical.by_contradiction,
+    intro h, push_neg at h,
+    have : -s ≤ x := by {rw neg_le, from (hbd (-x) hx)},
+    apply not_le_of_lt h, assumption
+    },
+    {intros y hy hlbd,
+    have : upper_bound S (-y) := 
+      by {intros x hx,
+      apply classical.by_contradiction,
+      intro h, push_neg at h,
+      unfold lower_bound at hlbd,
+      have : y ≤ -x := 
+        by {replace hx : -x ∈ {t : ℝ | -t ∈ S},
+          rw set.mem_set_of_eq, simp, assumption,
+        from hlbd (-x) hx
         },
-        {intros y hy hlbd,
-        have : upper_bound S (-y) := 
-            by {intros x hx,
-            apply classical.by_contradiction,
-            intro h, push_neg at h,
-            unfold lower_bound at hlbd,
-            have : y ≤ -x := 
-                by {replace hx : -x ∈ {t : ℝ | -t ∈ S},
-                    rw set.mem_set_of_eq, simp, assumption,
-                from hlbd (-x) hx
-                },
-            apply not_le_of_lt h, rwa le_neg
-            },
-        replace hy : -y < s := by {rwa neg_lt},
-        from hlub (-y) hy this
-        }
+      apply not_le_of_lt h, rwa le_neg
+      },
+    replace hy : -y < s := by {rwa neg_lt},
+    from hlub (-y) hy this
+    }
 end
 
 theorem sup_def (S : set ℝ) (s : ℝ) : sup S s ↔ upper_bound S s ∧ ∀ x : ℝ, (upper_bound S x → s ≤ x) :=
 begin
+  split,
+    {rintros ⟨ha, hb⟩,
     split,
-        {rintros ⟨ha, hb⟩,
-        split,
-            {intros x hx,
-            from ha x hx
-            },
-            {intros x hx,
-            suffices : ¬ x < s, revert this, simp,
-            intro, apply hb x, repeat {assumption}}
-        },
-        {rintros ⟨ha, hb⟩, split,
-            {assumption},
-            {intros x hx hc,
-            replace hx : ¬ s ≤ x := by {push_neg, assumption},
-            from hx (hb x hc)
-            }
-        }
+      {intros x hx,
+      from ha x hx
+      },
+      {intros x hx,
+      suffices : ¬ x < s, revert this, simp,
+      intro, apply hb x, repeat {assumption}}
+    },
+    {rintros ⟨ha, hb⟩, split,
+      {assumption},
+      {intros x hx hc,
+      replace hx : ¬ s ≤ x := by {push_neg, assumption},
+      from hx (hb x hc)
+      }
+    }
 end
 
 theorem inf_def (S : set ℝ) (s : ℝ) : inf S s ↔ lower_bound S s ∧ ∀ x : ℝ, (lower_bound S x → x ≤ s) :=
 begin -- proof essentially identical to that of sup_def
-        split,
-        {rintros ⟨ha, hb⟩,
-        split,
-            {intros x hx,
-            from ha x hx
-            },
-            {intros x hx,
-            suffices : ¬ s < x, revert this, simp,
-            intro, apply hb x, repeat {assumption}}
-        },
-        {rintros ⟨ha, hb⟩, split,
-            {assumption},
-            {intros x hx hc,
-            replace hx : ¬ x ≤ s := by {push_neg, assumption},
-            from hx (hb x hc)
-            }
-        }
+    split,
+    {rintros ⟨ha, hb⟩,
+    split,
+      {intros x hx,
+      from ha x hx
+      },
+      {intros x hx,
+      suffices : ¬ s < x, revert this, simp,
+      intro, apply hb x, repeat {assumption}}
+    },
+    {rintros ⟨ha, hb⟩, split,
+      {assumption},
+      {intros x hx hc,
+      replace hx : ¬ x ≤ s := by {push_neg, assumption},
+      from hx (hb x hc)
+      }
+    }
 end
 
 -- Defining the Completeness axiom
@@ -233,8 +233,8 @@ begin
 -- Now let's consider the set T := {t : ℝ | -t ∈ S}.
 -- This set is bounded above by our previous lemma so by completeness, it has a supremum (lets call it b).
   cases completeness {t : ℝ | -t ∈ S} 
-    (neg_bdd_above_of_bdd_below h) 
-    (ne_empty_iff_nonempty.2 ⟨-s, by simp [hs]⟩) with b hb,
+  (neg_bdd_above_of_bdd_below h) 
+  (ne_empty_iff_nonempty.2 ⟨-s, by simp [hs]⟩) with b hb,
 -- I claim that -b is the infimum of S.
   refine ⟨-b, _⟩, 
 -- As we have previously proven that if s is the supremum of S then -s is the infimum of {t : ℝ | -t ∈ S},
@@ -252,15 +252,15 @@ begin
   split,
 -- Let use prove the forward direction first. 
 -- Suppose otherwise. Then x ≠ a.
-    intro h, by_contra h1,
+  intro h, by_contra h1,
 -- It suffices to prove abs (x - a) <  abs (x - a) since that's obviously false.
-    suffices : abs (x - a) <  abs (x - a), linarith,
+  suffices : abs (x - a) <  abs (x - a), linarith,
 -- So, by choosing ε = abs (x - a), the contradiction follows easily.
-    refine h _ (abs_pos_iff.2 $ λ h2, _), 
-    rw sub_eq_zero at h2, contradiction,
+  refine h _ (abs_pos_iff.2 $ λ h2, _), 
+  rw sub_eq_zero at h2, contradiction,
 -- For the other direction it is much easier. 
 -- If x = a then abs (x - a) = 0 < ε by construction so we are done!
-    intro h, rw h, simp
+  intro h, rw h, simp
 end
 
 end completeness

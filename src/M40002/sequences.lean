@@ -49,8 +49,6 @@ def seq_bounded (a : ℕ → ℝ) := seq_bounded_above a ∧ seq_bounded_below a
 def seq_in (a : ℕ → ℝ) (S : set ℝ) := ∀ n : ℕ, a n ∈ S
 notation a ` ⊆ ` S := seq_in a S
 
-example (n : ℕ) (hn : 0 < n) : 0 ≤ 1 / n := by exact bot_le
-
 /- Example
 Let $a_n : ℕ → ℝ : n ↦ 1 / n$, then $a_n$ converges to 0.
 -/
